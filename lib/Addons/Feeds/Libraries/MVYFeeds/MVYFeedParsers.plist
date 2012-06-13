@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key></key>
+	<string>MVYFeedParserDelegateRSS</string>
+	<key>http://search.yahoo.com/mrss/</key>
+	<string>MVYFeedParserDelegateYahooMedia</string>
+	<key>http://www.w3.org/2005/Atom</key>
+	<string>MVYFeedParserDelegateAtom</string>
+	<key>http://purl.org/dc/elements/1.1/</key>
+	<string>MVYFeedParserDelegateDC</string>
+</dict>
+</plist>

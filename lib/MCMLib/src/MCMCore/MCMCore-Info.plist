@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AdWhirlBaseUrl</key>
+	<string>http://ads.mymalcom.com/</string>
+	<key>AdWhirlId</key>
+	<string>9a6b95a81fac4384b54948cf5cea858b</string>
+	<key>AssetsBaseURL</key>
+	<string>http://assets.tebas.mymalcom.com/</string>
+	<key>MalcomAppId</key>
+	<string>3eb5fdfd-8045-4111-8889-932877366285</string>
+	<key>MalcomAppSecretKey</key>
+	<string>9be8ad4d5863d8222f4d16e7f788e0dc</string>
+	<key>MalcomBaseURL</key>
+	<string>http://api.mymalcom.com/</string>
+</dict>
+</plist>

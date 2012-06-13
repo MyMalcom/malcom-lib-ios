@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NewsMainColor</key>
+	<string>#404040</string>
+	<key>NewsSecondaryColor</key>
+	<string>#808184</string>
+	<key>NewsExtraColor</key>
+	<string>#919191</string>
+	<key>NewsShadowColor</key>
+	<string>#ffffff</string>
+	<key>NewsFontFamily</key>
+	<string>Helvetica</string>
+	<key>NewsFontFamilyBold</key>
+	<string>Helvetica-Bold</string>
+	<key>NewsDateFormat</key>
+	<string> / dd MMMM yyyy</string>
+</dict>
+</plist>

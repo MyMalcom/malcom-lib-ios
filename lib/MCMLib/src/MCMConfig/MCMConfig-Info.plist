@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>appProblems</key>
+	<true/>
+	<key>appProblemsMsg_en</key>
+	<string>The application can not connect to the server. Please check your connection and try again</string>
+	<key>appProblemsMsg_es</key>
+	<string>La aplicación no ha podido contectarse al servidor. Por favor, compruebe su conexión a Internet e inténtelo de nuevo</string>
+</dict>
+</plist>
