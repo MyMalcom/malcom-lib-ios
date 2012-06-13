@@ -1,4 +1,1 @@
-malcom-lib-ios
-==============
-
-Malcom Library for iOS
+h1. malcom iOS SDK (Version 2.0.0)
