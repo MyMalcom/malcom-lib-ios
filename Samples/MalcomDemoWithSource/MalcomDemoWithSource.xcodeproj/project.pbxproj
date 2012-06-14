@@ -1375,6 +1375,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
+				OTHER_CFLAGS = "-DDISTRIBUTION=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1386,6 +1387,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
+				OTHER_CFLAGS = (
+					"-DNS_BLOCK_ASSERTIONS=1",
+					"-DDISTRIBUTION=0",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

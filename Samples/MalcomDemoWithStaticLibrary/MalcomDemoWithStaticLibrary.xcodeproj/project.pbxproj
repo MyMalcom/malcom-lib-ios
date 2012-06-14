@@ -1,0 +1,567 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F3A33793158A379100DAA0FC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33792158A379100DAA0FC /* UIKit.framework */; };
+		F3A33795158A379100DAA0FC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33794158A379100DAA0FC /* Foundation.framework */; };
+		F3A33797158A379100DAA0FC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33796158A379100DAA0FC /* CoreGraphics.framework */; };
+		F3A3379D158A379100DAA0FC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F3A3379B158A379100DAA0FC /* InfoPlist.strings */; };
+		F3A3379F158A379100DAA0FC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A3379E158A379100DAA0FC /* main.m */; };
+		F3A337A3158A379100DAA0FC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A337A2158A379100DAA0FC /* AppDelegate.m */; };
+		F3A337A6158A379100DAA0FC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A337A5158A379100DAA0FC /* ViewController.m */; };
+		F3A337A9158A379100DAA0FC /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3A337A7158A379100DAA0FC /* ViewController_iPhone.xib */; };
+		F3A337AC158A379100DAA0FC /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3A337AA158A379100DAA0FC /* ViewController_iPad.xib */; };
+		F3A337BD158A385300DAA0FC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B2158A385300DAA0FC /* AudioToolbox.framework */; };
+		F3A337BE158A385300DAA0FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B3158A385300DAA0FC /* AVFoundation.framework */; };
+		F3A337BF158A385300DAA0FC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B4158A385300DAA0FC /* CFNetwork.framework */; };
+		F3A337C0158A385300DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B5158A385300DAA0FC /* CoreLocation.framework */; };
+		F3A337C1158A385300DAA0FC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B6158A385300DAA0FC /* CoreTelephony.framework */; };
+		F3A337C2158A385300DAA0FC /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B7158A385300DAA0FC /* iAd.framework */; };
+		F3A337C3158A385300DAA0FC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B8158A385300DAA0FC /* libz.1.2.5.dylib */; };
+		F3A337C4158A385300DAA0FC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B9158A385300DAA0FC /* MediaPlayer.framework */; };
+		F3A337C5158A385300DAA0FC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BA158A385300DAA0FC /* MessageUI.framework */; };
+		F3A337C6158A385300DAA0FC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BB158A385300DAA0FC /* QuartzCore.framework */; };
+		F3A337C7158A385300DAA0FC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BC158A385300DAA0FC /* SystemConfiguration.framework */; };
+		F3A337F7158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */; };
+		F3A337FA158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */; };
+		F3A33816158A3B7100DAA0FC /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33801158A3B7100DAA0FC /* CDataScanner.m */; };
+		F3A33817158A3B7100DAA0FC /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33804158A3B7100DAA0FC /* CDataScanner_Extensions.m */; };
+		F3A33818158A3B7100DAA0FC /* NSCharacterSet_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33806158A3B7100DAA0FC /* NSCharacterSet_Extensions.m */; };
+		F3A33819158A3B7100DAA0FC /* NSDictionary_JSONExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33808158A3B7100DAA0FC /* NSDictionary_JSONExtensions.m */; };
+		F3A3381A158A3B7100DAA0FC /* NSScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A3380A158A3B7100DAA0FC /* NSScanner_Extensions.m */; };
+		F3A3381B158A3B7100DAA0FC /* CJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A3380D158A3B7100DAA0FC /* CJSONDataSerializer.m */; };
+		F3A3381C158A3B7100DAA0FC /* CJSONDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A3380F158A3B7100DAA0FC /* CJSONDeserializer.m */; };
+		F3A3381D158A3B7100DAA0FC /* CJSONScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33811158A3B7100DAA0FC /* CJSONScanner.m */; };
+		F3A3381E158A3B7100DAA0FC /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33813158A3B7100DAA0FC /* CJSONSerializer.m */; };
+		F3A3381F158A3B7100DAA0FC /* CSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33815158A3B7100DAA0FC /* CSerializedJSONData.m */; };
+		F3A33821158A3C6B00DAA0FC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemoWithStaticLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F3A33792158A379100DAA0FC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F3A33794158A379100DAA0FC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F3A33796158A379100DAA0FC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F3A3379A158A379100DAA0FC /* MalcomDemoWithStaticLibrary-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MalcomDemoWithStaticLibrary-Info.plist"; sourceTree = "<group>"; };
+		F3A3379C158A379100DAA0FC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F3A3379E158A379100DAA0FC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F3A337A0158A379100DAA0FC /* MalcomDemoWithStaticLibrary-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MalcomDemoWithStaticLibrary-Prefix.pch"; sourceTree = "<group>"; };
+		F3A337A1158A379100DAA0FC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		F3A337A2158A379100DAA0FC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		F3A337A4158A379100DAA0FC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		F3A337A5158A379100DAA0FC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		F3A337A8158A379100DAA0FC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
+		F3A337AB158A379100DAA0FC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		F3A337B2158A385300DAA0FC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		F3A337B3158A385300DAA0FC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F3A337B4158A385300DAA0FC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F3A337B5158A385300DAA0FC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		F3A337B6158A385300DAA0FC /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		F3A337B7158A385300DAA0FC /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		F3A337B8158A385300DAA0FC /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		F3A337B9158A385300DAA0FC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		F3A337BA158A385300DAA0FC /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		F3A337BB158A385300DAA0FC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F3A337BC158A385300DAA0FC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F3A337D1158A393400DAA0FC /* AdWhirlAdNetworkAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlAdNetworkAdapter.h; sourceTree = "<group>"; };
+		F3A337D2158A393400DAA0FC /* AdWhirlAdNetworkConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlAdNetworkConfig.h; sourceTree = "<group>"; };
+		F3A337D3158A393400DAA0FC /* AdWhirlAdNetworkRegistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlAdNetworkRegistry.h; sourceTree = "<group>"; };
+		F3A337D4158A393400DAA0FC /* AdWhirlConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlConfig.h; sourceTree = "<group>"; };
+		F3A337D5158A393400DAA0FC /* AdWhirlDelegateProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlDelegateProtocol.h; sourceTree = "<group>"; };
+		F3A337D6158A393400DAA0FC /* AdWhirlLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlLog.h; sourceTree = "<group>"; };
+		F3A337D7158A393400DAA0FC /* AdWhirlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdWhirlView.h; sourceTree = "<group>"; };
+		F3A337D8158A393400DAA0FC /* AWNetworkReachabilityDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWNetworkReachabilityDelegate.h; sourceTree = "<group>"; };
+		F3A337D9158A393400DAA0FC /* AWNetworkReachabilityWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWNetworkReachabilityWrapper.h; sourceTree = "<group>"; };
+		F3A337DA158A393400DAA0FC /* MalcomAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MalcomAd.h; sourceTree = "<group>"; };
+		F3A337DB158A393400DAA0FC /* MCMAdAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdAdapter.h; sourceTree = "<group>"; };
+		F3A337DC158A393400DAA0FC /* MCMAdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdManager.h; sourceTree = "<group>"; };
+		F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomAdsLib-ios-2.0.0.a"; sourceTree = "<group>"; };
+		F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomLib-ios-2.0.0.a"; sourceTree = "<group>"; };
+		F3A337E8158A393400DAA0FC /* MalcomLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MalcomLib.h; sourceTree = "<group>"; };
+		F3A337E9158A393400DAA0FC /* MCMApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMApplicationDelegate.h; sourceTree = "<group>"; };
+		F3A337EA158A393400DAA0FC /* MCMConfigAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMConfigAdapter.h; sourceTree = "<group>"; };
+		F3A337EB158A393400DAA0FC /* MCMConfigSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMConfigSplashViewController.h; sourceTree = "<group>"; };
+		F3A337EC158A393400DAA0FC /* MCMCore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCore.h; sourceTree = "<group>"; };
+		F3A337ED158A393400DAA0FC /* MCMCoreManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCoreManager.h; sourceTree = "<group>"; };
+		F3A337EE158A393400DAA0FC /* MCMLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMLib.h; sourceTree = "<group>"; };
+		F3A337EF158A393400DAA0FC /* MCMLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMLog.h; sourceTree = "<group>"; };
+		F3A337F0158A393400DAA0FC /* MCMModuleAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMModuleAdapter.h; sourceTree = "<group>"; };
+		F3A337F1158A393400DAA0FC /* MCMNotificationsAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMNotificationsAdapter.h; sourceTree = "<group>"; };
+		F3A337F2158A393400DAA0FC /* MCMStatsAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMStatsAdapter.h; sourceTree = "<group>"; };
+		F3A337F3158A393400DAA0FC /* MCMViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMViewController.h; sourceTree = "<group>"; };
+		F3A337F4158A393400DAA0FC /* UITabBarController+MCMConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBarController+MCMConfig.h"; sourceTree = "<group>"; };
+		F3A337FE158A3A5000DAA0FC /* MCMDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMDefine.h; sourceTree = "<group>"; };
+		F3A33800158A3B7100DAA0FC /* CDataScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner.h; sourceTree = "<group>"; };
+		F3A33801158A3B7100DAA0FC /* CDataScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner.m; sourceTree = "<group>"; };
+		F3A33803158A3B7100DAA0FC /* CDataScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDataScanner_Extensions.h; sourceTree = "<group>"; };
+		F3A33804158A3B7100DAA0FC /* CDataScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDataScanner_Extensions.m; sourceTree = "<group>"; };
+		F3A33805158A3B7100DAA0FC /* NSCharacterSet_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCharacterSet_Extensions.h; sourceTree = "<group>"; };
+		F3A33806158A3B7100DAA0FC /* NSCharacterSet_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCharacterSet_Extensions.m; sourceTree = "<group>"; };
+		F3A33807158A3B7100DAA0FC /* NSDictionary_JSONExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionary_JSONExtensions.h; sourceTree = "<group>"; };
+		F3A33808158A3B7100DAA0FC /* NSDictionary_JSONExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSDictionary_JSONExtensions.m; sourceTree = "<group>"; };
+		F3A33809158A3B7100DAA0FC /* NSScanner_Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSScanner_Extensions.h; sourceTree = "<group>"; };
+		F3A3380A158A3B7100DAA0FC /* NSScanner_Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSScanner_Extensions.m; sourceTree = "<group>"; };
+		F3A3380C158A3B7100DAA0FC /* CJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDataSerializer.h; sourceTree = "<group>"; };
+		F3A3380D158A3B7100DAA0FC /* CJSONDataSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDataSerializer.m; sourceTree = "<group>"; };
+		F3A3380E158A3B7100DAA0FC /* CJSONDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDeserializer.h; sourceTree = "<group>"; };
+		F3A3380F158A3B7100DAA0FC /* CJSONDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONDeserializer.m; sourceTree = "<group>"; };
+		F3A33810158A3B7100DAA0FC /* CJSONScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONScanner.h; sourceTree = "<group>"; };
+		F3A33811158A3B7100DAA0FC /* CJSONScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONScanner.m; sourceTree = "<group>"; };
+		F3A33812158A3B7100DAA0FC /* CJSONSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONSerializer.h; sourceTree = "<group>"; };
+		F3A33813158A3B7100DAA0FC /* CJSONSerializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CJSONSerializer.m; sourceTree = "<group>"; };
+		F3A33814158A3B7100DAA0FC /* CSerializedJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSerializedJSONData.h; sourceTree = "<group>"; };
+		F3A33815158A3B7100DAA0FC /* CSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSerializedJSONData.m; sourceTree = "<group>"; };
+		F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F3A3378B158A379100DAA0FC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A33821158A3C6B00DAA0FC /* MobileCoreServices.framework in Frameworks */,
+				F3A337BD158A385300DAA0FC /* AudioToolbox.framework in Frameworks */,
+				F3A337BE158A385300DAA0FC /* AVFoundation.framework in Frameworks */,
+				F3A337BF158A385300DAA0FC /* CFNetwork.framework in Frameworks */,
+				F3A337C0158A385300DAA0FC /* CoreLocation.framework in Frameworks */,
+				F3A337C1158A385300DAA0FC /* CoreTelephony.framework in Frameworks */,
+				F3A337C2158A385300DAA0FC /* iAd.framework in Frameworks */,
+				F3A337C3158A385300DAA0FC /* libz.1.2.5.dylib in Frameworks */,
+				F3A337C4158A385300DAA0FC /* MediaPlayer.framework in Frameworks */,
+				F3A337C5158A385300DAA0FC /* MessageUI.framework in Frameworks */,
+				F3A337C6158A385300DAA0FC /* QuartzCore.framework in Frameworks */,
+				F3A337C7158A385300DAA0FC /* SystemConfiguration.framework in Frameworks */,
+				F3A33793158A379100DAA0FC /* UIKit.framework in Frameworks */,
+				F3A33795158A379100DAA0FC /* Foundation.framework in Frameworks */,
+				F3A33797158A379100DAA0FC /* CoreGraphics.framework in Frameworks */,
+				F3A337F7158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a in Frameworks */,
+				F3A337FA158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F3A33783158A379000DAA0FC = {
+			isa = PBXGroup;
+			children = (
+				F3A33798158A379100DAA0FC /* MalcomDemoWithStaticLibrary */,
+				F3A33791158A379100DAA0FC /* Frameworks */,
+				F3A3378F158A379100DAA0FC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F3A3378F158A379100DAA0FC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F3A33791158A379100DAA0FC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */,
+				F3A337B2158A385300DAA0FC /* AudioToolbox.framework */,
+				F3A337B3158A385300DAA0FC /* AVFoundation.framework */,
+				F3A337B4158A385300DAA0FC /* CFNetwork.framework */,
+				F3A337B5158A385300DAA0FC /* CoreLocation.framework */,
+				F3A337B6158A385300DAA0FC /* CoreTelephony.framework */,
+				F3A337B7158A385300DAA0FC /* iAd.framework */,
+				F3A337B8158A385300DAA0FC /* libz.1.2.5.dylib */,
+				F3A337B9158A385300DAA0FC /* MediaPlayer.framework */,
+				F3A337BA158A385300DAA0FC /* MessageUI.framework */,
+				F3A337BB158A385300DAA0FC /* QuartzCore.framework */,
+				F3A337BC158A385300DAA0FC /* SystemConfiguration.framework */,
+				F3A33792158A379100DAA0FC /* UIKit.framework */,
+				F3A33794158A379100DAA0FC /* Foundation.framework */,
+				F3A33796158A379100DAA0FC /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F3A33798158A379100DAA0FC /* MalcomDemoWithStaticLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337FF158A3B7100DAA0FC /* TouchJSON */,
+				F3A337FE158A3A5000DAA0FC /* MCMDefine.h */,
+				F3A337C8158A392700DAA0FC /* MCMLib */,
+				F3A337A1158A379100DAA0FC /* AppDelegate.h */,
+				F3A337A2158A379100DAA0FC /* AppDelegate.m */,
+				F3A337A4158A379100DAA0FC /* ViewController.h */,
+				F3A337A5158A379100DAA0FC /* ViewController.m */,
+				F3A337A7158A379100DAA0FC /* ViewController_iPhone.xib */,
+				F3A337AA158A379100DAA0FC /* ViewController_iPad.xib */,
+				F3A33799158A379100DAA0FC /* Supporting Files */,
+			);
+			path = MalcomDemoWithStaticLibrary;
+			sourceTree = "<group>";
+		};
+		F3A33799158A379100DAA0FC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F3A3379A158A379100DAA0FC /* MalcomDemoWithStaticLibrary-Info.plist */,
+				F3A3379B158A379100DAA0FC /* InfoPlist.strings */,
+				F3A3379E158A379100DAA0FC /* main.m */,
+				F3A337A0158A379100DAA0FC /* MalcomDemoWithStaticLibrary-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F3A337C8158A392700DAA0FC /* MCMLib */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337C9158A393400DAA0FC /* lib */,
+			);
+			name = MCMLib;
+			sourceTree = "<group>";
+		};
+		F3A337C9158A393400DAA0FC /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337CA158A393400DAA0FC /* ads */,
+				F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */,
+				F3A337E5158A393400DAA0FC /* usr */,
+			);
+			name = lib;
+			path = "../../../Libraries/static library/lib";
+			sourceTree = "<group>";
+		};
+		F3A337CA158A393400DAA0FC /* ads */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337D0158A393400DAA0FC /* headers */,
+				F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */,
+			);
+			path = ads;
+			sourceTree = "<group>";
+		};
+		F3A337D0158A393400DAA0FC /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337D1158A393400DAA0FC /* AdWhirlAdNetworkAdapter.h */,
+				F3A337D2158A393400DAA0FC /* AdWhirlAdNetworkConfig.h */,
+				F3A337D3158A393400DAA0FC /* AdWhirlAdNetworkRegistry.h */,
+				F3A337D4158A393400DAA0FC /* AdWhirlConfig.h */,
+				F3A337D5158A393400DAA0FC /* AdWhirlDelegateProtocol.h */,
+				F3A337D6158A393400DAA0FC /* AdWhirlLog.h */,
+				F3A337D7158A393400DAA0FC /* AdWhirlView.h */,
+				F3A337D8158A393400DAA0FC /* AWNetworkReachabilityDelegate.h */,
+				F3A337D9158A393400DAA0FC /* AWNetworkReachabilityWrapper.h */,
+				F3A337DA158A393400DAA0FC /* MalcomAd.h */,
+				F3A337DB158A393400DAA0FC /* MCMAdAdapter.h */,
+				F3A337DC158A393400DAA0FC /* MCMAdManager.h */,
+			);
+			path = headers;
+			sourceTree = "<group>";
+		};
+		F3A337E5158A393400DAA0FC /* usr */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337E6158A393400DAA0FC /* local */,
+			);
+			path = usr;
+			sourceTree = "<group>";
+		};
+		F3A337E6158A393400DAA0FC /* local */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337E7158A393400DAA0FC /* include */,
+			);
+			path = local;
+			sourceTree = "<group>";
+		};
+		F3A337E7158A393400DAA0FC /* include */ = {
+			isa = PBXGroup;
+			children = (
+				F3A337E8158A393400DAA0FC /* MalcomLib.h */,
+				F3A337E9158A393400DAA0FC /* MCMApplicationDelegate.h */,
+				F3A337EA158A393400DAA0FC /* MCMConfigAdapter.h */,
+				F3A337EB158A393400DAA0FC /* MCMConfigSplashViewController.h */,
+				F3A337EC158A393400DAA0FC /* MCMCore.h */,
+				F3A337ED158A393400DAA0FC /* MCMCoreManager.h */,
+				F3A337EE158A393400DAA0FC /* MCMLib.h */,
+				F3A337EF158A393400DAA0FC /* MCMLog.h */,
+				F3A337F0158A393400DAA0FC /* MCMModuleAdapter.h */,
+				F3A337F1158A393400DAA0FC /* MCMNotificationsAdapter.h */,
+				F3A337F2158A393400DAA0FC /* MCMStatsAdapter.h */,
+				F3A337F3158A393400DAA0FC /* MCMViewController.h */,
+				F3A337F4158A393400DAA0FC /* UITabBarController+MCMConfig.h */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		F3A337FF158A3B7100DAA0FC /* TouchJSON */ = {
+			isa = PBXGroup;
+			children = (
+				F3A33800158A3B7100DAA0FC /* CDataScanner.h */,
+				F3A33801158A3B7100DAA0FC /* CDataScanner.m */,
+				F3A33802158A3B7100DAA0FC /* Extensions */,
+				F3A3380B158A3B7100DAA0FC /* JSON */,
+			);
+			name = TouchJSON;
+			path = ../../../Libraries/external/TouchJSON;
+			sourceTree = "<group>";
+		};
+		F3A33802158A3B7100DAA0FC /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				F3A33803158A3B7100DAA0FC /* CDataScanner_Extensions.h */,
+				F3A33804158A3B7100DAA0FC /* CDataScanner_Extensions.m */,
+				F3A33805158A3B7100DAA0FC /* NSCharacterSet_Extensions.h */,
+				F3A33806158A3B7100DAA0FC /* NSCharacterSet_Extensions.m */,
+				F3A33807158A3B7100DAA0FC /* NSDictionary_JSONExtensions.h */,
+				F3A33808158A3B7100DAA0FC /* NSDictionary_JSONExtensions.m */,
+				F3A33809158A3B7100DAA0FC /* NSScanner_Extensions.h */,
+				F3A3380A158A3B7100DAA0FC /* NSScanner_Extensions.m */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		F3A3380B158A3B7100DAA0FC /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				F3A3380C158A3B7100DAA0FC /* CJSONDataSerializer.h */,
+				F3A3380D158A3B7100DAA0FC /* CJSONDataSerializer.m */,
+				F3A3380E158A3B7100DAA0FC /* CJSONDeserializer.h */,
+				F3A3380F158A3B7100DAA0FC /* CJSONDeserializer.m */,
+				F3A33810158A3B7100DAA0FC /* CJSONScanner.h */,
+				F3A33811158A3B7100DAA0FC /* CJSONScanner.m */,
+				F3A33812158A3B7100DAA0FC /* CJSONSerializer.h */,
+				F3A33813158A3B7100DAA0FC /* CJSONSerializer.m */,
+				F3A33814158A3B7100DAA0FC /* CSerializedJSONData.h */,
+				F3A33815158A3B7100DAA0FC /* CSerializedJSONData.m */,
+			);
+			path = JSON;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F3A3378D158A379100DAA0FC /* MalcomDemoWithStaticLibrary */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F3A337AF158A379100DAA0FC /* Build configuration list for PBXNativeTarget "MalcomDemoWithStaticLibrary" */;
+			buildPhases = (
+				F3A3378A158A379100DAA0FC /* Sources */,
+				F3A3378B158A379100DAA0FC /* Frameworks */,
+				F3A3378C158A379100DAA0FC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MalcomDemoWithStaticLibrary;
+			productName = MalcomDemoWithStaticLibrary;
+			productReference = F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F3A33785158A379100DAA0FC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+				ORGANIZATIONNAME = Malcom;
+			};
+			buildConfigurationList = F3A33788158A379100DAA0FC /* Build configuration list for PBXProject "MalcomDemoWithStaticLibrary" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F3A33783158A379000DAA0FC;
+			productRefGroup = F3A3378F158A379100DAA0FC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F3A3378D158A379100DAA0FC /* MalcomDemoWithStaticLibrary */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F3A3378C158A379100DAA0FC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A3379D158A379100DAA0FC /* InfoPlist.strings in Resources */,
+				F3A337A9158A379100DAA0FC /* ViewController_iPhone.xib in Resources */,
+				F3A337AC158A379100DAA0FC /* ViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F3A3378A158A379100DAA0FC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F3A3379F158A379100DAA0FC /* main.m in Sources */,
+				F3A337A3158A379100DAA0FC /* AppDelegate.m in Sources */,
+				F3A337A6158A379100DAA0FC /* ViewController.m in Sources */,
+				F3A33816158A3B7100DAA0FC /* CDataScanner.m in Sources */,
+				F3A33817158A3B7100DAA0FC /* CDataScanner_Extensions.m in Sources */,
+				F3A33818158A3B7100DAA0FC /* NSCharacterSet_Extensions.m in Sources */,
+				F3A33819158A3B7100DAA0FC /* NSDictionary_JSONExtensions.m in Sources */,
+				F3A3381A158A3B7100DAA0FC /* NSScanner_Extensions.m in Sources */,
+				F3A3381B158A3B7100DAA0FC /* CJSONDataSerializer.m in Sources */,
+				F3A3381C158A3B7100DAA0FC /* CJSONDeserializer.m in Sources */,
+				F3A3381D158A3B7100DAA0FC /* CJSONScanner.m in Sources */,
+				F3A3381E158A3B7100DAA0FC /* CJSONSerializer.m in Sources */,
+				F3A3381F158A3B7100DAA0FC /* CSerializedJSONData.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F3A3379B158A379100DAA0FC /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3A3379C158A379100DAA0FC /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F3A337A7158A379100DAA0FC /* ViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3A337A8158A379100DAA0FC /* en */,
+			);
+			name = ViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		F3A337AA158A379100DAA0FC /* ViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F3A337AB158A379100DAA0FC /* en */,
+			);
+			name = ViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F3A337AD158A379100DAA0FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		F3A337AE158A379100DAA0FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F3A337B0158A379100DAA0FC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Prefix.pch";
+				INFOPLIST_FILE = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Libraries/static library/lib/ads\"",
+					"\"$(SRCROOT)/../../Libraries/static library/lib\"",
+				);
+				OTHER_CFLAGS = "-DDISTRIBUTION=0";
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F3A337B1158A379100DAA0FC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Prefix.pch";
+				INFOPLIST_FILE = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Libraries/static library/lib/ads\"",
+					"\"$(SRCROOT)/../../Libraries/static library/lib\"",
+				);
+				OTHER_CFLAGS = (
+					"-DNS_BLOCK_ASSERTIONS=1",
+					"-DDISTRIBUTION=1",
+				);
+				OTHER_LDFLAGS = (
+					"-all_load",
+					"-ObjC",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F3A33788158A379100DAA0FC /* Build configuration list for PBXProject "MalcomDemoWithStaticLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A337AD158A379100DAA0FC /* Debug */,
+				F3A337AE158A379100DAA0FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F3A337AF158A379100DAA0FC /* Build configuration list for PBXNativeTarget "MalcomDemoWithStaticLibrary" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F3A337B0158A379100DAA0FC /* Debug */,
+				F3A337B1158A379100DAA0FC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F3A33785158A379100DAA0FC /* Project object */;
+}
