@@ -14,7 +14,7 @@ Integración
         git://github.com/MyMalcom/malcom-lib-ios.git
     
 * Añade una de lasa dos versiones de la librería:
-    * Librería estática:
+    * Librería estática: Añadir la carpeta de la librería estática. Si no se quiere añadir el módulo de publicidad no es necesario añadir la carpeta ads. Hay que añadir también la librería TouchJSON que está en el directorio "External".
     * Código fuente: Se añade el código al proyecto. En el caso de que no se quiera usar alguno de los módulos (Configuración, Publicidad, Notificaciones o Estadísticas) se puede borrar su correspondiente carpeta.
 
 * Añadir los siguientes frameworks al proyecto:
