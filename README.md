@@ -15,7 +15,7 @@ Integración
     
 * Añade una de lasa dos versiones de la librería:
     * Librería estática:
-    * Código fuente: 
+    * Código fuente: Se añade el código al proyecto. En el caso de que no se quiera usar alguno de los módulos (Configuración, Publicidad, Notificaciones o Estadísticas) se puede borrar su correspondiente carpeta.
 
 * Añadir los siguientes frameworks al proyecto:
 
@@ -37,7 +37,7 @@ Integración
         
         -DDISTRIBUTION=1
 
-* Add in "Other link Flags"
+* Añadir en "Other link Flags"
        
         -all_load -ObjC 
 
@@ -47,6 +47,105 @@ Sample App
 
 Usando la librería
 ------------------
+
+Inicializar:
+
+Para inicializar malcom en la aplicación hay que importar la librería MCMLib.h
+
+		#import "MalcomLib.h"
+
+y hacer uso del siguiente método:
+
+		[MalcomLib initWithUUID:@"UUID" 
+                   andSecretKey:@"SECRETKEY" 
+                       withAdId:@"ADID"];
+                       
+Pasándole los datos que se proporcionan en la configuración de su aplicación.
+
+Si queremos que aparezca por consola el log de Malcom hay que usar este método:
+
+	[MalcomLib showLog:YES];
+
+Configuración:
+
+Llamar al siguiente método:
+
+	[MalcomLib loadConfiguration:viewController withDelegate:delegate withLabel:NO];
+	
+Donde el primer parámetro será la vista donde se cargará la configuración, el segundo su delegado y el tercero si desea que aparezca o no el label con la información de descarga de la configuración.
+
+Notificaciones:
+
+Previamente hay que tener definido la variable -DDISTRIBUTION=1 en el entorno de producción, tal y como se indicó en el punto de la integración.
+En el método didFinishLaunchingWithOptions de la clase AppDelegate hay que añadir este código:
+
+	#if DISTRIBUTION
+	    
+	    [MalcomLib startNotifications:application withOptions:launchOptions isDevelopmentMode:NO];
+	    
+	#else
+	    
+	    [MalcomLib startNotifications:application withOptions:launchOptions isDevelopmentMode:YES];
+	    
+	#endif
+	
+Y en el AppDelegate se añaden los siguientes métodos:
+
+	- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
+	    
+	    [MalcomLib didRegisterForRemoteNotificationsWithDeviceToken:devToken];
+	    
+	}
+	
+	- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+	    
+	    [MalcomLib didFailToRegisterForRemoteNotificationsWithError:err];
+	    
+	}
+	
+	- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+	    
+	    [MalcomLib didReceiveRemoteNotification:userInfo active:NO];
+	    
+	}
+
+Estadísticas:
+
+Para el uso de estadísticas, en primer lugar hay que inicializarlas en los métodos didFinishLaunchingWithOption, applicationWillEnterForeground y applicationDidBecomeActive de la clase AppDelegate de la siguiente forma:
+
+	[MalcomLib initAndStartBeacon:YES useOnlyWiFi:YES];
+	
+Donde el primer parámetro es si queremos utilizar geolocalización (solo usar si la aplicación ya lo necesitaba) y el segundo para enviar las estadísticas solo con conexión wifi.
+
+Una vez hecho esto tenemos el siguiente método:
+
+	[MalcomLib endBeacon];
+	
+el cual se usará cuando salgamos de la aplicación, es decir, en los métodos applicationDidEnterBackground y applicationWillTerminate.
+
+Y para obtener estadística de diferentes acciones, vistas, etc. tenemos:
+
+Para comenzar a registrar la estadística:
+
+	[MalcomLib startBeaconWithName:@"ViewController"];
+	
+
+Para terminar y enviar la estadística:
+	
+	[MalcomLib endBeaconWithName:@"ViewController"];
+	
+
+Publicidad:
+
+Para añadir la publicidad a una vista usaremos el siguiente método:
+
+	[MalcomAd presentAd:viewController atPosition:point];
+	
+Donde viewController es la vista donde la queremos mostrar (si es en la vista donde nos encontramos usaremos 'self', y point la posición.
+
+Si queremos indicar el tamaño de la publicidad, podemos usar el siguiente método:
+
+	[MalcomAd presentAd:viewController atPosition:point withSize:size];
 
 Change log
 ----------
