@@ -43,7 +43,7 @@
     
     [MalcomLib showLog:YES];
     
-    [MalcomLib loadConfiguration:self.viewController withDelegate:self withLabel:NO];
+    [MalcomLib loadConfiguration:self.viewController withDelegate:self withSplash:YES];
     
     [MalcomLib initAndStartBeacon:YES useOnlyWiFi:YES];
     

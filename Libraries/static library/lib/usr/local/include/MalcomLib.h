@@ -58,6 +58,13 @@
  */
 + (void)showLog:(BOOL)logActivated;
 
+/**
+ Get Malcom udid
+ return get malcom udid from device
+ @since 2.0.0
+ */
++ (NSString *)getUDID;
+
 //  CONFIGURATION
 
 /**

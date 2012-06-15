@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
+#import <CoreLocation/CoreLocation.h>
 
 /**
  Class that manages the methods of Malcom Library. It's responsable of all Malcom's modules: 
@@ -56,6 +57,13 @@
  @since 2.0.0
  */
 + (void)showLog:(BOOL)logActivated;
+
+/**
+ Get Malcom udid
+ return get malcom udid from device
+ @since 2.0.0
+ */
++ (NSString *)getUDID;
 
 //  CONFIGURATION
 
@@ -129,6 +137,13 @@
  @since 2.0.0
  */
 + (NSArray *) getTags;
+
+/**
+ Get location
+ return location User Location
+ @since 2.0.0
+ */
++ (CLLocation *) getLocation;
 
 //  Notifications
 

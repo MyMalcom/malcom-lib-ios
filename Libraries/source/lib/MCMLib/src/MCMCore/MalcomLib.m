@@ -69,16 +69,18 @@
         
     }
     
-    // Install Crash Manager
-	//[[CrashManager sharedInstance] manageCrashes];
-	//[[CrashManager sharedInstance] setCrashDelegate:self selector:@selector(notifyException:stackTrace:)];
-    
 }
 
 + (void)showLog:(BOOL)logActivated {
     
     [[NSUserDefaults standardUserDefaults]  setObject:[NSNumber numberWithBool:logActivated]  forKey:KMCMLogActivated];
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
+
++ (NSString *)getUDID {
+    
+    return [MCMCoreUtils uniqueIdentifier];
     
 }
 
@@ -189,6 +191,12 @@
 
 }
 
++ (CLLocation *) getLocation {
+    
+    return [MCMStatsManager sharedInstance].location;
+    
+}
+
 //  Notifications
 
 + (void)startNotifications:(UIApplication *)application withOptions:(NSDictionary *)launchOptions isDevelopmentMode:(BOOL)developmentMode {
@@ -286,21 +294,5 @@
     }
     
 }
-
-/*- (void) notifyException:(NSException*) exception stackTrace:(NSArray*) stackTrace
-{
-	// Oh no!  We crashed!
-	// Time to output some stuff to the console.
-	
-	// Note: Any EXC_BAD_ACCESS crashes (such as accessing a deallocated object) will
-	// cause the app to close stdout, so you won't see this trace in such a case.
-    
-	NSLog(@"Exception:\n%@\n", exception);
-    
-	NSLog(@"Full Trace:\n%@\n", [[StackTracer sharedInstance] printableTrace:stackTrace]);
-    
-	NSArray* intelligentTrace = [[StackTracer sharedInstance] intelligentTrace:stackTrace];
-	NSLog(@"Condensed Intelligent Trace:\n%@", [[StackTracer sharedInstance] condensedPrintableTrace:intelligentTrace]);
-}*/
 
 @end
