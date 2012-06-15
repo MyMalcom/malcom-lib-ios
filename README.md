@@ -37,13 +37,14 @@ Integración
         
         -DDISTRIBUTION=1
 
-* Añadir en "Other link Flags"
+* Añadir en "Other link Flags" (en todos los entornos)
        
         -all_load -ObjC 
 
 Sample App
 ----------
 
+En el directorio Samples hay dos proyectos de ejemplo con la integración de los dos formatos de la librería.
 
 Usando la librería
 ------------------
