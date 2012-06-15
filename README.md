@@ -151,6 +151,31 @@ Si queremos indicar el tamaño de la publicidad, podemos usar el siguiente méto
 Change log
 ----------
 
+v2.0.0
+
+Remodelación total de la librería haciendo mucho más adaptable a los deseos del desarrollador.
+
+	* MCMCore
+		* Nuevo método para la inicialización de Malcom de forma que no sea necesario usar MCMCore-Info.plist.
+		* Método para la activación/desactivación del log de Malcom
+		* Método para la obtención del udid de Malcom.
+
+	* MCMConfig
+		* Método para poder lanzar la configuración de Malcom, en cualquier lugar de la aplicación (no necesariamente al arrancar), teniendo la opción de mostrar o no la splash o el label.
+		* Método más accesible para obtener variables de la configuración avanzada.
+
+	* MCMStats
+		* Los métodos para enviar las estadísticas se ponen accesible para que sean usados a gusto del desarrollador.
+		* Cambios en los datos que se envían a Malcom.
+
+	* MCMAd
+		* Método para añadir la publicidad en cualquier vista de forma sencilla y configurable en posición y tamaño.
+		* Facilidad para añadir proveedores de publicidad no soportados por defecto por Malcom.
+
+	* MCMNotifications
+		* Extracción de los métodos para que sean usados por el desarrollador
+		* Cambio en la metodología para registrar las notificaciones en sandox o producción.
+
 v1.3.3
 
 Se muestra un error cuando se compile para release o distribution y no esté la variable DISTRIBUTION a 1. De esta forma se intenta evitar enviar a la App Store aplicaciones que registren en SANDBOX. Se soluciona también un problema que había con la SPLASH en iOS 5.0 o superiores 
