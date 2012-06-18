@@ -1,11 +1,6 @@
 Malcom Lib iOS
 ==============
 
-Intro
------
-
-Intro about malcom-lib-ios
-
 Integración
 ------------
 
