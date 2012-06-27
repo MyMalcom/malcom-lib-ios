@@ -1,18 +1,18 @@
 Malcom Lib iOS
 ==============
 
-Integración
+Integration
 ------------
 
-* Clona este repositorio o descargate el zip:
+* Clone this repository o download the zip:
 
         git://github.com/MyMalcom/malcom-lib-ios.git
     
-* Añade una de lasa dos versiones de la librería:
-    * Librería estática: Añadir la carpeta de la librería estática. Si no se quiere añadir el módulo de publicidad no es necesario añadir la carpeta ads. Hay que añadir también la librería TouchJSON que está en el directorio "External".
-    * Código fuente: Se añade el código al proyecto. En el caso de que no se quiera usar alguno de los módulos (Configuración, Publicidad, Notificaciones o Estadísticas) se puede borrar su correspondiente carpeta.
+* Add one of versions avaibles of library:
+    * Static library: Add the folder of static library. If you wan't ad module, don't add 'ads' folder. Add TouchJSON library which is in 'External' folder.
+    * Source library: Add source in project. In case that you wan't use any module (Configuration, Ad, Notifications or Stats) you can delete the folder.
 
-* Añadir los siguientes frameworks al proyecto:
+* Add this frameworks to project:
 
    * MediaPlayer.framework
    * AVFoundation.framework
@@ -28,52 +28,52 @@ Integración
    * iAd.framework (solo necesario si se añade el módulo de publicidad)
 
 
-* Añadir en "Other C Flags", en el entorno de producción:
+* Add in "Other C Flags", in production:
         
         -DDISTRIBUTION=1
 
-* Añadir en "Other link Flags" (en todos los entornos)
+* Add in "Other link Flags"
        
         -all_load -ObjC 
 
 Sample App
 ----------
 
-En el directorio Samples hay dos proyectos de ejemplo con la integración de los dos formatos de la librería.
+In Samples folder there are two projects, each one of them with a integration type different.
 
-Usando la librería
+Using library
 ------------------
 
-Inicializar:
+Init:
 
-Para inicializar malcom en la aplicación hay que importar la librería MCMLib.h
+First, import MCMLib.h
 
 		#import "MalcomLib.h"
 
-y hacer uso del siguiente método:
+and add this method:
 
 		[MalcomLib initWithUUID:@"UUID" 
                    andSecretKey:@"SECRETKEY" 
                        withAdId:@"ADID"];
                        
-Pasándole los datos que se proporcionan en la configuración de su aplicación.
+With the params of your app in Malcom
 
-Si queremos que aparezca por consola el log de Malcom hay que usar este método:
+If you want that show log for console, use it:
 
 	[MalcomLib showLog:YES];
 
-Configuración:
+Configuration:
 
-Llamar al siguiente método:
+Call this method
 
 	[MalcomLib loadConfiguration:viewController withDelegate:delegate withLabel:NO];
 	
-Donde el primer parámetro será la vista donde se cargará la configuración, el segundo su delegado y el tercero si desea que aparezca o no el label con la información de descarga de la configuración.
+Where first param is view where configuration is charged, secund is delegate and third is appear or not label in splash.
 
-Notificaciones:
+Notifications:
 
-Previamente hay que tener definido la variable -DDISTRIBUTION=1 en el entorno de producción, tal y como se indicó en el punto de la integración.
-En el método didFinishLaunchingWithOptions de la clase AppDelegate hay que añadir este código:
+You must have defined -DDISTRIBUTION=1 in production enviorement.
+In didFinishLaunchingWithOptions, class AppDelegate add this code:
 
 	#if DISTRIBUTION
 	    
@@ -85,7 +85,7 @@ En el método didFinishLaunchingWithOptions de la clase AppDelegate hay que aña
 	    
 	#endif
 	
-Y en el AppDelegate se añaden los siguientes métodos:
+And, in AppDelegate, add this methods:
 
 	- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
 	    
@@ -105,231 +105,40 @@ Y en el AppDelegate se añaden los siguientes métodos:
 	    
 	}
 
-Estadísticas:
+Stats:
 
-Para el uso de estadísticas, en primer lugar hay que inicializarlas en los métodos didFinishLaunchingWithOption, applicationWillEnterForeground y applicationDidBecomeActive de la clase AppDelegate de la siguiente forma:
+First, you must init in didFinishLaunchingWithOption, applicationWillEnterForeground y applicationDidBecomeActive methods of class AppDelegate whith this method:
 
 	[MalcomLib initAndStartBeacon:YES useOnlyWiFi:YES];
 	
-Donde el primer parámetro es si queremos utilizar geolocalización (solo usar si la aplicación ya lo necesitaba) y el segundo para enviar las estadísticas solo con conexión wifi.
+First param is if app use geolocation and second is for send stats only with wifi connection.
 
-Una vez hecho esto tenemos el siguiente método:
+This method:
 
 	[MalcomLib endBeacon];
 	
-el cual se usará cuando salgamos de la aplicación, es decir, en los métodos applicationDidEnterBackground y applicationWillTerminate.
+is used when app exit or background in applicationDidEnterBackground and applicationWillTerminate methods.
 
-Y para obtener estadística de diferentes acciones, vistas, etc. tenemos:
+For get stats of actions, views, etc, you must use:
 
-Para comenzar a registrar la estadística:
+For start:
 
 	[MalcomLib startBeaconWithName:@"ViewController"];
 	
 
-Para terminar y enviar la estadística:
+For end and send:
 	
 	[MalcomLib endBeaconWithName:@"ViewController"];
 	
 
-Publicidad:
+Ads:
 
-Para añadir la publicidad a una vista usaremos el siguiente método:
+For add :
 
 	[MalcomAd presentAd:viewController atPosition:point];
 	
-Donde viewController es la vista donde la queremos mostrar (si es en la vista donde nos encontramos usaremos 'self', y point la posición.
+where viewController is view where ads is showed, and point is position.
 
-Si queremos indicar el tamaño de la publicidad, podemos usar el siguiente método:
+If you want add the size of ads, use this method:
 
 	[MalcomAd presentAd:viewController atPosition:point withSize:size];
-
-Change log
-----------
-
-v2.0.0
-
-Remodelación total de la librería haciendo mucho más adaptable a los deseos del desarrollador.
-
-	* MCMCore
-		* Nuevo método para la inicialización de Malcom de forma que no sea necesario usar MCMCore-Info.plist.
-		* Método para la activación/desactivación del log de Malcom
-		* Método para la obtención del udid de Malcom.
-
-	* MCMConfig
-		* Método para poder lanzar la configuración de Malcom, en cualquier lugar de la aplicación (no necesariamente al arrancar), teniendo la opción de mostrar o no la splash o el label.
-		* Método más accesible para obtener variables de la configuración avanzada.
-
-	* MCMStats
-		* Los métodos para enviar las estadísticas se ponen accesible para que sean usados a gusto del desarrollador.
-		* Cambios en los datos que se envían a Malcom.
-
-	* MCMAd
-		* Método para añadir la publicidad en cualquier vista de forma sencilla y configurable en posición y tamaño.
-		* Facilidad para añadir proveedores de publicidad no soportados por defecto por Malcom.
-
-	* MCMNotifications
-		* Extracción de los métodos para que sean usados por el desarrollador
-		* Cambio en la metodología para registrar las notificaciones en sandox o producción.
-
-v1.3.3
-
-Se muestra un error cuando se compile para release o distribution y no esté la variable DISTRIBUTION a 1. De esta forma se intenta evitar enviar a la App Store aplicaciones que registren en SANDBOX. Se soluciona también un problema que había con la SPLASH en iOS 5.0 o superiores 
-    
-    * MCMCore
-    	* Se muestra un error cuando se compile para release o distribution y no esté la variable DISTRIBUTION a 1.
-    
-    * MCMConfig
-    	* Bug: Se soluciona también un problema que había con la SPLASH en iOS 5.0 o superiores.
-
-v1.3.2
-
-Corrección de un bug en el control de las versiones del módulo de configuración y creación de un método en el módulo de la publicidad para poder cambiar la posición del banner
-
-	* MCMAd
-	    * Posición del banner: Creación de un método para poder cambiar la posición del banner.
-
-	* MCMConfig
-	    * Bug: Corregido el problema con el control de las versiones del módulo de configuración
-
-
-
-v1.3.1
-
-Modificación de la configuración y otros bugs menores
-
-	* MCMConfig
-	
-	  * Se modifica la forma de obtener los datos de configuración para mostrar las diferentes alertas.
-	  * Se podrá mostrar a la vez tanto la alerta como un intersitial (web). 
-
-
-v1.3.0
-
-Modificación de librerías y otros bugs menores
-
-	* MCMAd
-	    *Other: Eliminada Admob para reducir peso de la librería
-
-	* MCMNotifications
-	    * Bug: Corregido el problema con la lectura y borrado del badge de las notificaciones
-
-	* Externas
-	    * Feature: Modificados los nombres de las clases y constantes para evitar error de duplicidad durante el compilado
-
-
-v1.2.1
-
-Actualización para SDK5
-
-	* MCAddons
-	    * Other: Actualización para SDK5
-
-	* MCMAd
-	    * Bug: Crash cuando se incluía este módulo sin AdWhirlId configurado
-
-	* MCMCore
-	    * Other: Actualización para SDK5
-
-	* MCMConfig
-	    * Other: Actualización para SDK5
-
-
-v1.2.0
-
-Actualización de APIs, inclusión de seguridad y otras mejoras menores
-
-	* MCMCore
-	    * Feature: Incluido nuevo request para comunicaciones seguras mediante HMAC
-	    * Optimización: Modificados system version para que lleve información del iOS (compatibilidad con Android)
-	    * Other: Apuntado a nuevo entorno en mymalcom.com
-
-	* MCMConfig
-	    * Feature: Actualización API con soporte para segmentación de usuarios
-
-	* MCMNotifications
-	    * Other: Modificada API de registro para compatibilidad con v2 de Malcom
-	    * Bug: Corregido captura de NotificationId para medir la eficacia de las Push
-	    * Optimización: Introducido autenticación HMAC
-
-	* MCMStats
-	    * Feature: Actualización API con soporte para envío de múltiples beacons
-	    * Optimización: Eliminado envío directo a cola SQS. Ahora se hace a través del API con autenticación HMAC
-
-
-v1.1.0 
-
-Inclusión de AddOns, actualización de eventos del Core y mejoras en módulo de publicidad
-
-	* MCAddons
-	    * Feature: Incluida sección tipo Web
-	    * Feature: Incluida sección tipo RSS/Atom de noticias
-	    * Feature: Incluida sección tipo galería de fotos
-
-	* MCMAd
-	    * Feature: Soporte para APIs con opción de testMode
-	    * Feature: Soporte para rotación
-	    * Feature: Soporte para tamaños de banner no standard
-	    * Feature: Agregada posibilidad de controlar aparición de publicidad a nivel de controlador mediante protocolo
-
-	* MCMCore
-	    * Other: Modificados los eventos del ModuleAdapter para simplificar y agregar rotaciones
-
-
-v1.0.3
-
-Inclusión de librerías de terceros en módulo de publicidad, distinción de entornos (developement/production) y otras pequeñas mejoras y bugs
-
-	* MCMAd
-	    * Feature: Incluida primera versión del módulo con publicidad de AdMob, iAd y inHouse
-
-	* MCMConfig
-	    * Bug: Creada UIWindow programáticamente si no estaba asignada desde .xib
-	    * Bug: Utilizada correctamente la tabBar si ya se había creado por el developer
-	    * Feature: Soporte para splash en iOS anteriores a 4.0
-	    * Optimización: Evitada la carga de secciones si no está activo el módulo
-
-	* MCMCore
-	    * Feature: Agregada distinción entre entornos de desarrollo y producción
-
-	* MCMStats
-	    * Feature: Agregada información del carrier del dispositivo
-	    * Feature: Agregado soporte para TouchJSON con parámetro de error
-
-	* Example
-	    * Bug: Corregido fallo en gestión de memoria de tags
-	    * Feature: Agregado fichero de configuración apuntando a Malcom3 en modo debug
-	    * Feature: Creado nuevo info-plist para tener dos apps diferentes según entorno apuntado
-
-
-v1.0.2
-
-Actualización del POC (mejoras gráficas y formatos RSS/Atom) y otras pequeñas mejoras y bugs
-
-	* MCMAds
-	    * Feature: Configurada librería de AdWhirl para apuntar a entorno Malcom
-	    * Bug: Implementados delegados para evitar que la vista banner tape algún control mientras está cargando
-
-	* MCMConfig
-	    * Feature: Agregado parámetro infoMsgTimesToShow a las alertas para controlar número de repeticiones
-
-	* MCMCore
-	    * Bug: Corregido método de lenguaje para adaptarlo a ISO (ej: es)
-
-	* MCMNotifications
-	    * Feature: Extraída URL de conexión para apuntar a subdominio tipo apns.malcom
-
-	*   Example
-	    * Feature: Actualizado el POC con nueva librería de RSS y Atom
-	    * Feature: Mejorada apariencia de visor de fotos
-	    * Feature: Actualizado bundleId para nuevos certificados APNS
-
-v1.0.1 
-
-Resueltos varios bugs y optimizaciones en el módulo de configuración
-
-	* MCMConfig
-	    * Optimización: Implementado "if-cache" en peticiones para evitar transferencia de datos innecesaria
-	    * Bug: Corregido error en splash screen en apps con controladores principales no estándar y que soporten rotación
-	    * Feature: Agregada distinción en la carga de la imagen de Default de la  Splash según la orientación del dispositivo
-	    * Bug: Corregido pequeño fallo por el cuál era posible que la splash no se llegara a descargar nunca si el usuario entraba y salía muy rápido de la app justo después de un cambio de imagen
-
