@@ -25,7 +25,7 @@ Integration
    * AudioToolbox.framework
    * MessageUI.framework
    * libz.1.2.5.dylib
-   * iAd.framework (solo necesario si se añade el módulo de publicidad)
+   * iAd.framework (only for ad module)
 
 
 * Add in "Other C Flags", in production:
