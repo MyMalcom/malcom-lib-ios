@@ -40,7 +40,41 @@
 		F3A3381E158A3B7100DAA0FC /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33813158A3B7100DAA0FC /* CJSONSerializer.m */; };
 		F3A3381F158A3B7100DAA0FC /* CSerializedJSONData.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33815158A3B7100DAA0FC /* CSerializedJSONData.m */; };
 		F3A33821158A3C6B00DAA0FC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */; };
+		F3D4FEA9159B169300FD1E5B /* MCMAdManager+CustomEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEA8159B169300FD1E5B /* MCMAdManager+CustomEvent.m */; };
+		F3D4FEDF159B189C00FD1E5B /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEAD159B189C00FD1E5B /* JSONKit.m */; };
+		F3D4FEE0159B189C00FD1E5B /* MadvertiseAd.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEB0159B189C00FD1E5B /* MadvertiseAd.m */; };
+		F3D4FEE1159B189C00FD1E5B /* MadvertiseTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEB3159B189C00FD1E5B /* MadvertiseTracker.m */; };
+		F3D4FEE2159B189C00FD1E5B /* MadvertiseUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEB5159B189C00FD1E5B /* MadvertiseUtilities.m */; };
+		F3D4FEE3159B189C00FD1E5B /* MadvertiseView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEB7159B189C00FD1E5B /* MadvertiseView.m */; };
+		F3D4FEE4159B189C00FD1E5B /* NSString+URLEncoding.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEB9159B189C00FD1E5B /* NSString+URLEncoding.m */; };
+		F3D4FEE5159B189C00FD1E5B /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = F3D4FEBE159B189C00FD1E5B /* LICENSE */; };
+		F3D4FEE6159B189C00FD1E5B /* MPAdBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEC0159B189C00FD1E5B /* MPAdBrowserController.m */; };
+		F3D4FEE7159B189C00FD1E5B /* MPAdBrowserController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F3D4FEC1159B189C00FD1E5B /* MPAdBrowserController.xib */; };
+		F3D4FEE8159B189C00FD1E5B /* MPCloseButtonX.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D4FEC2159B189C00FD1E5B /* MPCloseButtonX.png */; };
+		F3D4FEE9159B189C00FD1E5B /* MPCloseButtonX@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F3D4FEC3159B189C00FD1E5B /* MPCloseButtonX@2x.png */; };
+		F3D4FEEA159B189C00FD1E5B /* MPGlobal.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEC6159B189C00FD1E5B /* MPGlobal.m */; };
+		F3D4FEEB159B189C00FD1E5B /* MPLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEC8159B189C00FD1E5B /* MPLogging.m */; };
+		F3D4FEEC159B189C00FD1E5B /* MPTimer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FECA159B189C00FD1E5B /* MPTimer.m */; };
+		F3D4FEED159B189C00FD1E5B /* MRAdView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FECD159B189C00FD1E5B /* MRAdView.m */; };
+		F3D4FEEE159B189C00FD1E5B /* MRAdViewBrowsingController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FECF159B189C00FD1E5B /* MRAdViewBrowsingController.m */; };
+		F3D4FEEF159B189C00FD1E5B /* MRAdViewDisplayController.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FED1159B189C00FD1E5B /* MRAdViewDisplayController.m */; };
+		F3D4FEF0159B189C00FD1E5B /* MRAID.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F3D4FED2159B189C00FD1E5B /* MRAID.bundle */; };
+		F3D4FEF1159B189C00FD1E5B /* MRCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FED4159B189C00FD1E5B /* MRCommand.m */; };
+		F3D4FEF2159B189C00FD1E5B /* MRDimmingView.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FED6159B189C00FD1E5B /* MRDimmingView.m */; };
+		F3D4FEF3159B189C00FD1E5B /* MRProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FED8159B189C00FD1E5B /* MRProperty.m */; };
+		F3D4FEF4159B189C00FD1E5B /* UIWebView+MPAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEDB159B189C00FD1E5B /* UIWebView+MPAdditions.m */; };
+		F3D4FF00159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = F3D4FEFF159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F3D4FEF6159B189D00FD1E5B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3D4FEBA159B189C00FD1E5B /* madvertise-ios-sdk.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5B4E248713F0323700F67F5A;
+			remoteInfo = "madvertise-ios-sdk";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemoWithStaticLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,6 +151,53 @@
 		F3A33814158A3B7100DAA0FC /* CSerializedJSONData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSerializedJSONData.h; sourceTree = "<group>"; };
 		F3A33815158A3B7100DAA0FC /* CSerializedJSONData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSerializedJSONData.m; sourceTree = "<group>"; };
 		F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		F3D4FEA7159B169300FD1E5B /* MCMAdManager+CustomEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MCMAdManager+CustomEvent.h"; sourceTree = "<group>"; };
+		F3D4FEA8159B169300FD1E5B /* MCMAdManager+CustomEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MCMAdManager+CustomEvent.m"; sourceTree = "<group>"; };
+		F3D4FEAC159B189C00FD1E5B /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
+		F3D4FEAD159B189C00FD1E5B /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
+		F3D4FEAF159B189C00FD1E5B /* MadvertiseAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseAd.h; sourceTree = "<group>"; };
+		F3D4FEB0159B189C00FD1E5B /* MadvertiseAd.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MadvertiseAd.m; sourceTree = "<group>"; };
+		F3D4FEB1159B189C00FD1E5B /* MadvertiseDelegationProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseDelegationProtocol.h; sourceTree = "<group>"; };
+		F3D4FEB2159B189C00FD1E5B /* MadvertiseTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseTracker.h; sourceTree = "<group>"; };
+		F3D4FEB3159B189C00FD1E5B /* MadvertiseTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MadvertiseTracker.m; sourceTree = "<group>"; };
+		F3D4FEB4159B189C00FD1E5B /* MadvertiseUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseUtilities.h; sourceTree = "<group>"; };
+		F3D4FEB5159B189C00FD1E5B /* MadvertiseUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MadvertiseUtilities.m; sourceTree = "<group>"; };
+		F3D4FEB6159B189C00FD1E5B /* MadvertiseView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseView.h; sourceTree = "<group>"; };
+		F3D4FEB7159B189C00FD1E5B /* MadvertiseView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MadvertiseView.m; sourceTree = "<group>"; };
+		F3D4FEB8159B189C00FD1E5B /* NSString+URLEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncoding.h"; sourceTree = "<group>"; };
+		F3D4FEB9159B189C00FD1E5B /* NSString+URLEncoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncoding.m"; sourceTree = "<group>"; };
+		F3D4FEBA159B189C00FD1E5B /* madvertise-ios-sdk.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "madvertise-ios-sdk.xcodeproj"; sourceTree = "<group>"; };
+		F3D4FEBE159B189C00FD1E5B /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		F3D4FEBF159B189C00FD1E5B /* MPAdBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAdBrowserController.h; sourceTree = "<group>"; };
+		F3D4FEC0159B189C00FD1E5B /* MPAdBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPAdBrowserController.m; sourceTree = "<group>"; };
+		F3D4FEC1159B189C00FD1E5B /* MPAdBrowserController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MPAdBrowserController.xib; sourceTree = "<group>"; };
+		F3D4FEC2159B189C00FD1E5B /* MPCloseButtonX.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MPCloseButtonX.png; sourceTree = "<group>"; };
+		F3D4FEC3159B189C00FD1E5B /* MPCloseButtonX@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MPCloseButtonX@2x.png"; sourceTree = "<group>"; };
+		F3D4FEC4159B189C00FD1E5B /* MPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPConstants.h; sourceTree = "<group>"; };
+		F3D4FEC5159B189C00FD1E5B /* MPGlobal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGlobal.h; sourceTree = "<group>"; };
+		F3D4FEC6159B189C00FD1E5B /* MPGlobal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGlobal.m; sourceTree = "<group>"; };
+		F3D4FEC7159B189C00FD1E5B /* MPLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPLogging.h; sourceTree = "<group>"; };
+		F3D4FEC8159B189C00FD1E5B /* MPLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPLogging.m; sourceTree = "<group>"; };
+		F3D4FEC9159B189C00FD1E5B /* MPTimer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPTimer.h; sourceTree = "<group>"; };
+		F3D4FECA159B189C00FD1E5B /* MPTimer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPTimer.m; sourceTree = "<group>"; };
+		F3D4FECB159B189C00FD1E5B /* MRAdView+Controllers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MRAdView+Controllers.h"; sourceTree = "<group>"; };
+		F3D4FECC159B189C00FD1E5B /* MRAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRAdView.h; sourceTree = "<group>"; };
+		F3D4FECD159B189C00FD1E5B /* MRAdView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRAdView.m; sourceTree = "<group>"; };
+		F3D4FECE159B189C00FD1E5B /* MRAdViewBrowsingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRAdViewBrowsingController.h; sourceTree = "<group>"; };
+		F3D4FECF159B189C00FD1E5B /* MRAdViewBrowsingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRAdViewBrowsingController.m; sourceTree = "<group>"; };
+		F3D4FED0159B189C00FD1E5B /* MRAdViewDisplayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRAdViewDisplayController.h; sourceTree = "<group>"; };
+		F3D4FED1159B189C00FD1E5B /* MRAdViewDisplayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRAdViewDisplayController.m; sourceTree = "<group>"; };
+		F3D4FED2159B189C00FD1E5B /* MRAID.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MRAID.bundle; sourceTree = "<group>"; };
+		F3D4FED3159B189C00FD1E5B /* MRCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRCommand.h; sourceTree = "<group>"; };
+		F3D4FED4159B189C00FD1E5B /* MRCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRCommand.m; sourceTree = "<group>"; };
+		F3D4FED5159B189C00FD1E5B /* MRDimmingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRDimmingView.h; sourceTree = "<group>"; };
+		F3D4FED6159B189C00FD1E5B /* MRDimmingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRDimmingView.m; sourceTree = "<group>"; };
+		F3D4FED7159B189C00FD1E5B /* MRProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MRProperty.h; sourceTree = "<group>"; };
+		F3D4FED8159B189C00FD1E5B /* MRProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MRProperty.m; sourceTree = "<group>"; };
+		F3D4FEDA159B189C00FD1E5B /* UIWebView+MPAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+MPAdditions.h"; sourceTree = "<group>"; };
+		F3D4FEDB159B189C00FD1E5B /* UIWebView+MPAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+MPAdditions.m"; sourceTree = "<group>"; };
+		F3D4FEFE159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MadvertiseAdWhirlAdapter.h; sourceTree = "<group>"; };
+		F3D4FEFF159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MadvertiseAdWhirlAdapter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +270,8 @@
 		F3A33798158A379100DAA0FC /* MalcomDemoWithStaticLibrary */ = {
 			isa = PBXGroup;
 			children = (
+				F3D4FEFC159B18B500FD1E5B /* Adapters */,
+				F3D4FEF8159B18A800FD1E5B /* Libraries */,
 				F3A337FF158A3B7100DAA0FC /* TouchJSON */,
 				F3A337FE158A3A5000DAA0FC /* MCMDefine.h */,
 				F3A337C8158A392700DAA0FC /* MCMLib */,
@@ -341,6 +424,125 @@
 			path = JSON;
 			sourceTree = "<group>";
 		};
+		F3D4FEA6159B169300FD1E5B /* CustomEvent */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEA7159B169300FD1E5B /* MCMAdManager+CustomEvent.h */,
+				F3D4FEA8159B169300FD1E5B /* MCMAdManager+CustomEvent.m */,
+			);
+			path = CustomEvent;
+			sourceTree = "<group>";
+		};
+		F3D4FEAB159B189C00FD1E5B /* madvertise_5_0_3 */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEAC159B189C00FD1E5B /* JSONKit.h */,
+				F3D4FEAD159B189C00FD1E5B /* JSONKit.m */,
+				F3D4FEAE159B189C00FD1E5B /* madvertise */,
+				F3D4FEBA159B189C00FD1E5B /* madvertise-ios-sdk.xcodeproj */,
+				F3D4FEBD159B189C00FD1E5B /* MRAID */,
+				F3D4FED9159B189C00FD1E5B /* UIWebView Categories */,
+			);
+			name = madvertise_5_0_3;
+			path = ../../../Libraries/external/madvertise_5_0_3;
+			sourceTree = "<group>";
+		};
+		F3D4FEAE159B189C00FD1E5B /* madvertise */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEAF159B189C00FD1E5B /* MadvertiseAd.h */,
+				F3D4FEB0159B189C00FD1E5B /* MadvertiseAd.m */,
+				F3D4FEB1159B189C00FD1E5B /* MadvertiseDelegationProtocol.h */,
+				F3D4FEB2159B189C00FD1E5B /* MadvertiseTracker.h */,
+				F3D4FEB3159B189C00FD1E5B /* MadvertiseTracker.m */,
+				F3D4FEB4159B189C00FD1E5B /* MadvertiseUtilities.h */,
+				F3D4FEB5159B189C00FD1E5B /* MadvertiseUtilities.m */,
+				F3D4FEB6159B189C00FD1E5B /* MadvertiseView.h */,
+				F3D4FEB7159B189C00FD1E5B /* MadvertiseView.m */,
+				F3D4FEB8159B189C00FD1E5B /* NSString+URLEncoding.h */,
+				F3D4FEB9159B189C00FD1E5B /* NSString+URLEncoding.m */,
+			);
+			path = madvertise;
+			sourceTree = "<group>";
+		};
+		F3D4FEBB159B189C00FD1E5B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEF7159B189D00FD1E5B /* libmadvertise-ios-sdk.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F3D4FEBD159B189C00FD1E5B /* MRAID */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEBE159B189C00FD1E5B /* LICENSE */,
+				F3D4FEBF159B189C00FD1E5B /* MPAdBrowserController.h */,
+				F3D4FEC0159B189C00FD1E5B /* MPAdBrowserController.m */,
+				F3D4FEC1159B189C00FD1E5B /* MPAdBrowserController.xib */,
+				F3D4FEC2159B189C00FD1E5B /* MPCloseButtonX.png */,
+				F3D4FEC3159B189C00FD1E5B /* MPCloseButtonX@2x.png */,
+				F3D4FEC4159B189C00FD1E5B /* MPConstants.h */,
+				F3D4FEC5159B189C00FD1E5B /* MPGlobal.h */,
+				F3D4FEC6159B189C00FD1E5B /* MPGlobal.m */,
+				F3D4FEC7159B189C00FD1E5B /* MPLogging.h */,
+				F3D4FEC8159B189C00FD1E5B /* MPLogging.m */,
+				F3D4FEC9159B189C00FD1E5B /* MPTimer.h */,
+				F3D4FECA159B189C00FD1E5B /* MPTimer.m */,
+				F3D4FECB159B189C00FD1E5B /* MRAdView+Controllers.h */,
+				F3D4FECC159B189C00FD1E5B /* MRAdView.h */,
+				F3D4FECD159B189C00FD1E5B /* MRAdView.m */,
+				F3D4FECE159B189C00FD1E5B /* MRAdViewBrowsingController.h */,
+				F3D4FECF159B189C00FD1E5B /* MRAdViewBrowsingController.m */,
+				F3D4FED0159B189C00FD1E5B /* MRAdViewDisplayController.h */,
+				F3D4FED1159B189C00FD1E5B /* MRAdViewDisplayController.m */,
+				F3D4FED2159B189C00FD1E5B /* MRAID.bundle */,
+				F3D4FED3159B189C00FD1E5B /* MRCommand.h */,
+				F3D4FED4159B189C00FD1E5B /* MRCommand.m */,
+				F3D4FED5159B189C00FD1E5B /* MRDimmingView.h */,
+				F3D4FED6159B189C00FD1E5B /* MRDimmingView.m */,
+				F3D4FED7159B189C00FD1E5B /* MRProperty.h */,
+				F3D4FED8159B189C00FD1E5B /* MRProperty.m */,
+			);
+			path = MRAID;
+			sourceTree = "<group>";
+		};
+		F3D4FED9159B189C00FD1E5B /* UIWebView Categories */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEDA159B189C00FD1E5B /* UIWebView+MPAdditions.h */,
+				F3D4FEDB159B189C00FD1E5B /* UIWebView+MPAdditions.m */,
+			);
+			path = "UIWebView Categories";
+			sourceTree = "<group>";
+		};
+		F3D4FEF8159B18A800FD1E5B /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEAB159B189C00FD1E5B /* madvertise_5_0_3 */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
+		F3D4FEFC159B18B500FD1E5B /* Adapters */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEFD159B18C800FD1E5B /* MadvertiseAdapter */,
+				F3D4FEA6159B169300FD1E5B /* CustomEvent */,
+			);
+			name = Adapters;
+			sourceTree = "<group>";
+		};
+		F3D4FEFD159B18C800FD1E5B /* MadvertiseAdapter */ = {
+			isa = PBXGroup;
+			children = (
+				F3D4FEFE159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.h */,
+				F3D4FEFF159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.m */,
+			);
+			name = MadvertiseAdapter;
+			path = ../../../Adapters/MadvertiseAdapter;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -380,12 +582,28 @@
 			mainGroup = F3A33783158A379000DAA0FC;
 			productRefGroup = F3A3378F158A379100DAA0FC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F3D4FEBB159B189C00FD1E5B /* Products */;
+					ProjectRef = F3D4FEBA159B189C00FD1E5B /* madvertise-ios-sdk.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				F3A3378D158A379100DAA0FC /* MalcomDemoWithStaticLibrary */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		F3D4FEF7159B189D00FD1E5B /* libmadvertise-ios-sdk.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libmadvertise-ios-sdk.a";
+			remoteRef = F3D4FEF6159B189D00FD1E5B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F3A3378C158A379100DAA0FC /* Resources */ = {
@@ -395,6 +613,11 @@
 				F3A3379D158A379100DAA0FC /* InfoPlist.strings in Resources */,
 				F3A337A9158A379100DAA0FC /* ViewController_iPhone.xib in Resources */,
 				F3A337AC158A379100DAA0FC /* ViewController_iPad.xib in Resources */,
+				F3D4FEE5159B189C00FD1E5B /* LICENSE in Resources */,
+				F3D4FEE7159B189C00FD1E5B /* MPAdBrowserController.xib in Resources */,
+				F3D4FEE8159B189C00FD1E5B /* MPCloseButtonX.png in Resources */,
+				F3D4FEE9159B189C00FD1E5B /* MPCloseButtonX@2x.png in Resources */,
+				F3D4FEF0159B189C00FD1E5B /* MRAID.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -418,6 +641,25 @@
 				F3A3381D158A3B7100DAA0FC /* CJSONScanner.m in Sources */,
 				F3A3381E158A3B7100DAA0FC /* CJSONSerializer.m in Sources */,
 				F3A3381F158A3B7100DAA0FC /* CSerializedJSONData.m in Sources */,
+				F3D4FEA9159B169300FD1E5B /* MCMAdManager+CustomEvent.m in Sources */,
+				F3D4FEDF159B189C00FD1E5B /* JSONKit.m in Sources */,
+				F3D4FEE0159B189C00FD1E5B /* MadvertiseAd.m in Sources */,
+				F3D4FEE1159B189C00FD1E5B /* MadvertiseTracker.m in Sources */,
+				F3D4FEE2159B189C00FD1E5B /* MadvertiseUtilities.m in Sources */,
+				F3D4FEE3159B189C00FD1E5B /* MadvertiseView.m in Sources */,
+				F3D4FEE4159B189C00FD1E5B /* NSString+URLEncoding.m in Sources */,
+				F3D4FEE6159B189C00FD1E5B /* MPAdBrowserController.m in Sources */,
+				F3D4FEEA159B189C00FD1E5B /* MPGlobal.m in Sources */,
+				F3D4FEEB159B189C00FD1E5B /* MPLogging.m in Sources */,
+				F3D4FEEC159B189C00FD1E5B /* MPTimer.m in Sources */,
+				F3D4FEED159B189C00FD1E5B /* MRAdView.m in Sources */,
+				F3D4FEEE159B189C00FD1E5B /* MRAdViewBrowsingController.m in Sources */,
+				F3D4FEEF159B189C00FD1E5B /* MRAdViewDisplayController.m in Sources */,
+				F3D4FEF1159B189C00FD1E5B /* MRCommand.m in Sources */,
+				F3D4FEF2159B189C00FD1E5B /* MRDimmingView.m in Sources */,
+				F3D4FEF3159B189C00FD1E5B /* MRProperty.m in Sources */,
+				F3D4FEF4159B189C00FD1E5B /* UIWebView+MPAdditions.m in Sources */,
+				F3D4FF00159B18C800FD1E5B /* MadvertiseAdWhirlAdapter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -560,6 +802,7 @@
 				F3A337B1158A379100DAA0FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
