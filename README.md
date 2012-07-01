@@ -21,12 +21,13 @@ Integration
    * MobileCoreServices.framework
    * QuartzCore.framework
    * CoreTelephony.framework
-   * CoreLocation.framework
+   * CoreLocation.framework (Optional)
    * AudioToolbox.framework
    * MessageUI.framework
    * libz.1.2.5.dylib
    * iAd.framework (only for ad module)
 
+* In target, Link Binary With Libraries, push CoreLocation.framework like 'Optional'.
 
 * Add in "Other C Flags", in production:
         
