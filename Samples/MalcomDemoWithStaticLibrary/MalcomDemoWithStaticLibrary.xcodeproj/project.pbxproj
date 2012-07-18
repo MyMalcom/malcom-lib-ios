@@ -19,7 +19,7 @@
 		F3A337BD158A385300DAA0FC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B2158A385300DAA0FC /* AudioToolbox.framework */; };
 		F3A337BE158A385300DAA0FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B3158A385300DAA0FC /* AVFoundation.framework */; };
 		F3A337BF158A385300DAA0FC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B4158A385300DAA0FC /* CFNetwork.framework */; };
-		F3A337C0158A385300DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B5158A385300DAA0FC /* CoreLocation.framework */; };
+		F3A337C0158A385300DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B5158A385300DAA0FC /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F3A337C1158A385300DAA0FC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B6158A385300DAA0FC /* CoreTelephony.framework */; };
 		F3A337C2158A385300DAA0FC /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B7158A385300DAA0FC /* iAd.framework */; };
 		F3A337C3158A385300DAA0FC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337B8158A385300DAA0FC /* libz.1.2.5.dylib */; };
@@ -744,6 +744,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Libraries/static library/lib/ads\"",
@@ -765,6 +766,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithStaticLibrary/MalcomDemoWithStaticLibrary-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../Libraries/static library/lib/ads\"",

@@ -58,32 +58,37 @@
 }
 
 // Delegate method from the CLLocationManagerDelegate protocol. Called when the location is updated
-- (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
-{
+- (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
     
-    CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
-    [geocoder reverseGeocodeLocation:newLocation 
-                   completionHandler:^(NSArray *placemarks, NSError *error) {
-                       
-                       [MCMLog log:@"reverseGeocodeLocation:completionHandler: Completion Handler called!" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-                       
-                       if (error){
+    Class klass = NSClassFromString(@"CLGeocoder");
+    
+    if (klass != nil) {
+        
+        CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
+        [geocoder reverseGeocodeLocation:newLocation 
+                       completionHandler:^(NSArray *placemarks, NSError *error) {
                            
-                           [MCMLog log:[NSString stringWithFormat:@"Geocode failed with error: %@", error] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-                           return;
+                           [MCMLog log:@"reverseGeocodeLocation:completionHandler: Completion Handler called!" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
                            
-                       }
-                       
-                       if(placemarks && placemarks.count > 0)
+                           if (error){
+                               
+                               [MCMLog log:[NSString stringWithFormat:@"Geocode failed with error: %@", error] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+                               return;
+                               
+                           }
                            
-                       {
-                           //do something   
-                           CLPlacemark *topResult = [placemarks objectAtIndex:0];
-                                                      
-                           [[MCMStatsManager sharedInstance] setCity:[topResult locality]];
-
-                       }
-                   }];
+                           if(placemarks && placemarks.count > 0)
+                               
+                           {
+                               //do something   
+                               CLPlacemark *topResult = [placemarks objectAtIndex:0];
+                               
+                               [[MCMStatsManager sharedInstance] setCity:[topResult locality]];
+                               
+                           }
+                       }];
+        
+    }
     
 	[MCMLog log:[NSString stringWithFormat:@"latitude %+.6f, longitude %+.6f\n", newLocation.coordinate.latitude, newLocation.coordinate.longitude] 
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];

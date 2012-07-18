@@ -132,7 +132,7 @@
 		F3A3376A158A06F700DAA0FC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A3375E158A06F600DAA0FC /* AudioToolbox.framework */; };
 		F3A3376B158A06F700DAA0FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A3375F158A06F600DAA0FC /* AVFoundation.framework */; };
 		F3A3376C158A06F700DAA0FC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33760158A06F600DAA0FC /* CFNetwork.framework */; };
-		F3A3376D158A06F700DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33761158A06F600DAA0FC /* CoreLocation.framework */; };
+		F3A3376D158A06F700DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33761158A06F600DAA0FC /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		F3A3376E158A06F700DAA0FC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33762158A06F600DAA0FC /* CoreTelephony.framework */; };
 		F3A3376F158A06F700DAA0FC /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33763158A06F600DAA0FC /* iAd.framework */; };
 		F3A33770158A06F700DAA0FC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33764158A06F600DAA0FC /* libz.1.2.5.dylib */; };
@@ -1375,6 +1375,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_CFLAGS = "-DDISTRIBUTION=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1387,6 +1388,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DDISTRIBUTION=0",
