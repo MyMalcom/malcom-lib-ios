@@ -58,8 +58,13 @@
 }
 
 // Delegate method from the CLLocationManagerDelegate protocol. Called when the location is updated
-- (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation {
-    
+- (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
+{
+ 
+//    Class klass = NSClassFromString(@"CLGeocoder");
+//    
+//    if ([klass instancesRespondToSelector:@selector(alloc)]) {
+
     Class klass = NSClassFromString(@"CLGeocoder");
     
     if (klass != nil) {

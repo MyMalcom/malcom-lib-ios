@@ -53,6 +53,7 @@
 }
 
 - (void) viewRotate:(UIViewController *)vc toOrientation:(UIInterfaceOrientation)orientation{
+    
     AdWhirlView *adWhirlView = [adViewDict_ objectForKey:[NSString stringWithFormat:@"%x", vc]];
     if (adWhirlView){
         [adWhirlView rotateToOrientation:orientation];  

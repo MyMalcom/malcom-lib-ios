@@ -30,4 +30,11 @@
  */
 + (void)presentAd:(UIViewController *)vc atPosition:(CGPoint)position;
 
+/**
+ Relocate ads position
+ @param position New position of ad
+ @since 2.0.0
+ */
++ (void)relocateAd:(CGPoint)position;
+
 @end

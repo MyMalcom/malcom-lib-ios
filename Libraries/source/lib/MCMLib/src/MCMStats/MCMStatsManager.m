@@ -158,6 +158,8 @@
         NSArray *cacheJsons = [[self class] getCachedJSON];
         NSString *stringToSend = [cacheJsons componentsJoinedByString:@"\n"];
         
+        [MCMLog log:[NSString stringWithFormat:@"Beacon sent: %@", stringToSend] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        
         NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMStatsBeaconsAPIPath]];
                         
         MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
@@ -208,13 +210,13 @@
 								 [NSNumber numberWithInt:(int) location_.horizontalAccuracy], @"accuracy",
 								 [NSNumber numberWithDouble:location_.coordinate.latitude], @"latitude",
 								 [NSNumber numberWithDouble:location_.coordinate.longitude], @"longitude",
-                                 city_, @"city",
 								 nil], @"location",
 								[NSNumber numberWithDouble:[startedOn_ timeIntervalSince1970]], @"started_on",
 								[NSNumber numberWithDouble:[stoppedOn_ timeIntervalSince1970]], @"stopped_on",
 								[MCMCoreUtils uniqueIdentifier], @"udid",
 								[MCMCoreUtils currentLanguage], @"language",
                                 [MCMCoreUtils languageDeviceCountryCode], @"country",
+                                city_, @"city",
                                 [MCMCoreUtils carrierName], @"carrier",
                                 [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"], @"tags",	
                                 timeZone, @"time_zone",

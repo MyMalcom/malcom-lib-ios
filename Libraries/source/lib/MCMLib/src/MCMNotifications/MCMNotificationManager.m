@@ -89,7 +89,7 @@ static NSData *sDevToken=nil;
     NSString *timeZone = [MCMCoreUtils userTimezone];
     [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: timeZone: %@",timeZone] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
-    NSString *json = [NSString stringWithFormat:@"{\"apns_registration\":{\"application_code\":\"%@\",\"token\":\"%@\",\"language\":\"%@\",\"tags\":\"%@\",\"country\":\"%@\",\"device_model\":\"%@\",\"device_os\":\"%@\",\"app_version\":\"%@\", \"time_zone\":\"%@\"}}",appId, hexToken, currentLanguage, [MCMNotificationUtils formatApnsTagString:tags], country, deviceModel, deviceOS, version, timeZone];
+    NSString *json = [NSString stringWithFormat:@"{\"apns_registration\":{\"application_code\":\"%@\",\"token\":\"%@\",\"language\":\"%@\",\"tags\":\%@\,\"country\":\"%@\",\"device_model\":\"%@\",\"device_os\":\"%@\",\"app_version\":\"%@\", \"time_zone\":\"%@\"}}",appId, hexToken, currentLanguage, [MCMNotificationUtils formatApnsTagString:tags], country, deviceModel, deviceOS, version, timeZone];
     
     [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     

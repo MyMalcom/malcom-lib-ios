@@ -26,6 +26,11 @@
         //adWhirlFrame_ = CGRectMake(0, 0, adWhirlView.frame.size.width, adWhirlView.frame.size.height);
         frameChanged_ = NO;
         
+        adWhirlView_ = [AdWhirlView requestAdWhirlViewWithDelegate:self];
+        
+        [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+        [[NSNotificationCenter defaultCenter] addObserver: self selector: @selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
+        
     }
 
     return self;
@@ -34,8 +39,12 @@
 
 - (void)presentAd:(UIViewController *)vc atPosition:(CGRect)position {
     
+    //[adWhirlView_ removeFromSuperview];
+    
     //AdWhirl methods	
-	adWhirlView_ = [AdWhirlView requestAdWhirlViewWithDelegate:self];
+	
+    
+    
     
     if (position.size.width == 0 && position.size.height == 0) {
         
@@ -60,6 +69,12 @@
     
 }
 
+- (void)relocateAd:(CGPoint)position {
+    
+    [adWhirlView_ setFrame:CGRectMake(position.x, position.y, adWhirlView_.frame.size.width, adWhirlView_.frame.size.height)];
+    
+}
+
 - (void)setAdWhirlFrame:(CGRect)adWhirlFrame {
     
     adWhirlFrame_ = adWhirlFrame;
@@ -73,12 +88,20 @@
     
 }
 
-- (void) viewRotate:(UIViewController *)vc toOrientation:(UIInterfaceOrientation)orientation{
+
+#pragma -
+#pragma Orientation methods
+
+- (void)deviceOrientationDidChange:(NSNotification *)notification {
+ 
+    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
     
     if (adWhirlView_){
         [adWhirlView_ rotateToOrientation:orientation];  
     }
+    
 }
+
 
 #pragma mark AdWhirl delegate
 

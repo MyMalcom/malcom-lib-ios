@@ -121,7 +121,7 @@
         break;
     }
   }
-    
+    NSLog(@"__________viewController: %@", viewController);
   [viewController presentModalViewController:self animated:YES];
 }
 

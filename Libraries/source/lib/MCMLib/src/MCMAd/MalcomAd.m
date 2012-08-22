@@ -29,4 +29,10 @@
     
 }
 
++ (void)relocateAd:(CGPoint)position {
+    
+    [[MCMAdManager sharedInstance] relocateAd:position];
+    
+}
+
 @end
