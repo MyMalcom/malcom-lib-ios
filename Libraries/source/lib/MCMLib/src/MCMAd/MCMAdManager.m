@@ -39,13 +39,6 @@
 
 - (void)presentAd:(UIViewController *)vc atPosition:(CGRect)position {
     
-    //[adWhirlView_ removeFromSuperview];
-    
-    //AdWhirl methods	
-	
-    
-    
-    
     if (position.size.width == 0 && position.size.height == 0) {
         
         CGSize adSize = [adWhirlView_ actualAdSize];
@@ -56,8 +49,6 @@
         
     }
     else {
-    
-        //[adWhirlView_ setFrame:CGRectMake((adWhirlView_.superview.frame.size.width-adSize.width)/2, adWhirlView_.superview.frame.size.height-adSize.height, adSize.width, adSize.height)];
     
         [adWhirlView_ setFrame:position];
         
@@ -72,6 +63,22 @@
 - (void)relocateAd:(CGPoint)position {
     
     [adWhirlView_ setFrame:CGRectMake(position.x, position.y, adWhirlView_.frame.size.width, adWhirlView_.frame.size.height)];
+    
+}
+
+- (void)removeAd:(UIViewController *)viewController {
+    
+    for (int i = 0; i < [[viewController.view subviews] count]; i++) {
+        
+        id view = [[viewController.view subviews] objectAtIndex:i];
+        
+        if ([view isKindOfClass:[AdWhirlView class]]) {
+            
+            [view removeFromSuperview];
+            
+        }
+        
+    }
     
 }
 

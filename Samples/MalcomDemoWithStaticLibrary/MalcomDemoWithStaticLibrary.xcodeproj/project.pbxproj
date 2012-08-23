@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F3A23E7E15E6483A00D26C44 /* libMalcomLib-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A23E7D15E6483A00D26C44 /* libMalcomLib-ios.a */; };
+		F3A23E8015E6484B00D26C44 /* libMalcomAdsLib-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A23E7F15E6484B00D26C44 /* libMalcomAdsLib-ios.a */; };
 		F3A33793158A379100DAA0FC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33792158A379100DAA0FC /* UIKit.framework */; };
 		F3A33795158A379100DAA0FC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33794158A379100DAA0FC /* Foundation.framework */; };
 		F3A33797158A379100DAA0FC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33796158A379100DAA0FC /* CoreGraphics.framework */; };
@@ -27,8 +29,6 @@
 		F3A337C5158A385300DAA0FC /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BA158A385300DAA0FC /* MessageUI.framework */; };
 		F3A337C6158A385300DAA0FC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BB158A385300DAA0FC /* QuartzCore.framework */; };
 		F3A337C7158A385300DAA0FC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337BC158A385300DAA0FC /* SystemConfiguration.framework */; };
-		F3A337F7158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */; };
-		F3A337FA158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */; };
 		F3A33816158A3B7100DAA0FC /* CDataScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33801158A3B7100DAA0FC /* CDataScanner.m */; };
 		F3A33817158A3B7100DAA0FC /* CDataScanner_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33804158A3B7100DAA0FC /* CDataScanner_Extensions.m */; };
 		F3A33818158A3B7100DAA0FC /* NSCharacterSet_Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A33806158A3B7100DAA0FC /* NSCharacterSet_Extensions.m */; };
@@ -77,6 +77,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F3A23E7D15E6483A00D26C44 /* libMalcomLib-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomLib-ios.a"; sourceTree = "<group>"; };
+		F3A23E7F15E6484B00D26C44 /* libMalcomAdsLib-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomAdsLib-ios.a"; sourceTree = "<group>"; };
 		F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemoWithStaticLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A33792158A379100DAA0FC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F3A33794158A379100DAA0FC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -114,8 +116,6 @@
 		F3A337DA158A393400DAA0FC /* MalcomAd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MalcomAd.h; sourceTree = "<group>"; };
 		F3A337DB158A393400DAA0FC /* MCMAdAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdAdapter.h; sourceTree = "<group>"; };
 		F3A337DC158A393400DAA0FC /* MCMAdManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdManager.h; sourceTree = "<group>"; };
-		F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomAdsLib-ios-2.0.0.a"; sourceTree = "<group>"; };
-		F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomLib-ios-2.0.0.a"; sourceTree = "<group>"; };
 		F3A337E8158A393400DAA0FC /* MalcomLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MalcomLib.h; sourceTree = "<group>"; };
 		F3A337E9158A393400DAA0FC /* MCMApplicationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMApplicationDelegate.h; sourceTree = "<group>"; };
 		F3A337EA158A393400DAA0FC /* MCMConfigAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMConfigAdapter.h; sourceTree = "<group>"; };
@@ -220,8 +220,8 @@
 				F3A33793158A379100DAA0FC /* UIKit.framework in Frameworks */,
 				F3A33795158A379100DAA0FC /* Foundation.framework in Frameworks */,
 				F3A33797158A379100DAA0FC /* CoreGraphics.framework in Frameworks */,
-				F3A337F7158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a in Frameworks */,
-				F3A337FA158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a in Frameworks */,
+				F3A23E7E15E6483A00D26C44 /* libMalcomLib-ios.a in Frameworks */,
+				F3A23E8015E6484B00D26C44 /* libMalcomAdsLib-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,8 +308,8 @@
 		F3A337C9158A393400DAA0FC /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				F3A23E7D15E6483A00D26C44 /* libMalcomLib-ios.a */,
 				F3A337CA158A393400DAA0FC /* ads */,
-				F3A337E2158A393400DAA0FC /* libMalcomLib-ios-2.0.0.a */,
 				F3A337E5158A393400DAA0FC /* usr */,
 			);
 			name = lib;
@@ -319,8 +319,8 @@
 		F3A337CA158A393400DAA0FC /* ads */ = {
 			isa = PBXGroup;
 			children = (
+				F3A23E7F15E6484B00D26C44 /* libMalcomAdsLib-ios.a */,
 				F3A337D0158A393400DAA0FC /* headers */,
-				F3A337DD158A393400DAA0FC /* libMalcomAdsLib-ios-2.0.0.a */,
 			);
 			path = ads;
 			sourceTree = "<group>";

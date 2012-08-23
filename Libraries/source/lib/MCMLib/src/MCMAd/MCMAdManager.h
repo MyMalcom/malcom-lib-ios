@@ -40,4 +40,6 @@
 
 - (void)relocateAd:(CGPoint)position;
 
+- (void)removeAd:(UIViewController *)viewController;
+
 @end

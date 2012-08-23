@@ -35,4 +35,10 @@
     
 }
 
++ (void)removeAd:(UIViewController *)viewController {
+    
+    [[MCMAdManager sharedInstance] removeAd:viewController];
+    
+}
+
 @end

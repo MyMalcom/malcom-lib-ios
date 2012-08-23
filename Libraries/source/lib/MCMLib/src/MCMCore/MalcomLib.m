@@ -295,4 +295,17 @@
     
 }
 
++ (void)setAppActive:(BOOL)active {
+    
+    [[NSUserDefaults standardUserDefaults] setBool:active forKey:@"mcm_appActive"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
+
++ (BOOL)getAppActive {
+    
+    return [[[NSUserDefaults standardUserDefaults] valueForKey:@"mcm_appActive"] boolValue];
+    
+}
+
 @end

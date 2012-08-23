@@ -177,5 +177,19 @@
  @since 2.0.0
  */
 + (void)didReceiveRemoteNotification:(NSDictionary *)userInfo active:(BOOL)appActive;
+
+/**
+ Method set if app is active
+ @param active YES if app is active
+ @since 2.0.0
+ */
++ (void)setAppActive:(BOOL)active;
+
+/**
+ Method get if app is active
+ @return appActive Param indicating if app is active
+ @since 2.0.0
+ */
++ (BOOL)getAppActive;
     
 @end
