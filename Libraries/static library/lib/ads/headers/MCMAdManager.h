@@ -38,4 +38,8 @@
 
 - (void)presentAd:(UIViewController *)vc atPosition:(CGRect)position;
 
+- (void)relocateAd:(CGPoint)position;
+
+- (void)removeAd:(UIViewController *)viewController;
+
 @end
