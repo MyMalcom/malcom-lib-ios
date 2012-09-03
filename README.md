@@ -21,13 +21,12 @@ Integration
    * MobileCoreServices.framework
    * QuartzCore.framework
    * CoreTelephony.framework
-   * CoreLocation.framework (Optional)
+   * CoreLocation.framework (Optional if app works whith versions minor than 5.0)
    * AudioToolbox.framework
    * MessageUI.framework
    * CoreGraphics.framework
    * libz.1.2.5.dylib
    * iAd.framework (only for ad module)
-   * 
 
 * In target, Link Binary With Libraries, push CoreLocation.framework like 'Optional'.
 
@@ -65,83 +64,9 @@ If you want that show log for console, use it:
 
 	[MalcomLib showLog:YES];
 
-Configuration:
+We can use these modules:
 
-Call this method
-
-	[MalcomLib loadConfiguration:viewController withDelegate:delegate withLabel:NO];
-	
-Where first param is view where configuration is charged, secund is delegate and third is appear or not label in splash.
-
-Notifications:
-
-You must have defined -DDISTRIBUTION=1 in production enviorement.
-In didFinishLaunchingWithOptions, class AppDelegate add this code:
-
-	#if DISTRIBUTION
-	    
-	    [MalcomLib startNotifications:application withOptions:launchOptions isDevelopmentMode:NO];
-	    
-	#else
-	    
-	    [MalcomLib startNotifications:application withOptions:launchOptions isDevelopmentMode:YES];
-	    
-	#endif
-	
-And, in AppDelegate, add this methods:
-
-	- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
-	    
-	    [MalcomLib didRegisterForRemoteNotificationsWithDeviceToken:devToken];
-	    
-	}
-	
-	- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
-	    
-	    [MalcomLib didFailToRegisterForRemoteNotificationsWithError:err];
-	    
-	}
-	
-	- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-	    
-	    [MalcomLib didReceiveRemoteNotification:userInfo active:NO];
-	    
-	}
-
-Stats:
-
-First, you must init in didFinishLaunchingWithOption, applicationWillEnterForeground y applicationDidBecomeActive methods of class AppDelegate whith this method:
-
-	[MalcomLib initAndStartBeacon:YES useOnlyWiFi:YES];
-	
-First param is if app use geolocation and second is for send stats only with wifi connection.
-
-This method:
-
-	[MalcomLib endBeacon];
-	
-is used when app exit or background in applicationDidEnterBackground and applicationWillTerminate methods.
-
-For get stats of actions, views, etc, you must use:
-
-For start:
-
-	[MalcomLib startBeaconWithName:@"ViewController"];
-	
-
-For end and send:
-	
-	[MalcomLib endBeaconWithName:@"ViewController"];
-	
-
-Ads:
-
-For add :
-
-	[MalcomAd presentAd:viewController atPosition:point];
-	
-where viewController is view where ads is showed, and point is position.
-
-If you want add the size of ads, use this method:
-
-	[MalcomAd presentAd:viewController atPosition:point withSize:size];
+* [Configuration](https://github.com/MyMalcom/malcom-lib-ios/wiki/Configuration)
+* [Notifications](https://github.com/MyMalcom/malcom-lib-ios/wiki/Notifications)
+* [Stats](https://github.com/MyMalcom/malcom-lib-ios/wiki/Stats)	
+* [Ads](https://github.com/MyMalcom/malcom-lib-ios/wiki/Ads)
