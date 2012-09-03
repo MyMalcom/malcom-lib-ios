@@ -24,8 +24,10 @@ Integration
    * CoreLocation.framework (Optional)
    * AudioToolbox.framework
    * MessageUI.framework
+   * CoreGraphics.framework
    * libz.1.2.5.dylib
    * iAd.framework (only for ad module)
+   * 
 
 * In target, Link Binary With Libraries, push CoreLocation.framework like 'Optional'.
 
