@@ -37,6 +37,8 @@
     
     //  Activamos/Desactivamos el log
     
+    [MCMLog log:[NSString stringWithFormat:@"SDK Version: %@", MCMVersionSDK] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    
     [self showLog:logActivated];
     
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:kMCMCoreInfoPlistName ofType:nil];
@@ -127,12 +129,13 @@
         [viewController.view addSubview:splashController.view];    
         [splashController.view.superview performSelector:@selector(bringSubviewToFront:) withObject:splashController.view afterDelay:0];
         
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"IntersitialBringToFront" object:nil];
         //splashController.statusLabel.hidden = !isLabel;
         
         //Notify the AppDelegate
         if ([viewController respondsToSelector:@selector(splashLoaded:)]){
             [((id<MCMConfigApplicationDelegate>) viewController) splashLoaded:splashController];
-        }
+        }        
         
     }
     
@@ -149,6 +152,12 @@
     }
     
     return value;
+    
+}
+
++ (NSString *)sdkVersion {
+    
+    return MCMVersionSDK;
     
 }
 
@@ -189,6 +198,19 @@
     
 	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
 
+}
+
++ (void) setUserMetadata:(NSString *)userMetadata {
+	
+    [[NSUserDefaults standardUserDefaults] setObject:userMetadata forKey:@"mcm_user_metadata"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+}
+
++ (NSString *) getUserMetadata {
+    
+	return [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
+    
 }
 
 + (CLLocation *) getLocation {
@@ -276,7 +298,13 @@
     }
     
     if (([alertMsg length]>0) && (appActive==YES)){        
-                
+        
+        NSDictionary *push = [userInfo retain];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:push forKey:@"mcm_push_dictionary"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        
         // Showing an alert with push notification message
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
                                                         message:alertMsg delegate:self 
@@ -305,6 +333,21 @@
 + (BOOL)getAppActive {
     
     return [[[NSUserDefaults standardUserDefaults] valueForKey:@"mcm_appActive"] boolValue];
+    
+}
+
+#pragma mark UIAlertViewDelegate method
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    NSLog(@"_____________alertView");
+    
+    if (buttonIndex==1){
+        
+        NSDictionary *pushDictionary = [[NSUserDefaults standardUserDefaults] valueForKey:@"mcm_push_dictionary"];
+        
+        [MCMNotificationManager processRemoteNotification:pushDictionary];
+    }
     
 }
 

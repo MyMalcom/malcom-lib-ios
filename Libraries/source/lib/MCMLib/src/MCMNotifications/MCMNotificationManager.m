@@ -36,11 +36,11 @@ static NSData *sDevToken=nil;
 	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"apns_tags"];
 }
 
-+ (void) didRegisterAPNS:(NSData*)devToken inServer:(NSString*)url withAppId:(NSString*)appId withTags:(NSArray *)tags{
++ (void) didRegisterAPNS:(NSData*)devToken inEnvironment:(NSString*)environment {
 	
-	if ((url==nil) || (appId==nil) || (devToken==nil)){
+	if (devToken==nil || [[MCMCoreManager sharedInstance] malcomAppId] == nil){
         
-        [MCMLog log:@"Mobivery APNS Library: Error in registration because of the parameters" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:@"Mobivery Notification Library: Error in registration because of the parameters" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 		return ;
 	}
     
@@ -50,8 +50,9 @@ static NSData *sDevToken=nil;
     sDevToken = devToken;        
     
     //Compose the URL
-    url = [url stringByAppendingString:kMCMNotificationsRegisterURI(appId)];    
-	
+    //url = [url stringByAppendingString:kMCMNotificationsRegisterURI(appId)];
+	NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationRegisterURL];
+    
     [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: url: %@", url] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
 
@@ -64,57 +65,31 @@ static NSData *sDevToken=nil;
 	
     [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: deviceToken: %@", hexToken] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
-    // Language of device
-	NSString *currentLanguage = [MCMCoreUtils currentLanguage];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: language: %@", currentLanguage] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-
-    
-    // Country
-    NSString *country = [MCMCoreUtils languageDeviceCountryCode];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: country: %@",country] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    
-    // Device Model
-    NSString *deviceModel = [MCMCoreUtils machinePlatform];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: deviceModel: %@",deviceModel] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    
-    // Device OS
-    NSString *deviceOS = [MCMCoreUtils systemVersion];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: deviceOS: %@",deviceOS] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    
-    // Application version
-    NSString *version = [MCMCoreUtils applicationVersion];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: version: %@",version] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-
-    // Timezone
-    NSString *timeZone = [MCMCoreUtils userTimezone];
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: timeZone: %@",timeZone] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    
-    NSString *json = [NSString stringWithFormat:@"{\"apns_registration\":{\"application_code\":\"%@\",\"token\":\"%@\",\"language\":\"%@\",\"tags\":\%@\,\"country\":\"%@\",\"device_model\":\"%@\",\"device_os\":\"%@\",\"app_version\":\"%@\", \"time_zone\":\"%@\"}}",appId, hexToken, currentLanguage, [MCMNotificationUtils formatApnsTagString:tags], country, deviceModel, deviceOS, version, timeZone];
+    NSString *json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], @"IOS"];
     
     [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        
+    //json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"IOS\"}}", [[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier]];
     
     // Malcom's PNS device registration request        
     MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:[NSURL URLWithString:url]];
     [request appendPostData:[json dataUsingEncoding:NSUTF8StringEncoding]];
     [request addRequestHeader:@"Content-Type" value:@"application/json"];
+    [request setDelegate:self];
     [request startAsynchronous];
+    
 	
 }
 
-+ (void) didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)devToken {	
-    NSArray *tags = [MCMNotificationManager getTags];
++ (void) didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)devToken {
     
-    NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPath];
+	[self didRegisterAPNS:devToken inEnvironment:@"PRODUCTION"];
     
-	[self didRegisterAPNS:devToken inServer:url withAppId:[[MCMCoreManager sharedInstance] malcomAppId] withTags:tags];	
 }
 
 + (void) didRegisterForRemoteNotificationsInSANDBOX:(NSData*)devToken {
-    NSArray *tags = [MCMNotificationManager getTags];
     
-    NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPathSandbox];
-    
-	[self didRegisterAPNS:devToken inServer:url withAppId:[[MCMCoreManager sharedInstance] malcomAppId] withTags:tags];	
+	[self didRegisterAPNS:devToken inEnvironment:@"SANDBOX"];
 }
 
 + (void) didFailToRegisterForRemoteNotificationsWithError: (NSError *) err{	
@@ -126,7 +101,7 @@ static NSData *sDevToken=nil;
 
 + (void) didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: Notification received - %@", [userInfo description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: Notification received - %@", userInfo] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 	    
     NSInteger notificationId=0;
     
@@ -142,24 +117,62 @@ static NSData *sDevToken=nil;
     // Malcom's APNS device efficacy request
     if (notificationId>0){        
                         
-        NSString *url = nil;
-        if ([[MCMCoreManager sharedInstance] developmentMode]){
-            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPathSandbox];
-        }
-        else{
-            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPath];
-        }
-        url = [url stringByAppendingString:kMCMNotificationsEfficacyURI(notificationId)];    
+        NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationACKURL];
+//        if ([[MCMCoreManager sharedInstance] developmentMode]){
+//            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPathSandbox];
+//        }
+//        else{
+//            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPath];
+//        }
+//        url = [url stringByAppendingString:kMCMNotificationsEfficacyURI(notificationId)];
         
         NSString *timeStamp = [[NSDate date] description];
-        NSString *json = [NSString stringWithFormat:@"{\"apns_efficacy\":{\"time_stamp\":\"%@\"}}", timeStamp];        
+        
+        NSString *segmentId = [userInfo objectForKey:kMCMNotificationsSegmentId];
+        
+        if (segmentId == nil) {
+            
+            segmentId = @"0";
+            
+        }
+        
+        NSString *environment = @"";
+        
+        if ([[MCMCoreManager sharedInstance ]developmentMode]) {
+            
+            environment = @"SANDBOX";
+            
+        }
+        else {
+            
+            environment = @"PRODUCTION";
+            
+        }
+        
+        NSString *json = [NSString stringWithFormat:@"{\"notificationReceipt\":{\"created\":\"%@\",\"applicationCode\":\"%@\",\"environment\":\"%@\",\"id\":\"%d\",\"udid\":\"%@\", \"segmentId\":\"%@\"}}", timeStamp, [[MCMCoreManager sharedInstance] malcomAppId], environment, notificationId, [MCMCoreUtils uniqueIdentifier],segmentId];
           
         [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: efficacy request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
         MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        request.delegate = self;
         [request appendPostData:[json dataUsingEncoding:NSUTF8StringEncoding]];
         [request addRequestHeader:@"Content-Type" value:@"application/json"];
         [request startAsynchronous];
+        
+//        NSError *error = [request error];
+//        
+//        NSLog(@"________Error: %@", error);
+//        
+//        if ((!error) && ([request responseStatusCode]<402)) {
+//            
+//            [MCMLog log:[NSString stringWithFormat:@"Success registry: %d", [request responseStatusCode]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+//            
+//        }
+//        else {
+//            
+//            [MCMLog log:[NSString stringWithFormat:@"Error registry: %@", [request responseStatusMessage]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+//        }
+        
     }    
 }
 
@@ -182,6 +195,19 @@ static NSData *sDevToken=nil;
     if ([[[UIApplication sharedApplication] delegate] respondsToSelector:@selector(processRemoteNotification:)]){
         [[[UIApplication sharedApplication] delegate] performSelector:@selector(processRemoteNotification:) withObject:userInfo];
     }    
+}
+
+- (void)requestFinished:(MCMASIHTTPRequest *)request {
+
+    NSLog(@"requestFinished");
+
+}
+
+
+- (void)requestFailed:(MCMASIHTTPRequest *)request {
+
+    NSLog(@"requestFailed");
+
 }
 
 @end

@@ -1,6 +1,6 @@
 
 #import <Foundation/Foundation.h>
-
+#import "MCMASIHTTPRequestDelegate.h"
 
 /**
  Class that manages the MCMNotification module. It's responsable of registering devices within the
@@ -8,7 +8,7 @@
  designed for the notification
  @since 1.0
  */
-@interface MCMNotificationManager : NSObject {
+@interface MCMNotificationManager : NSObject<MCMASIHTTPRequestDelegate> {
     
 }
 

@@ -197,14 +197,13 @@
 	[self startSubBeaconWithName:@"cerrando" timeSession:false];
     
     //NSString *tags = [MCMNotificationUtils formatApnsTagString:[[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"]];
-    NSString *timeZone = [MCMCoreUtils userTimezone];    
-    
-    NSArray *tags = [[NSArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"]];
-    
+    NSString *timeZone = [MCMCoreUtils userTimezone];
+    NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
     
 	NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
 								applicationCode_, @"application_code",
+                                userMetadata?userMetadata:@"", @"user_metadata",
 								[MCMCoreUtils machinePlatform], @"device_model",
 								[MCMCoreUtils systemVersion], @"device_os",
                                 [MCMCoreUtils platform], @"device_platform",
@@ -220,12 +219,11 @@
                                 [MCMCoreUtils languageDeviceCountryCode], @"country",
                                 city_?city_:@"", @"city",
                                 [MCMCoreUtils carrierName], @"carrier",
-                                tags, @"tags",	
+                                [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"], @"tags",
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];
-    
-    [tags release];
+	
     
 	NSDictionary *jsonBeacon = [[NSDictionary alloc] initWithObjectsAndKeys:
 								dictionary, @"beacon",

@@ -172,6 +172,4 @@
 	return dateFormatter;	
 }
 
-
-
 @end

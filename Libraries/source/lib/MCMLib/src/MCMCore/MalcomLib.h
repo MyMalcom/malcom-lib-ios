@@ -94,6 +94,13 @@
  */
 + (NSString *)getAdvanceConfigurationForKey:(NSString *)key valueDefault:(NSString *)vDefault;
 
+/**
+ Get sdk version
+ @since 2.0.1
+ */
+
++ (NSString *)sdkVersion;
+
 //  STATS
 
 /**
@@ -144,6 +151,20 @@
  @since 2.0.0
  */
 + (CLLocation *) getLocation;
+
+/**
+ Add user metadata to beacon
+ @param userMetadata
+ @since 2.0.1
+ */
++ (void) setUserMetadata:(NSString *)userMetadata;
+
+/**
+ Get location
+ return location User Location
+ @since 2.0.0
+ */
++ (NSString *) getUserMetadata;
 
 //  Notifications
 

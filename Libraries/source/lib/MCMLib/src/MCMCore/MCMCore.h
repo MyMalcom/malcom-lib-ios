@@ -14,6 +14,8 @@
 #define MCMFailReceiveAd @"mcmFailReceiveAd"
 #define MCMNotificationAdsAreOff @"mcmNotificationAdsAreOff"
 
+#define MCMVersionSDK @"2.0.1"
+
 
 //General imports
 #import "MCMCoreManager.h"
