@@ -34,7 +34,7 @@ Integration
         
         -DDISTRIBUTION=1
 
-* Add in "Other link Flags"
+* Add in "Other linker Flags"
        
         -all_load -ObjC 
 
