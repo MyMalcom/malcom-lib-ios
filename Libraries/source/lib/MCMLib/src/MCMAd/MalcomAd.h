@@ -44,4 +44,11 @@
  */
 + (void)removeAd:(UIViewController *)viewController;
 
+/**
+ Return ads banner
+ @return ads banner
+ @since 2.0.2
+ */
++ (id)getAd;
+
 @end

@@ -310,6 +310,7 @@
                                                         message:alertMsg delegate:self 
                                               cancelButtonTitle:NSLocalizedString(@"Close", @"")
                                               otherButtonTitles:NSLocalizedString(@"View", @""),nil];
+        alert.delegate = self;
         [alert show];
         [alert release];	
         

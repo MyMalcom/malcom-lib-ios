@@ -41,4 +41,10 @@
     
 }
 
++ (id)getAd {
+    
+    return [[MCMAdManager sharedInstance] getAd];
+    
+}
+
 @end

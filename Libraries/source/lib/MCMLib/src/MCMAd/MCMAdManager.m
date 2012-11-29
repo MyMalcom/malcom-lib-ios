@@ -39,6 +39,8 @@
 
 - (void)presentAd:(UIViewController *)vc atPosition:(CGRect)position {
     
+    adWhirlView_ = [AdWhirlView requestAdWhirlViewWithDelegate:self];
+    
     if (position.size.width == 0 && position.size.height == 0) {
         
         CGSize adSize = [adWhirlView_ actualAdSize];
@@ -80,6 +82,8 @@
         
     }
     
+    //adWhirlView_ = nil;
+    
 }
 
 - (void)setAdWhirlFrame:(CGRect)adWhirlFrame {
@@ -92,6 +96,14 @@
 - (CGRect)getAdWhirlFrame {
     
     return adWhirlFrame_;
+    
+}
+
+- (id)getAd {
+    
+    adWhirlView_ = [AdWhirlView requestAdWhirlViewWithDelegate:self];
+    
+    return adWhirlView_;
     
 }
 

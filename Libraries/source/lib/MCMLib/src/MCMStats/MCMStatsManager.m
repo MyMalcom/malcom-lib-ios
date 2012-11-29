@@ -194,11 +194,12 @@
 - (NSString *) getJSON 
 {
     
-	[self startSubBeaconWithName:@"cerrando" timeSession:false];
+	//[self startSubBeaconWithName:@"cerrando" timeSession:false];
     
     //NSString *tags = [MCMNotificationUtils formatApnsTagString:[[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"]];
     NSString *timeZone = [MCMCoreUtils userTimezone];
     NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
+    NSArray *tagsArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
     
 	NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
@@ -219,7 +220,7 @@
                                 [MCMCoreUtils languageDeviceCountryCode], @"country",
                                 city_?city_:@"", @"city",
                                 [MCMCoreUtils carrierName], @"carrier",
-                                [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"], @"tags",
+                                tagsArray?tagsArray:@"", @"tags",
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];

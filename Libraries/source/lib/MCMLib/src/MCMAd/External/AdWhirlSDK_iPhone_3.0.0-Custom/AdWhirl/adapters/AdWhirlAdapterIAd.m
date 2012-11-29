@@ -18,6 +18,7 @@
 
  */
 
+#import <iAd/ADBannerView_Deprecated.h>
 #import "AdWhirlAdapterIAd.h"
 #import "AdWhirlAdNetworkConfig.h"
 #import "AdWhirlView.h"

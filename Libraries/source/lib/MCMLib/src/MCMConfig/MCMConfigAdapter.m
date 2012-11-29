@@ -29,6 +29,8 @@
     //Add Splash to main window
     [[[application windows] objectAtIndex:0] addSubview:splashController_.view];    
     [splashController_.view.superview performSelector:@selector(bringSubviewToFront:) withObject:splashController_.view afterDelay:0];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"IntersitialBringToFront" object:nil];
   
     //Notify the AppDelegate
     if ([[application delegate] respondsToSelector:@selector(splashLoaded:)]){
