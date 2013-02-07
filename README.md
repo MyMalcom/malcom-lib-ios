@@ -34,7 +34,7 @@ Integration
         
         -DDISTRIBUTION=1
 
-* Add in "Other linker Flags"
+* Add in "Other link Flags"
        
         -all_load -ObjC 
 
@@ -69,4 +69,5 @@ We can use these modules:
 * [Configuration](https://github.com/MyMalcom/malcom-lib-ios/wiki/Configuration)
 * [Notifications](https://github.com/MyMalcom/malcom-lib-ios/wiki/Notifications)
 * [Stats](https://github.com/MyMalcom/malcom-lib-ios/wiki/Stats)	
-* [Ads](https://github.com/MyMalcom/malcom-lib-ios/wiki/Ads)
+* [Ads](https://github.com/MyMalcom/malcom-lib-ios/wiki/Ads)	
+* [Campaings](https://github.com/MyMalcom/malcom-lib-ios/wiki/Campaing)
