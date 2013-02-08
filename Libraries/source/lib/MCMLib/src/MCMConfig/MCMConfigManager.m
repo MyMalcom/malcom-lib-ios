@@ -9,6 +9,7 @@
 
 #import "MCMASIHTTPRequest.h"
 #import "MCMASIDownloadCache.h"
+#import "MCMIntersitialBannerViewController.h"
 
 @interface MCMConfigManager(private) <MCMASIHTTPRequestDelegate>
 
@@ -207,7 +208,7 @@
 	
 	NSString *installedVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];//[[UIDevice currentDevice].systemVersion floatValue];
     
-	id alert=nil;		
+	id alert=nil;
     
     NSString *locale = [[NSLocale preferredLanguages] objectAtIndex:0];
     
@@ -278,6 +279,7 @@
             //		}
             
         }
+        
         //isShowAlert = NO;
         if (isShowAlert) {
             
@@ -578,6 +580,8 @@
             [self willChangeValueForKey:@"configChanged"];
             configChanged=YES;
             [self didChangeValueForKey:@"configChanged"];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MCMConfigChanged" object:nil];
             
             //Reload settings from cached file
             [self loadSettingsWithConfigUrl:nil];		

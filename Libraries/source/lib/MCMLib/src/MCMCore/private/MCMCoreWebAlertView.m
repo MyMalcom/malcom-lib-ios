@@ -15,12 +15,13 @@
 
 @implementation MCMCoreWebAlertView
 
-@synthesize url=url_, delegate=delegate_;
+@synthesize url=url_, delegate=delegate_, isBanner = isBanner_, htmlString = htmlString_;
 
 
 - (void) viewDidLoad {
 	[super viewDidLoad];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(close) name:MCMCloseIntersitialNotification object:nil];
+    isBanner_ = NO;
 	//Regenerate view without animation
 	if (showed_){
 		[self createView];
@@ -37,6 +38,8 @@
 	
 	[closeButton_ release]; closeButton_=nil;	
 	[indicator_ release]; indicator_=nil;
+    
+    isBanner_ = NO;
 }
 
 
@@ -57,7 +60,8 @@
 
 #pragma mark Show/Hide methods
 
-- (void) show{    
+- (void) show{
+    
     if ([[NSThread currentThread] isMainThread]==NO){
         [self performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:YES];
         return;
@@ -69,8 +73,8 @@
 	
 	showed_=YES;
 		
-    statusHidden_ = [[UIApplication sharedApplication] isStatusBarHidden];
-    [[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
+    //statusHidden_ = [[UIApplication sharedApplication] isStatusBarHidden];
+    //[[UIApplication sharedApplication] setStatusBarHidden:YES withAnimation:UIStatusBarAnimationSlide];
     
 	//Create the view
 	[self createView];
@@ -113,7 +117,7 @@
 	}
     
     
-    [[UIApplication sharedApplication] setStatusBarHidden:statusHidden_ withAnimation:UIStatusBarAnimationSlide];
+    //[[UIApplication sharedApplication] setStatusBarHidden:statusHidden_ withAnimation:UIStatusBarAnimationSlide];
     showed_=NO;
     
 	//Undo the retain operation done in show method
@@ -175,7 +179,18 @@
 	}
 	
 	//Load the webview
-	[webView_ loadRequest:[NSURLRequest requestWithURL:url_]];		
+    
+    if (isBanner_) {
+        
+        [webView_ loadHTMLString:htmlString_ baseURL:nil];
+        
+    }
+    else {
+	
+        [webView_ loadRequest:[NSURLRequest requestWithURL:url_]];
+        
+    }
+    
 	[indicator_ startAnimating];
     
     //Bring to the top

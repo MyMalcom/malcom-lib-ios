@@ -139,6 +139,8 @@
     //Compose string to sign
     NSString *stringToSign = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n%@\n%@", verb, md5, type, date, canMcmHeaders, canResource];
     
+    NSLog(@"___________________: %@", stringToSign);
+    
     //SHA1
     NSData *secretData = [secret dataUsingEncoding:NSUTF8StringEncoding];
     NSData *clearTextData = [stringToSign dataUsingEncoding:NSUTF8StringEncoding];
@@ -152,6 +154,10 @@
     NSData *theData = [NSData dataWithBytes:base64Result length:theResultLength];
     
     NSString *base64EncodedResult = [[NSString alloc] initWithData:theData encoding:NSUTF8StringEncoding];
+    
+    NSLog(@"_____________: password: %@", base64EncodedResult);
+    NSLog(@"_____________: md5: %@", md5);
+    
     
     return [base64EncodedResult autorelease];    
 }

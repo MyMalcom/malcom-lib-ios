@@ -212,5 +212,13 @@
  @since 2.0.0
  */
 + (BOOL)getAppActive;
+
+//  Campaings
+
+/**
+ Method add banner
+ @since 2.0.0
+ */
++ (void)addCampaingBanner:(UIView *)view;
     
 @end

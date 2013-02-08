@@ -7,7 +7,8 @@
 
 #define MCMCloseIntersitialNotification @"MCMCloseIntersitialNotification"
 
-#define kMCMBaseUrl @"http://api.mymalcom.com/"
+//#define kMCMBaseUrl @"http://api.mymalcom.com/"
+#define kMCMBaseUrl @"http://malcom-api-dev.elasticbeanstalk.com/"
 #define kMCMAdwhirlURL @"http://ads.mymalcom.com/"
 
 #define MCMReceiveAd @"mcmReceiveAd"

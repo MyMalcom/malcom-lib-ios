@@ -14,6 +14,7 @@
 #import "MCMStatsManager.h"
 //#import "MCMAdManager.h"
 #import "MCMNotificationManager.h"
+#import "MCMCampaignsManager.h"
 
 
 @implementation MalcomLib
@@ -334,6 +335,14 @@
 + (BOOL)getAppActive {
     
     return [[[NSUserDefaults standardUserDefaults] valueForKey:@"mcm_appActive"] boolValue];
+    
+}
+
+//  Campaings
+
++ (void)addCampaingBanner:(UIView *)view {
+    
+    [[MCMCampaignsManager sharedInstance] addBanner:view];
     
 }
 
