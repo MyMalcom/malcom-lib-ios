@@ -25,6 +25,7 @@ Integration
    * AudioToolbox.framework
    * MessageUI.framework
    * CoreGraphics.framework
+   * StoreKit.framework
    * libz.1.2.5.dylib
    * iAd.framework (only for ad module)
 
