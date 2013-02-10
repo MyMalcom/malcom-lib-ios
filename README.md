@@ -35,7 +35,7 @@ Integration
         
         -DDISTRIBUTION=1
 
-* Add in "Other link Flags"
+* Add in "Other linker Flags"
        
         -all_load -ObjC 
 
@@ -49,7 +49,7 @@ Using library
 
 Init:
 
-First, import MCMLib.h
+First, import MalcomLib.h
 
 		#import "MalcomLib.h"
 
