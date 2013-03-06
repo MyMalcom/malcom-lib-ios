@@ -10,7 +10,7 @@ Integration
     
 * Add one of available versions of library:
     * Static library: Add the folder of static library. If you don't want to use the 'ad module', just delete the 'ads' folder. Add TouchJSON library which is in 'External' folder.¡
-    * Source library: Add source in project. In case that you don't want use any module (Configuration, Ad, Notifications) you can delete the not desired folder.
+    * Source library: Add source in project. In case that you don't want to use any module (Configuration, Ad or Notifications) you can delete the not desired folder.
     
     We strongly recommend to use the static library.
 
