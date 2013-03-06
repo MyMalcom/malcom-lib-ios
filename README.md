@@ -71,4 +71,4 @@ We can use these modules:
 * [Notifications](https://github.com/MyMalcom/malcom-lib-ios/wiki/Notifications)
 * [Stats](https://github.com/MyMalcom/malcom-lib-ios/wiki/Stats)	
 * [Ads](https://github.com/MyMalcom/malcom-lib-ios/wiki/Ads)	
-* [Campaings](https://github.com/MyMalcom/malcom-lib-ios/wiki/Campaing)
+* [Campaings](https://github.com/MyMalcom/malcom-lib-ios/wiki/Campaign)
