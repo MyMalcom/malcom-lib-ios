@@ -37,12 +37,12 @@
      if (launchOptions == nil) {
          //	Normal tasks if appication was run in a normal way
          // ...
-         [MCMLog log:@"App running in normal mode" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+         [MCMLog log:@"Malcom - MCMNotifications App running in normal mode" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
          
      } else {
          // Initialization task when app was run from a push notification
          
-         [MCMLog log:[NSString stringWithFormat:@"App running from push notification with pushOption -> %@", [[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] description]] 
+         [MCMLog log:[NSString stringWithFormat:@"Malcom - MCMNotifications App running from push notification with pushOption -> %@", [[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] description]] 
               inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 
          //Receive the notification
@@ -77,7 +77,7 @@
     
     // Initialization task when app was run from a push notification
     
-    [MCMLog log:[NSString stringWithFormat:@"Push notification received while app running with pushOption -> %@", [userInfo description]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom - MCMNotifications Push notification received while app running with pushOption -> %@", [userInfo description]] 
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     //Receive the notification

@@ -117,17 +117,20 @@
  Creates a new Subbeacon with a name and time. Subbeacons are like events inside a user
  session
  @param beaconName The subbeacon name
+ @param init paramsDictionary for event
+ @param type indicates if it is a subbeacon custom, special or error (and so on)
  @param timeSession Boolean indicating if it must track the time that the subbeacon lasted
  @since 1.0
  */
-- (void)startSubBeaconWithName:(NSString *)beaconName timeSession:(BOOL)trackSession;
+- (void)startSubBeaconWithName:(NSString *) beaconName forType:(NSString*) type andParams: (NSDictionary *) paramsDictionary timeSession:(BOOL)trackSession;
 
 /**
  Ends a new Subbeacon with a name previously created with the startSubbeaconXXX method.
  @param beaconName The subbeacon name to finish
+ @param final paramsDictionary for event
  @since 1.0
  */
-- (void)endSubBeaconWithName:(NSString *)beaconName;
+- (void)endSubBeaconWithName:(NSString *) beaconName andParams: (NSDictionary *) paramsDictionary;
 
 
 @end

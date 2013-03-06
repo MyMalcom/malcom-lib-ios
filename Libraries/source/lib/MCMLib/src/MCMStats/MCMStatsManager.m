@@ -80,7 +80,7 @@
 	NSArray *subbeacons = [subbeaconsDictionary_ allKeys];
 	for (NSString *subName in subbeacons)
 	{
-        [self endSubBeaconWithName:subName];
+        [self endSubBeaconWithName:subName andParams:nil];
 	}
 
     //Set stop date
@@ -99,28 +99,43 @@
 }
 
 
-- (void)startSubBeaconWithName:(NSString *) beaconName timeSession:(BOOL)trackSession 
+- (void)startSubBeaconWithName:(NSString *) beaconName forType:(NSString*)type andParams: (NSDictionary *) paramsDictionary timeSession:(BOOL)trackSession
 {
-	MCMStatsSubBeacon *subbeacon = [[MCMStatsSubBeacon alloc] initWithName:beaconName];
-
-	if (trackSession) 
-	{
-		subbeacon.startedOn = [NSDate date];
+	MCMStatsSubBeacon *subbeacon = [[MCMStatsSubBeacon alloc] initWithName:beaconName type:type andParams:paramsDictionary];
+    subbeacon.startedOn = [NSDate date];
+    
+	if (trackSession) {
+        //We add the subbeacon to dictionary in order to search it later and stablish the end time
 		[subbeaconsDictionary_ setObject:subbeacon forKey:beaconName];
-	}
+	}else{
+        //If not track session means that is a unique event without time
+        subbeacon.stoppedOn = [NSDate date];
+    }
 		
 	[subbeaconsArray_ addObject:subbeacon];
     [subbeacon release];
 }
 
-- (void)endSubBeaconWithName:(NSString *) beaconName 
+- (void)endSubBeaconWithName:(NSString *) beaconName andParams: (NSDictionary *) paramsDictionary
 {
 	MCMStatsSubBeacon *subbeacon = [subbeaconsDictionary_ valueForKey:beaconName];
 	if (subbeacon != nil ) {
 		subbeacon.stoppedOn =[NSDate date];
 	}
+    
+    //Check if the new param dictionary has some value setted in previous one and update it
+    if (paramsDictionary)
+    {
+        for (NSString *key in [paramsDictionary allKeys])
+        {
+            [subbeacon.params setValue:[paramsDictionary valueForKey:key] forKey:key];
+        }
+    }
+    
     [subbeaconsDictionary_ removeObjectForKey:beaconName];
 }
+
+
 
 + (void) clearCache{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMCMStatsCacheName];
@@ -152,13 +167,16 @@
     [[self class] addToJSONCache:[self getJSON]];
     
     //Check network status
-    MCMNetworkStatus status = [[MCMReachability reachabilityForInternetConnection] currentReachabilityStatus];    
-    if ((status==kReachableViaWiFi) || ((status==kReachableViaWWAN) && (useOnlyWifi_==NO))){                
+    MCMNetworkStatus status = [[MCMReachability reachabilityForInternetConnection] currentReachabilityStatus];
+    
+    //if ((status==kReachableViaWiFi) || ((status==kReachableViaWWAN) && (useOnlyWifi_==NO)) ){
+    //useOnlyWifi_ flag disabled. 
+    if ((status==kReachableViaWiFi) || (status==kReachableViaWWAN)){
         
         NSArray *cacheJsons = [[self class] getCachedJSON];
         NSString *stringToSend = [cacheJsons componentsJoinedByString:@"\n"];
         
-        [MCMLog log:[NSString stringWithFormat:@"Beacon sent: %@", stringToSend] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsManager Beacon sent: %@", stringToSend] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
         NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMStatsBeaconsAPIPath]];
                         
@@ -173,7 +191,7 @@
         }
         else {
             
-            [MCMLog log:[NSString stringWithFormat:@"Error sending statistics: %@", [request responseStatusMessage]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+            [MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsManager Error sending statistics: %@", [request responseStatusMessage]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         }            
     }    
 }
@@ -203,6 +221,7 @@
     
 	NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
+                                MCMVersionSDK, @"lib_version",
 								applicationCode_, @"application_code",
                                 userMetadata?userMetadata:@"", @"user_metadata",
 								[MCMCoreUtils machinePlatform], @"device_model",

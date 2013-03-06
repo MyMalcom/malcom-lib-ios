@@ -63,12 +63,12 @@
             bundlePath = [[NSBundle mainBundle] pathForResource:kMCMCoreInfoPlistNameDevelopment ofType:nil];        
             if (bundlePath==nil){
                 
-                [MCMLog log:[NSString stringWithFormat:@"Malcom Core - There is no configuration file for development in the bundle. You should include a configuration file named '%@' with the required constants for development within your project to have a sandbox environment. Taking the production environment in the meanwhile", kMCMCoreInfoPlistNameDevelopment] 
+                [MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager There is no configuration file for development in the bundle. You should include a configuration file named '%@' with the required constants for development within your project to have a sandbox environment. Taking the production environment in the meanwhile", kMCMCoreInfoPlistNameDevelopment]
                      inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
                 
             } else {
                 
-                [MCMLog log:@"Malcom Core - Development Configuration file used" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+                [MCMLog log:@"Malcom Core - MCMCoreManager  Development Configuration file used" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
                 
             }
         }
@@ -132,7 +132,7 @@
 	//TODO: Get classes and send to Malcom
     [[NSException exceptionWithName:@"Not implemented" reason:@"sendClassesFollowingMCMToMalcom not implemented in this version of MCMLib. Please update to the last" userInfo:nil] raise];
 #else
-	[MCMLog log:[NSString stringWithFormat:@"Method MCMCoreManager::classesFollowingMCMSectionProtocol not available for device binaries"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+	[MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager::classesFollowingMCMSectionProtocol not available for device binaries"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 #endif
 }
 
@@ -322,21 +322,21 @@
 //DEPRECATED. Included for compatibility with integrations previous to 1.0.4
 - (void)viewWillAppear:(BOOL)animated vc:(UIViewController *)vc{ 
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - Use of [MCMCoreManager viewDidAppear] event deprecated. Using viewAppear instead"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager Use of [MCMCoreManager viewDidAppear] event deprecated. Using viewAppear instead"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     [self viewAppear:vc];
 }
 - (void)viewDidAppear:(BOOL)animated vc:(UIViewController *)vc{ 
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - Use of [MCMCoreManager viewWillAppear] event deprecated."] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager Use of [MCMCoreManager viewWillAppear] event deprecated."] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 }
 -(void) viewWillDisappear:(BOOL)animated vc:(UIViewController *)vc{ 
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - Use of [MCMCoreManager viewWillDisappear] event deprecated. Using viewDisappear instead"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager Use of [MCMCoreManager viewWillDisappear] event deprecated. Using viewDisappear instead"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     [self viewDisappear:vc];
 }
 -(void) viewDidDisappear:(BOOL)animated vc:(UIViewController *)vc{ 
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - Use of [MCMCoreManager viewDidDisappear] event deprecated."] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Core - MCMCoreManager Use of [MCMCoreManager viewDidDisappear] event deprecated."] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 }
 
 @end

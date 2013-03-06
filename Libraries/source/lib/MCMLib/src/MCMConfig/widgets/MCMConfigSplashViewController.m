@@ -29,7 +29,7 @@
 		//Check if the MCMConfigManager is already loaded, or load from cache if not
 		if ([[MCMConfigManager sharedInstance] loaded]==NO){
             
-            [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigManager should be loaded before creating the splash Screen"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+            [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigSplashManager should be loaded before creating the splash Screen"] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 			[[MCMConfigManager sharedInstance] loadSettingsWithConfigUrl:nil];
 		}
 		

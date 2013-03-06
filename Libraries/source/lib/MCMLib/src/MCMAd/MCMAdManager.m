@@ -173,7 +173,7 @@
 
 - (void)adWhirlDidReceiveAd:(AdWhirlView *)adWhirlView{
     
-    [MCMLog log:[NSString stringWithFormat:@"AdWhirl banner received. Ad: %@", [adWhirlView description]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Ad - AdWhirl banner received. Ad: %@", [adWhirlView description]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     //Change size if the banner is not standard
     
@@ -200,7 +200,7 @@
 
 - (void)adWhirlDidFailToReceiveAd:(AdWhirlView *)adWhirlView usingBackup:(BOOL)yesOrNo{
     
-    [MCMLog log:[NSString stringWithFormat:@"AdWhirl failed to receive an ad. Check your appId is correct. Ad: %@", [adWhirlView description]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Ad - AdWhirl failed to receive an ad. Check your appId is correct. Ad: %@", [adWhirlView description]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:MCMFailReceiveAd object:adWhirlView];
@@ -209,7 +209,7 @@
 
 - (void)adWhirlReceivedNotificationAdsAreOff:(AdWhirlView *)adWhirlView {
     
-    [MCMLog log:[NSString stringWithFormat:@"AdWhirl failed to show an ad because they are off. Ad: %@", [adWhirlView description]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Ad - AdWhirl failed to show an ad because they are off. Ad: %@", [adWhirlView description]] 
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:MCMNotificationAdsAreOff object:adWhirlView];

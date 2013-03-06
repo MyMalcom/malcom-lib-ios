@@ -29,6 +29,10 @@
 #import "AdWhirlAdNetworkAdapter+Helpers.h"
 #import "AdWhirlAdNetworkRegistry.h"
 
+//We import MCMStats files here because this module is mandatory in every modules
+#import "MCMStats.h"
+#import "MCMStatsDefines.h"
+
 @interface AdWhirlAdapterCustom ()
 
 - (BOOL)parseAdData:(NSData *)data error:(NSError **)error;
@@ -388,6 +392,10 @@
     AWLogError(@"Custom ad redirect URL is nil");
     return;
   }
+    
+  //Mark the touch ad event
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:kMCMStatsSystemEventAdCliked forType:TYPE_SPECIAL andParams:[[NSDictionary alloc] initWithObjectsAndKeys:ad.redirectURL, @"url", nil] timeSession:NO];
+    
   switch (ad.launchType) {
     case AWCustomAdLaunchTypeSafari:
       AWLogDebug(@"Opening URL '%@' for custom ad", ad.redirectURL);

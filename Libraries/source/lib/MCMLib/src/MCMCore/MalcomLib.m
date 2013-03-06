@@ -15,12 +15,13 @@
 //#import "MCMAdManager.h"
 #import "MCMNotificationManager.h"
 #import "MCMCampaignsManager.h"
+#import "MCMStatsDefines.h"
 
 
 @implementation MalcomLib
 
 
-//  CORE
+#pragma mark - Core methods
 
 + (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey withAdId:(NSString *)adId {
     
@@ -38,7 +39,7 @@
     
     //  Activamos/Desactivamos el log
     
-    [MCMLog log:[NSString stringWithFormat:@"SDK Version: %@", MCMVersionSDK] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom - SDK Version: %@", MCMVersionSDK] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     [self showLog:logActivated];
     
@@ -87,7 +88,7 @@
     
 }
 
-//  CONFIGURATION
+#pragma mark - Configuration methods
 
 + (void)loadConfiguration:(UIViewController *)viewController withDelegate:(id)delegate withLabel:(BOOL) isLabel {
     
@@ -162,7 +163,12 @@
     
 }
 
-//  STATS
+#pragma mark - Stats methods
+
++ (void)initAndStartBeacon:(BOOL)userLocation{
+    [self initAndStartBeacon:userLocation useOnlyWiFi:NO];
+}
+
 
 + (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState {
     
@@ -178,49 +184,96 @@
 
 + (void)startBeaconWithName:(NSString *)name {
     
-    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name timeSession:YES];
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name forType:TYPE_CUSTOM andParams:nil timeSession:YES];
+    
+}
+
++ (void)startBeaconWithName:(NSString *)name andParams: (NSDictionary *) params andTimeSession: (BOOL)timeSession{
+    
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name forType:TYPE_CUSTOM andParams:params timeSession:timeSession];
     
 }
 
 + (void)endBeaconWithName:(NSString *)name {
     
-    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name];
+    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name andParams:nil];
     
 }
 
-+ (void) setTags:(NSArray *)tags {
++ (void)endBeaconWithName:(NSString *)name andParams: (NSDictionary *) params{
+    
+    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name andParams:params];
+    
+}
+
++ (void)identifyUserWithName: (NSString *)name mail: (NSString *)mail {
+    [self identifyUserWithName:name mail:mail andParams:[[NSMutableDictionary alloc] initWithCapacity:1]];
+}
+
++ (void)identifyUserWithName: (NSString *)name mail: (NSString *)mail andParams: (NSDictionary *)params {
+    
+    NSMutableDictionary *userDictionary = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [userDictionary setObject:name forKey:@"name"];
+    [userDictionary setObject:mail forKey:@"mail"];
+    [userDictionary addEntriesFromDictionary:params];
+    
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"app_user" forType:TYPE_SPECIAL andParams:userDictionary timeSession:NO];
+}
+
++ (void)registerRevenueWithName: (NSString *)name SKU: (NSString *)SKU price: (float)price currencyCode: (NSString *)currency andAmount: (int)amount{
+    
+    NSMutableDictionary *revenueDictionary = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [revenueDictionary setObject:name forKey:@"name"];
+    [revenueDictionary setObject:SKU forKey:@"SKU"];
+    [revenueDictionary setObject:[NSString stringWithFormat:@"%f", price] forKey:@"price"];
+    [revenueDictionary setObject:currency forKey:@"currencyCode"];
+    [revenueDictionary setObject:[NSString stringWithFormat:@"%d", amount] forKey:@"amount"];
+    
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"revenue" forType:TYPE_SPECIAL andParams:revenueDictionary timeSession:NO];
+}
+
++(void)trackView:(NSString *)name{
+    
+    NSMutableDictionary *screenViewDictionary = [[NSMutableDictionary alloc] initWithCapacity:1];
+    [screenViewDictionary setObject:name forKey:@"name"];
+
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"screenview" forType:TYPE_SPECIAL andParams:screenViewDictionary timeSession:NO];
+}
+
++ (void)setTags:(NSArray *)tags {
 	
     [[NSUserDefaults standardUserDefaults] setObject:tags forKey:@"mcm_tags"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 }
 
-+ (NSArray *) getTags {
++ (NSArray *)getTags {
     
 	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
 
 }
 
-+ (void) setUserMetadata:(NSString *)userMetadata {
++ (void)setUserMetadata:(NSString *)userMetadata {
 	
     [[NSUserDefaults standardUserDefaults] setObject:userMetadata forKey:@"mcm_user_metadata"];
 	[[NSUserDefaults standardUserDefaults] synchronize];
 	
 }
 
-+ (NSString *) getUserMetadata {
++ (NSString *)getUserMetadata {
     
 	return [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
     
 }
 
-+ (CLLocation *) getLocation {
++ (CLLocation *)getLocation {
     
     return [MCMStatsManager sharedInstance].location;
     
 }
 
-//  Notifications
+
+#pragma mark - Notification methods
 
 + (void)startNotifications:(UIApplication *)application withOptions:(NSDictionary *)launchOptions isDevelopmentMode:(BOOL)developmentMode {
     
@@ -240,12 +293,12 @@
     if (launchOptions == nil) {
         //	Normal tasks if appication was run in a normal way
         // ...
-        [MCMLog log:@"App running in normal mode" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:@"Malcom - App running in normal mode" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
         
     } else {
         // Initialization task when app was run from a push notification
-        [MCMLog log:[NSString stringWithFormat:@"App running from push notification with pushOption -> %@", [[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:[NSString stringWithFormat:@"Malcom - App running from push notification with pushOption -> %@", [[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
         //Receive the notification
         [MCMNotificationManager didReceiveRemoteNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
@@ -283,7 +336,7 @@
 + (void)didReceiveRemoteNotification:(NSDictionary *)userInfo active:(BOOL)appActive {
     
     // Initialization task when app was run from a push notification
-    [MCMLog log:[NSString stringWithFormat:@"Push notification received while app running with pushOption -> %@", [userInfo description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom - Push notification received while app running with pushOption -> %@", [userInfo description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     //Receive the notification
 	[MCMNotificationManager didReceiveRemoteNotification:userInfo];
@@ -340,11 +393,41 @@
 
 //  Campaings
 
-+ (void)addCampaingBanner:(UIView *)view {
-    
-    [[MCMCampaignsManager sharedInstance] addBanner:view];
-    
++ (void)addCampaignBanner:(UIView*)view{
+
+    [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:nil];
 }
+
++ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate{
+    
+    [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:delegate];
+}
+
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView{
+    
+    [self addCampaignBanner:view withAppstoreContainerView:appStoreContainerView withDelegate:nil];
+}
+
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
+    
+    [[MCMCampaignsManager sharedInstance] addBanner:view withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+}
+
++ (void)removeCampaignBanner{
+    
+    [[MCMCampaignsManager sharedInstance] removeCurrentBanner];
+}
+
++(void)setCampaignDuration:(int)duration{
+    
+    [[MCMCampaignsManager sharedInstance] setDuration:duration];
+}
+
+
 
 #pragma mark UIAlertViewDelegate method
 

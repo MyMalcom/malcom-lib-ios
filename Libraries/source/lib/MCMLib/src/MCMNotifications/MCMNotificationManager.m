@@ -40,7 +40,7 @@ static NSData *sDevToken=nil;
 	
 	if (devToken==nil || [[MCMCoreManager sharedInstance] malcomAppId] == nil){
         
-        [MCMLog log:@"Mobivery Notification Library: Error in registration because of the parameters" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:@"Malcom MCMNotifications - MCMNotificationManager Notification Library: Error in registration because of the parameters" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 		return ;
 	}
     
@@ -53,7 +53,7 @@ static NSData *sDevToken=nil;
     //url = [url stringByAppendingString:kMCMNotificationsRegisterURI(appId)];
 	NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationRegisterURL];
     
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: url: %@", url] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: url: %@", url] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
 
     // Device token
@@ -63,11 +63,11 @@ static NSData *sDevToken=nil;
 						  ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
 						  ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
 	
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: deviceToken: %@", hexToken] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: deviceToken: %@", hexToken] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     NSString *json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], @"IOS"];
     
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
     //json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"IOS\"}}", [[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier]];
     
@@ -94,14 +94,14 @@ static NSData *sDevToken=nil;
 
 + (void) didFailToRegisterForRemoteNotificationsWithError: (NSError *) err{	
     
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: Error in registration: %@", err] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: Error in registration: %@", err] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     [sDevToken release]; sDevToken=nil;
     
 }
 
 + (void) didReceiveRemoteNotification:(NSDictionary *)userInfo {
     
-    [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: Notification received - %@", userInfo] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: Notification received - %@", userInfo] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 	    
     NSInteger notificationId=0;
     
@@ -183,7 +183,7 @@ static NSData *sDevToken=nil;
 	NSString *webUrl=[[userInfo objectForKey:kMCMNotificationsTagWeb] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	if ([webUrl length]>0){
 		
-        [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: Open Web URL: %@", webUrl] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: Open Web URL: %@", webUrl] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 		MCMCoreWebAlertView *webViewController = [[MCMCoreWebAlertView alloc] init];
 		[webViewController setUrl:[NSURL URLWithString:webUrl]];
 		[webViewController show];

@@ -55,7 +55,7 @@
 	NSString *bundlePath = [[NSBundle mainBundle] pathForResource:kMalcomSectionsLocalName ofType:nil];
 	if ((bundlePath==nil) && (self.loaded==NO) && (self.error==NO)) {
         
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Config - There is no sections file in the bundle. You should include a settings file named '%@' with the default sections within your project", kMalcomSectionsLocalName] 
+        [MCMLog log:[NSString stringWithFormat:@"Malcom Config -  MCMConfigSectionManager There is no sections file in the bundle. You should include a settings file named '%@' with the default sections within your project", kMalcomSectionsLocalName]
              inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
 	}
@@ -120,7 +120,7 @@
     [request setDelegate:self];
     [request startAsynchronous];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - Updating sections file from %@", [url absoluteString]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigSectionManager Updating sections file from %@", [url absoluteString]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 }
 
@@ -183,7 +183,7 @@
         
         if ((vc!=nil) && ([vc isKindOfClass:[UIViewController class]]==NO)) {
             
-            [MCMLog log:[NSString stringWithFormat:@"Malcom Config - %@ is not a UIViewController subclass", NSStringFromClass([vc class])] 
+            [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigSectionManager %@ is not a UIViewController subclass", NSStringFromClass([vc class])]
                  inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
             [vc release]; vc=nil;
         }             
@@ -195,7 +195,7 @@
             vc = [[NSClassFromString(@"MCAWebBrowserViewController") alloc] initWithNibName:nil bundle:nil];	
             if (vc==nil){
                 
-                [MCMLog log:@"Malcom Config - You need to include the Malcom AddOns in order to create Web sections" 
+                [MCMLog log:@"Malcom Config - MCMConfigSectionManager You need to include the Malcom AddOns in order to create Web sections"
                      inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
                 
             }
@@ -204,7 +204,7 @@
             vc = [[NSClassFromString(@"MCAImageListViewController") alloc] initWithNibName:@"MCAImageListView" bundle:nil];	            
             if (vc==nil) {
                 
-                [MCMLog log:@"Malcom Config - You need to include the Malcom AddOns in order to create image sections" 
+                [MCMLog log:@"Malcom Config - MCMConfigSectionManager You need to include the Malcom AddOns in order to create image sections" 
                      inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
             }
         }
@@ -212,7 +212,7 @@
             vc = [[NSClassFromString(@"MCANewsListViewController") alloc] initWithNibName:@"MCANewsListView" bundle:nil];	            
             if (vc==nil) {
                 
-                [MCMLog log:@"Malcom Config - You need to include the Malcom AddOns in order to create feed sections" 
+                [MCMLog log:@"Malcom Config - MCMConfigSectionManager You need to include the Malcom AddOns in order to create feed sections"
                      inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
                 
             }
@@ -369,7 +369,7 @@
 {
     NSError *err = [request error];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - Error receiving the sections file: %@", [err description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigSectionManager Error receiving the sections file: %@", [err description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
 	self.error=YES;
 	self.updating=NO;

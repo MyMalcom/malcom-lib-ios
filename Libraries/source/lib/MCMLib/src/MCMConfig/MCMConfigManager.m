@@ -72,7 +72,7 @@
 	NSString *bundlePath = [[NSBundle mainBundle] pathForResource:kMalcomSettingsLocalName ofType:nil];
 	if ((bundlePath==nil) && (self.loaded==NO) && (self.error==NO)){
 		
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Config - There is no settings file in the bundle. You should include a settings file named '%@' with the default configuration within your project", kMalcomSettingsLocalName] 
+        [MCMLog log:[NSString stringWithFormat:@"Malcom Config -  MCMConfigManager There is no settings file in the bundle. You should include a settings file named '%@' with the default configuration within your project", kMalcomSettingsLocalName]
              inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
 	}
@@ -156,7 +156,7 @@
     [request setDelegate:self];
     [request startAsynchronous];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - Updating settings file from %@", [url absoluteString]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Config -  MCMConfigManager Updating settings file from %@", [url absoluteString]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
 }
 
@@ -617,7 +617,7 @@
 {
     NSError *err = [request error];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - Error receiving the configuration file: %@", [err description]] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Config - MCMConfigManager  Error receiving the configuration file: %@", [err description]] 
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
 	//Check the version

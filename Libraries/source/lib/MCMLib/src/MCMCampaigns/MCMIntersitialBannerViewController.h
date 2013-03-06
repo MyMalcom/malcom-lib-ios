@@ -8,12 +8,15 @@
 
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
+#import "MCMCampaignModel.h"
 
 @interface MCMIntersitialBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
 
-@property (nonatomic, retain) NSString *urlAppStore;
-@property (nonatomic, retain) NSString *urlImage;
-@property (nonatomic, retain) NSString *type;
-@property (nonatomic, retain) NSString *position;
+@property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;
+@property (nonatomic, retain) UIView *containerView;
+@property (nonatomic, retain) UIView *appstoreContainerView;
+
+- (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign;
+- (BOOL)needsToDisplayOnWindow;
 
 @end

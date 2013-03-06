@@ -7,8 +7,10 @@
 
 #define MCMCloseIntersitialNotification @"MCMCloseIntersitialNotification"
 
-//#define kMCMBaseUrl @"http://api.mymalcom.com/"
-#define kMCMBaseUrl @"http://malcom-api-dev.elasticbeanstalk.com/"
+#define kMCMBaseUrl @"http://api.mymalcom.com/"
+//#define kMCMBaseUrl @"http://malcom-api-dev.elasticbeanstalk.com/"
+//#define kMCMBaseUrl @"http://malcom-api-pre.elasticbeanstalk.com/"
+
 #define kMCMAdwhirlURL @"http://ads.mymalcom.com/"
 
 #define MCMReceiveAd @"mcmReceiveAd"
@@ -24,3 +26,4 @@
 #import "MCMViewController.h"
 #import "MCMApplicationDelegate.h"
 #import "MCMLog.h"
+#import "MCMCampaignsManager.h"

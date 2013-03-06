@@ -3,6 +3,7 @@
 #import "MCMStats.h"
 #import "MCMCore.h"
 #import "MCMCoreDefines.h"
+#import "MCMStatsDefines.h"
 
 @implementation MCMStatsAdapter
 
@@ -27,16 +28,16 @@
     if ([name length]<=0)
         name=NSStringFromClass([vc class]);    
     
-    [MCMLog log:[NSString stringWithFormat:@"Subbeacon init: %@", name] 
+    [MCMLog log:[NSString stringWithFormat:@"Malcom - MCMStats Subbeacon init: %@", name] 
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name timeSession:YES];	
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name forType:TYPE_SPECIAL andParams:nil timeSession:YES];
 }
 
 - (void) viewDisappear:(UIViewController *)vc{
     NSString *name = [vc title];
     if ([name length]<=0)
         name=NSStringFromClass([vc class]);    
-    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name];	    
+    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name andParams:nil];
 }
 
 

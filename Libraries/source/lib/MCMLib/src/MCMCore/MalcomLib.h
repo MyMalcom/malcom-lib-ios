@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIViewController.h>
 #import <CoreLocation/CoreLocation.h>
+#import "MCMLib.h"
 
 /**
  Class that manages the methods of Malcom Library. It's responsable of all Malcom's modules: 
@@ -20,7 +21,6 @@
 
 
 //  CORE
-
 /**
  Init Malcom with app values
  @param uuid uuid malcom app
@@ -103,6 +103,15 @@
 
 //  STATS
 
+
+/**
+ Init and start stats in application and the use of wifi only is deactivated by default. If you want to use only wifi you should use the method initAndStartBeacon:useOnlyWiFi:
+ @param userLocation BOOL value is YES if user location is activated
+ @since 2.0.0
+ */
++ (void)initAndStartBeacon:(BOOL)userLocation;
+
+
 /**
  Init and start stats in application
  @param userLocation BOOL value is YES if user location is activated
@@ -125,11 +134,63 @@
 + (void)startBeaconWithName:(NSString *)name;
 
 /**
+ End stats for a viewController or action adding params
+ @param action's name
+ @param params attributes
+ @param timeSession if the user wants to track the time that subbeacon takes
+ @since 2.0.2
+ */
++ (void)startBeaconWithName:(NSString *)name andParams: (NSDictionary *) params andTimeSession: (BOOL)timeSession;
+
+/**
  End stats for a viewController or action
  @param action's name
  @since 2.0.0
  */
 + (void)endBeaconWithName:(NSString *)name;
+
+/**
+ End stats for a viewController or action adding params
+ @param action's name
+ @param params attributes
+ @since 2.0.2
+ */
++ (void)endBeaconWithName:(NSString *)name andParams: (NSDictionary *) params;
+
+/**
+ Method that configures an user as identifier of the application
+ @param mail
+ @param name
+ @since 2.0.2
+ */
++ (void)identifyUserWithName: (NSString *) name mail: (NSString *) mail;
+
+/**
+ Method that configures an user as identifier of the application
+ @param mail
+ @param name
+ @param params additional info in case it's needed
+ @since 2.0.2
+ */
++ (void)identifyUserWithName: (NSString *) name mail: (NSString *) mail andParams: (NSDictionary *) params;
+
+/**
+ Method that registers a revenue
+ @param name revenue name
+ @param sku purchase product code
+ @param unitary price of the revenue
+ @param currencyCode international code for currency (EUR, USD...)
+ @param amount total amount of purchases
+ @since 2.0.2
+ */
++ (void)registerRevenueWithName: (NSString *)name SKU: (NSString *)SKU price: (float)price currencyCode: (NSString *)currency andAmount: (int)amount;
+
+/**
+ Method that tracks a view.
+ @param name name of the view.
+ @since 2.0.2
+ */
++ (void)trackView: (NSString *)name;
 
 /**
  Add tags to beacon
@@ -213,12 +274,53 @@
  */
 + (BOOL)getAppActive;
 
+
 //  Campaings
 
 /**
- Method add banner
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
  @since 2.0.0
  */
-+ (void)addCampaingBanner:(UIView *)view;
-    
++ (void)addCampaignBanner:(UIView*)view;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @param id delegate for controlling the banner finishing, loading and failing
+ @since 2.0.0
+ */
++ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @param appStoreContainerView View where user wants to present the Appstore.
+ @since 2.0.0
+ */
++ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+  @param id delegate for controlling the banner finishing, loading and failing
+ @param appStoreContainerView View where user wants to present the Appstore.
+ @since 2.0.0
+ */
++ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id)delegate;
+
+
+/**
+ Method that disables the campaigns banner retrieved from server and removes the current one.
+ @since 2.0.0
+ */
++ (void)removeCampaignBanner;
+
+/** 
+ Method that sets the duration for the campaign showing. By default it will 15 seconds.
+ @param duration int with duration in seconds. Value zero means that it wont dissapear never. By default it will dissapear at 15 seconds.
+ @since 2.0.0
+ */
++ (void)setCampaignDuration:(int)duration;
+
 @end
