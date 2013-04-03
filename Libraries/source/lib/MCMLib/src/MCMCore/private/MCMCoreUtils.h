@@ -1,6 +1,7 @@
 
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 /**
  Utilities class used to retrieve system and device information
@@ -118,5 +119,12 @@
 
 + (NSString *) platform;
 
+
+/**
+ Returns the current rectFor current screen.
+ @return CGRect with the bounds of the screen counting with the orientation.
+ @since 2.0.0
+ */
++ (CGRect) rectForViewScreen;
 
 @end
