@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C172BABF1737B10900556148 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C172BABE1737B10900556148 /* StoreKit.framework */; };
 		F3A23E7E15E6483A00D26C44 /* libMalcomLib-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A23E7D15E6483A00D26C44 /* libMalcomLib-ios.a */; };
 		F3A23E8015E6484B00D26C44 /* libMalcomAdsLib-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A23E7F15E6484B00D26C44 /* libMalcomAdsLib-ios.a */; };
 		F3A33793158A379100DAA0FC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33792158A379100DAA0FC /* UIKit.framework */; };
@@ -77,6 +78,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C172BABE1737B10900556148 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		F3A23E7D15E6483A00D26C44 /* libMalcomLib-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomLib-ios.a"; sourceTree = "<group>"; };
 		F3A23E7F15E6484B00D26C44 /* libMalcomAdsLib-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libMalcomAdsLib-ios.a"; sourceTree = "<group>"; };
 		F3A3378E158A379100DAA0FC /* MalcomDemoWithStaticLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemoWithStaticLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -205,6 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C172BABF1737B10900556148 /* StoreKit.framework in Frameworks */,
 				F3A33821158A3C6B00DAA0FC /* MobileCoreServices.framework in Frameworks */,
 				F3A337BD158A385300DAA0FC /* AudioToolbox.framework in Frameworks */,
 				F3A337BE158A385300DAA0FC /* AVFoundation.framework in Frameworks */,
@@ -248,6 +251,7 @@
 		F3A33791158A379100DAA0FC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C172BABE1737B10900556148 /* StoreKit.framework */,
 				F3A33820158A3C6B00DAA0FC /* MobileCoreServices.framework */,
 				F3A337B2158A385300DAA0FC /* AudioToolbox.framework */,
 				F3A337B3158A385300DAA0FC /* AVFoundation.framework */,
