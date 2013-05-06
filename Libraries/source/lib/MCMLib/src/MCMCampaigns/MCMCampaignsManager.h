@@ -8,14 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-@protocol MCMCampaignsManagerDelegate <NSObject>
-@optional
--(void)campaignViewWillLoad;
--(void)campaignViewDidLoad;
--(void)campaignViewDidFailRequest;
--(void)campaignViewDidFinish;
-@end
+#import "MCMCampaignsManagerDelegate.h"
+#import "MCMCampaignModel.h"
 
 @interface MCMCampaignsManager : NSObject
 
@@ -32,9 +26,10 @@
 
 /**
  Method that starts the manager and requests a banner to server.
+ @param view View where is going to be placed the banner.
  @since 2.0.0
  */
-- (void)addBanner;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view;
 
 /**
  Method that starts the manager and requests a banner to server.
@@ -42,7 +37,7 @@
  @param appstoreView View where is going to be placed the appstoreView storekit.
  @since 2.0.0
  */
-- (void)addBanner:(UIView*)view withAppstoreView:(UIView*)appstoreView;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view withAppstoreView:(UIView*)appstoreView;
 
 
 /**

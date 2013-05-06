@@ -9,18 +9,19 @@
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
 #import "MCMCampaignModel.h"
-
-#define TOP @"TOP"
-#define BOTTOM @"BOTTOM"
-#define FULLSCREEN @"FULL_SCREEN"
-#define MIDDLE_LANDSCAPE @"MIDDLE_LANDSCAPE"
-#define MIDDLE_PORTRAIT @"MIDDLE_PORTRAIT"
+//
+//#define TOP @"TOP"
+//#define BOTTOM @"BOTTOM"
+//#define FULLSCREEN @"FULL_SCREEN"
+//#define MIDDLE_LANDSCAPE @"MIDDLE_LANDSCAPE"
+//#define MIDDLE_PORTRAIT @"MIDDLE_PORTRAIT"
 
 @protocol MCMIntersitialBannerViewControllerDelegate <NSObject>
 @optional
--(void)mediaFinishLoading;
--(void)mediaFailedLoading;
--(void)mediaClosed;
+- (void)mediaFinishLoading;
+- (void)mediaFailedLoading;
+- (void)mediaClosed;
+- (void)bannerPressed:(MCMCampaignModel *)campaign;
 @end
 
 @interface MCMIntersitialBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>

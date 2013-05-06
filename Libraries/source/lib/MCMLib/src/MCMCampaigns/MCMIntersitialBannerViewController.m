@@ -7,9 +7,10 @@
 //
 #import <QuartzCore/QuartzCore.h>
 #import "MCMIntersitialBannerViewController.h"
-#import "MCMCoreUtils.h"
+#import "MCMCore.h"
 
 
+#define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
 
 #define bannerHeight 55.0
 #define offset 20.0
@@ -22,7 +23,28 @@
 #define middlePortraitHeight 350.0f
 
 @interface MCMIntersitialBannerViewController (private)
--(void)configureView;
+
+- (void)close;
+- (void)configureView;
+
+/**
+ Method that perform the action when the banner is pressed.
+ @since 2.0.0
+ */
+- (void)bannerPressed;
+
+/**
+ Method that opens the appstore inside the app or in another web view depending on the iOS version. As well, sends the campaignHit click event.
+ @since 2.0.0
+ */
+- (void)openURLAppstore;
+
+/**
+ Method that once it has the image in the memory it will be displayed on screen.
+ @since 2.0.0
+ */
+- (void)showImage;
+
 @end
 
 @implementation MCMIntersitialBannerViewController
@@ -92,7 +114,7 @@
 -(BOOL)needsToDisplayOnWindow{
     
     //in case the type is TOP or BOTTOM it will be shown in the specified view
-    if ([self.currentCampaignModel.position isEqualToString:TOP] || [self.currentCampaignModel.position isEqualToString:BOTTOM]) {
+    if ((self.currentCampaignModel.mediaFeature.position == TOP) || (self.currentCampaignModel.mediaFeature.position == BOTTOM)) {
         return NO;
     }else{ //otherwise it needs to be displayed on the window on the top of everyview (navbars, tabbars..)
         return YES;
@@ -108,7 +130,7 @@
      This notification is most likely triggered inside an animation block,
      therefore no animation is needed to perform this nice transition.
      */
-    if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE]||[self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT]){
+    if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
 //        [self rotateAccordingToStatusBarOrientationAndSupportedOrientations]; //use this method if you want to rotate everything
         
         [self close];
@@ -140,10 +162,30 @@
  Method that closes the banner and calls the delegate
  @since 2.0.0
  */
-- (void)close {
+- (void)close{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [self.delegate mediaClosed];
+}
+
+- (void)bannerPressed{
+    
+    if (self.delegate && [self.delegate respondsToSelector:@selector(bannerPressed:)]) {
+        [self.delegate bannerPressed:self.currentCampaignModel];
+    }
+    
+    NSLog(@"banner Pushed: %@",self.currentCampaignModel.name);
+    
+    if (self.currentCampaignModel.type == IN_APP_CROSS_SELLING) {
+        
+        [self openURLAppstore];
+        
+    } else if (self.currentCampaignModel.type == IN_APP_PROMOTION) {
+        
+        NSLog(@"Se ha pulsado una campaña");
+        
+    }
+    
 }
 
 
@@ -151,9 +193,7 @@
  Method that opens the appstore inside the app or in another web view depending on the iOS version. As well, sends the campaignHit click event.
  @since 2.0.0
  */
-- (void)openURLAppstore {
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CAMPAINGHIT" object:@"CLICK"];
+- (void)openURLAppstore{
     
     if(NSClassFromString(@"SKStoreProductViewController")) { // Checks for iOS 6 feature.
         
@@ -164,7 +204,7 @@
         // [NSNumber numberWithInt:581665873];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         [f setNumberStyle:NSNumberFormatterDecimalStyle];
-        NSNumber * idApple = [f numberFromString:self.currentCampaignModel.urlAppStore];
+        NSNumber * idApple = [f numberFromString:self.currentCampaignModel.promotionFeature.promotionIdentifier];
         [f release];
         NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : idApple };
         
@@ -174,6 +214,7 @@
 			//if it doesnt have where to place the appstoreView it will place it on the VC handler of the banner container view
                 if(!_appstoreContainerView){
                     id rootVC = [self.containerView nextResponder];
+//                    id rootVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
                     [rootVC presentViewController:storeController animated:YES completion:nil];
                 }else{ //if it is specified, it will be placed on the appstoreContainerView 
                     [[_appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
@@ -188,7 +229,7 @@
         
     } else { // Before iOS 6, we can only open the URL
               
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://itunes.apple.com/es/app/id%@", self.currentCampaignModel.urlAppStore]]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignModel.promotionFeature.promotionIdentifier]]];
         
     }
     
@@ -201,12 +242,12 @@
  Method that configures the view requesting firstly the image to show in the banner.
  @since 2.0.0
  */
--(void)configureView{
+- (void)configureView{
 
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
-    NSURL *url = [NSURL URLWithString:self.currentCampaignModel.media];
+    NSURL *url = [NSURL URLWithString:self.currentCampaignModel.mediaFeature.media];
     
     //launches the new connection asynchronously
     NSURLRequest* request = [NSURLRequest requestWithURL:url
@@ -217,45 +258,37 @@
 
 }
 
-
 /**
  Method that once it has the image in the memory it will be displayed on screen.
  @since 2.0.0
  */
--(void)showImage{
+- (void)showImage{
+    
+    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
     
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
     CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
     
     //reframes the size of the view
-    if ([self.currentCampaignModel.position isEqualToString:TOP]) { //top case
-        
-        int yOffset = 0;
-        //if the status bar is visible
-        if ([UIApplication sharedApplication].statusBarHidden == NO){
-            yOffset = statusBarOffset;
+    if (![self.currentCampaignModel showOnWindow]) {
+        if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
+            
+            frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
+            
+        } else { //top & default cases
+            
+            frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
         }
-        
-        frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
-    }
-    else if ([self.currentCampaignModel.position isEqualToString:BOTTOM]) { //bottom case
-        
-        frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
-        
     }
     
     //sets the color and the new frame
     [self.view setBackgroundColor:[UIColor clearColor]];
     
-    NSLog(@">> before: %@ ",NSStringFromCGRect(self.view.frame));
     [self.view setFrame:frame];
-    NSLog(@">> after: %@",NSStringFromCGRect(self.view.frame));
-
-    
     
     //just in case the campaign is middle or fullscreen
-    if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE] || [self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT] || [self.currentCampaignModel.position isEqualToString:FULLSCREEN]){
+    if([self.currentCampaignModel showOnWindow]){
         
         //creates the backgroundView
         self.backgroundFadedView = [[UIView alloc] initWithFrame:[MCMCoreUtils rectForViewScreen]];
@@ -265,25 +298,20 @@
         
     }
     
-    
-    
     //creates the button that is going to be the pushable
     self.bannerButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.bannerButton setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
-    [self.bannerButton setBackgroundColor:[UIColor clearColor]];
-    
-
     
     //in case it is a "middle" it needs to be centered and add a background view with alpha 0.7
-    if ([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE] || [self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT]) {
+    if ((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) || (self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)) {
        
-        int width;
-        int height;
+        int width = 0;
+        int height = 0;
 
-        if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE]){
+        if(self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE){
             width = middleLandscapeWidth;
             height = middleLandscapeHeight;
-        }else if([self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT]){
+        }else if(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT){
             width = middlePortraitWidth;
             height = middlePortraitHeight;
         }
@@ -293,7 +321,6 @@
         self.bannerButton.center = center;
         
         //sets it a border 
-
         [self.bannerButton.layer setShadowColor:[UIColor blackColor].CGColor];
         [self.bannerButton.layer setShadowOpacity:0.8];
         [self.bannerButton.layer setShadowRadius:3.0];
@@ -315,16 +342,18 @@
     //sets the image with the data media retrieved
     UIImage *image = [UIImage imageWithData:self.dataMedia];
     [self.bannerButton setImage:image forState:UIControlStateNormal];
-    [self.bannerButton addTarget:self action:@selector(openURLAppstore) forControlEvents:UIControlEventTouchUpInside];
-    [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.bannerButton setBackgroundColor:[UIColor blackColor]];
+    [self.bannerButton addTarget:self action:@selector(bannerPressed) forControlEvents:UIControlEventTouchUpInside];
+    //[self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
+    //[self.bannerButton setBackgroundColor:[UIColor blackColor]];
+    [self.bannerButton setBackgroundColor:[UIColor redColor]];
 
     [self.view addSubview:self.bannerButton];
     
     //unhides the view
     [self.view setHidden:NO];
     
-    if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE] || [self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT] || [self.currentCampaignModel.position isEqualToString:FULLSCREEN]){
+    if([self.currentCampaignModel showOnWindow]){
         
         int yOffset = 0;
         //if the status bar is visible
@@ -350,26 +379,22 @@
         [self.bannerButton setClipsToBounds:NO];
         [self.closeButton release];
         
-        
         CGRect auxFrame = self.closeButton.frame;
         
         //sets the position of the X button in case it is MIDDLE LANDSCAPE OR PORTRAIT in the top right corner
-        if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE]||[self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT]){
+        if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
             
             auxFrame.origin.x =  self.bannerButton.frame.size.width - self.closeButton.frame.size.width/2;
             auxFrame.origin.y =  - self.closeButton.frame.size.height/2;
             
             self.closeButton.frame = auxFrame;
         }
-        
     
     }
-    
     
     //Be sure that it still on top when finish animation and during all the web life
     [self.view.superview performSelector:@selector(bringSubviewToFront:) withObject:self.view];
 
-    
 }
 
 
@@ -402,12 +427,15 @@
         [self showImage];	 //shows the image
         
         //calls the delegate to advise that the image is loaded.
-        [self.delegate mediaFinishLoading];
+        [self.delegate mediaFinishLoading:self.currentCampaignModel];
     }
 
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Failed campaign loagin... %@",[error description]]
+         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
 	self.dataMedia = nil;
     

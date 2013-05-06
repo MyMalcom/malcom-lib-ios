@@ -57,9 +57,7 @@
     [settings setValue:secretKey forKey:kMCMCoreKeyAssetsAppSecretKey];
     
     if (bundlePath != nil) {
-        
         [settings writeToFile:bundlePath atomically:YES];
-        
     }
     else {
         
@@ -70,9 +68,7 @@
         
         [[NSUserDefaults standardUserDefaults]  setObject:settings  forKey:kMCMCoreInfoPlistName];
         [[NSUserDefaults standardUserDefaults] synchronize];
-        
     }
-    
 }
 
 + (void)showLog:(BOOL)logActivated {
@@ -165,6 +161,13 @@
 
 #pragma mark - Stats methods
 
++ (void)initAndStartBeacon{
+    
+    NSLog(@"Malcom initAndStartBeacon");
+
+    [self initAndStartBeacon:[[MCMStatsManager sharedInstance] coreLocation]];
+}
+
 + (void)initAndStartBeacon:(BOOL)userLocation{
     [self initAndStartBeacon:userLocation useOnlyWiFi:NO];
 }
@@ -172,8 +175,30 @@
 
 + (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState {
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+                                                 name:UIApplicationWillTerminateNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setAppInactive)
+                                                 name:UIApplicationWillResignActiveNotification object:nil];
+    
     [MCMStatsManager initAndStartBeaconWithApplicationCode:[[MCMCoreManager sharedInstance] malcomAppId] useCoreLocation:userLocation useOnlyWiFi:wifiState];
     
+}
+
++ (void)resumeMalcom{
+    [self initAndStartBeacon];
+    [self setAppActive];
 }
 
 + (void)endBeacon {
@@ -307,7 +332,10 @@
         [MCMNotificationManager processRemoteNotification:[launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey]];
         
     }
-    
+}
+
++ (void)startNotifications:(UIApplication *)application withOptions:(NSDictionary *)launchOptions{
+    [self startNotifications:application withOptions:launchOptions isDevelopmentMode:NO];
 }
 
 + (void)didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)devToken {
@@ -378,11 +406,23 @@
     
 }
 
++ (void)setAppActive{
+        
+    [[NSUserDefaults standardUserDefaults] setBool:TRUE forKey:@"mcm_appActive"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+}
 + (void)setAppActive:(BOOL)active {
     
     [[NSUserDefaults standardUserDefaults] setBool:active forKey:@"mcm_appActive"];
     [[NSUserDefaults standardUserDefaults] synchronize];
     
+}
+
++ (void) setAppInactive{
+
+    [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"mcm_appActive"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (BOOL)getAppActive {
@@ -411,6 +451,45 @@
 +(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
     
     [[MCMCampaignsManager sharedInstance] addBanner:view withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+}
+
+// Multitype campaigns
+
++ (void)addCampaignCrossSelling:(UIView*)view{
+    
+    [self addCampaignCrossSelling:view withAppstoreContainerView:nil withDelegate:nil];
+}
+
++ (void)addCampaignCrossSelling:(UIView*)view withDelegate:(id)delegate{
+    
+    [self addCampaignCrossSelling:view withAppstoreContainerView:nil withDelegate:delegate];
+}
+
++(void)addCampaignCrossSelling:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView{
+    
+    [self addCampaignCrossSelling:view withAppstoreContainerView:appStoreContainerView withDelegate:nil];
+}
+
++(void)addCampaignCrossSelling:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
+    
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+}
+
++ (void)addCampaignPromotions:(UIView*)view{
+    [self addCampaignPromotions:view withDelegate:nil];
+}
+
++ (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate{
+    
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_PROMOTION inView:view withAppstoreView:nil];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];

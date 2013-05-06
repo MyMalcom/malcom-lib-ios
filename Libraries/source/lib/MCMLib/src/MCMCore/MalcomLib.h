@@ -10,6 +10,7 @@
 #import <UIKit/UIViewController.h>
 #import <CoreLocation/CoreLocation.h>
 #import "MCMLib.h"
+#import "MCMCampaignsManagerDelegate.h"
 
 /**
  Class that manages the methods of Malcom Library. It's responsable of all Malcom's modules: 
@@ -110,7 +111,12 @@
  @since 2.0.0
  */
 + (void)initAndStartBeacon:(BOOL)userLocation;
++ (void)initAndStartBeacon;
 
+/**
+ Resume malcon from background
+ */
++ (void)resumeMalcom;
 
 /**
  Init and start stats in application
@@ -239,6 +245,14 @@
 + (void)startNotifications:(UIApplication *)application withOptions:(NSDictionary *)launchOptions isDevelopmentMode:(BOOL)developmentMode;
 
 /**
+ Prepare and start notifications on the application with developmentMode off by default
+ @param application UIApplication from didFinishLaunchingWithOptions
+ @param launchOptions info about options and notifications
+ @since 3.0.0
+ */
++ (void)startNotifications:(UIApplication *)application withOptions:(NSDictionary *)launchOptions;
+
+/**
  Registre divice with token
  @param devToken Device token
  @since 2.0.0
@@ -266,6 +280,8 @@
  @since 2.0.0
  */
 + (void)setAppActive:(BOOL)active;
++ (void)setAppActive;
++ (void)setAppInactive;
 
 /**
  Method get if app is active
@@ -282,7 +298,7 @@
  @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
  @since 2.0.0
  */
-+ (void)addCampaignBanner:(UIView*)view;
++ (void)addCampaignBanner:(UIView*)view __attribute__((deprecated));
 
 /**
  Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
@@ -290,7 +306,7 @@
  @param id delegate for controlling the banner finishing, loading and failing
  @since 2.0.0
  */
-+ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate;
++ (void)addCampaignBanner:(UIView*)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate __attribute__((deprecated("use addCampaign_type method instead")));
 
 /**
  Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
@@ -298,7 +314,7 @@
  @param appStoreContainerView View where user wants to present the Appstore.
  @since 2.0.0
  */
-+ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView;
++ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView __attribute__((deprecated("use addCampaign_type method instead")));
 
 /**
  Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
@@ -307,8 +323,56 @@
  @param appStoreContainerView View where user wants to present the Appstore.
  @since 2.0.0
  */
-+ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id)delegate;
++ (void)addCampaignBanner:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id<MCMCampaignsManagerDelegate>)delegate __attribute__((deprecated("use addCampaign_type method instead")));
 
+//Multitype Campaigns
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @since 2.0.1
+ */
++ (void)addCampaignCrossSelling:(UIView*)view;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @param id delegate for controlling the banner finishing, loading and failing
+ @since 2.0.1
+ */
++ (void)addCampaignCrossSelling:(UIView*)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @param appStoreContainerView View where user wants to present the Appstore.
+ @since 2.0.1
+ */
++ (void)addCampaignCrossSelling:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView;
+
+/**
+ Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
+ @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
+ @param id delegate for controlling the banner finishing, loading and failing
+ @param appStoreContainerView View where user wants to present the Appstore.
+ @since 2.0.1
+ */
++ (void)addCampaignCrossSelling:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
+
+/**
+ Method that enables the campaigns banners retrieved from server and places it on the view.
+ @param view UIView where is going to be placed the list of banners.
+ @since 2.0.1
+ */
++ (void)addCampaignPromotions:(UIView*)view;
+
+/**
+ Method that enables the campaigns banners retrieved from server and places it on the view.
+ @param view UIView where is going to be placed the list of banners.
+ @param id delegate for controlling the banner finishing, loading, failing and press
+ @since 2.0.1
+ */
++ (void)addCampaignPromotions:(UIView*)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
 
 /**
  Method that disables the campaigns banner retrieved from server and removes the current one.

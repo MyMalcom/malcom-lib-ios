@@ -1,0 +1,20 @@
+//
+//  MCMCampaignsManagerDelegate.h
+//  malcomdemo
+//
+//  Created by Pedro Durán on 29/04/13.
+//  Copyright (c) 2013 Malcom. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@protocol MCMCampaignsManagerDelegate <NSObject>
+@optional
+
+- (void)campaignViewWillLoad;
+- (void)campaignViewDidLoad;
+- (void)campaignViewDidFailRequest;
+- (void)campaignViewDidFinish;
+- (void)campaignPressed:(NSString *) promotionCode;
+
+@end

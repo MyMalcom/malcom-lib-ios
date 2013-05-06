@@ -20,16 +20,23 @@
 #import "MCMIntersitialBannerViewController.h"
 #import "MCMCoreUtils.h"
 
+#define MCMCAMPAIGN_URL @"v2/campaigns/application/%@/udid/%@"
+//#define MCMCAMPAIGN_URL @"http://malcom-api-dev.elasticbeanstalk.com/v2/campaigns/application/%@/udid/%@"          //DEV
+#define MCMCAMPAIGN_HIT_URL @"v2/campaigns/%@/hit/%@/application/%@/udid/%@"
+
 #define CURRENT_CAMPAIGN_VIEW_TAG 100
 #define DEFAULT_DURATION 15
 
 @interface MCMCampaignsManager () <MCMIntersitialBannerViewControllerDelegate>
--(void)requestCampaign;
--(MCMCampaignModel*)getCampaignPerWeight;
--(void)displayCampaign;
--(void)appDidBecomeActiveNotification:(NSNotification*)notification;
--(void)hideCampaignView;
--(void)finishCampaignView;
+- (void)requestCampaign;
+- (MCMCampaignModel*)getCampaignPerWeight;
+- (void)displayCampaign;
+- (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
+- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView;
+- (void)appDidBecomeActiveNotification:(NSNotification *)notification;
+- (void)hideCampaignView;
+- (void)finishCampaignView;
+- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign;
 
 
 @property (nonatomic, retain) UIView *campaignContainerView;    //view that contains the banner.
@@ -40,7 +47,8 @@
 @property (nonatomic, retain) MCMIntersitialBannerViewController *currentIntersitial;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
 @property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;       //current campaign selected
-
+@property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
+@property (nonatomic, retain) NSMutableArray *bannersArray;     //
 
 @property (nonatomic, assign) BOOL deletedView;  
 
@@ -53,33 +61,26 @@
 @synthesize campaignsEnabled = _campaignsEnabled;
 @synthesize delegate = _delegate;
 
+@synthesize bannersArray = _bannersArray;
+
 
 
 #pragma mark - public methods
 
-- (void)addBanner{
-    [self addBanner:nil withAppstoreView:nil];
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view {
+    [self addBannerType:type inView:view withAppstoreView:nil];
 }
 
-- (void) addBanner:(UIView *)view withAppstoreView:(UIView *)appstoreView{
-    
+- (void)addBannerType:(CampaignType)type inView:(UIView *)view withAppstoreView:(UIView *)appstoreView{
     
     [self hideCampaignView];
+    
+    self.type = type;
     
     if(self.durationTimer && [self.durationTimer isValid]){
         [self.durationTimer invalidate];
         self.durationTimer = nil;
     }
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(campaingHit:) name:@"CAMPAINGHIT" object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(appDidBecomeActiveNotification:)
-//                                                 name:UIApplicationDidBecomeActiveNotification
-//                                               object:nil];
 
     //time by default
     self.duration = DEFAULT_DURATION;
@@ -97,7 +98,7 @@
 }
 
 
--(void)removeCurrentBanner{
+- (void)removeCurrentBanner{
     
     //removes the current one
     if(self.currentIntersitial){
@@ -106,8 +107,6 @@
 
     _campaignsEnabled = NO;
     self.currentIntersitial = nil;
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 }
 - (void)dealloc{
@@ -117,6 +116,7 @@
         self.durationTimer = nil;
     }
     
+    [super dealloc];
 }
 
 
@@ -126,16 +126,16 @@
  Method that request the banner to the server.
  @since 2.0.0
  */
--(void)requestCampaign{
+- (void)requestCampaign{
     
-    //NSString *url = @"https://dl.dropbox.com/u/53608360/campaing.json";
+//    NSString *url = @"https://dl.dropboxusercontent.com/u/23103432/campaignsV2.json";
     
-    NSString *url = [NSString stringWithFormat:@"v1/campaigns/application/%@/udid/%@", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
+    NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
     url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager url: %@", url]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-        
+    
     MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
     [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
     [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
@@ -153,7 +153,7 @@
  @return MCMCampaignModel campaign selected.
  @since 2.0.0
  */
--(MCMCampaignModel *)getCampaignPerWeight{
+- (MCMCampaignModel *)getCampaignPerWeight{
     
     
     NSMutableArray *weightedArray = [[NSMutableArray alloc] init];
@@ -181,12 +181,38 @@
 
 }
 
+ 
+             
+/**
+Method that gets randomly weighted a campaign to serve.
+@return MCMCampaignModel campaign selected.
+@since 2.0.0
+*/
+- (NSMutableArray *)getPromotionCampaignsArray{
+    
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    
+    //generates the array with only the promotion campaigns
+    for(int i=0; i<[self.campaignsArray count]; i++){
+        
+        MCMCampaignModel *campaignModel = [self.campaignsArray objectAtIndex:i];
+        
+        if (campaignModel.type == IN_APP_PROMOTION) {
+            [resultArray addObject:campaignModel];
+        }
+             
+    }
+             
+    return [resultArray autorelease];
+             
+}
+
 
 /**
  Method that shows the selected campaign in the screen.
  @since 2.0.0
  */
--(void)displayCampaign{
+- (void)displayCampaign{
     
 
     //if there are parsed campaigns
@@ -197,14 +223,33 @@
             [self hideCampaignView];
         }
         
-        //gets the one that fits better depending on the weight of the campaign
-        self.currentCampaignModel = [self getCampaignPerWeight];
-        
-        //creates a banner with the specifications
-        self.currentIntersitial = [[MCMIntersitialBannerViewController alloc] initInView:_campaignContainerView andCampaign:self.currentCampaignModel];
-        [self.currentIntersitial setDelegate:self];
-        [self.currentIntersitial.view setTag:CURRENT_CAMPAIGN_VIEW_TAG];
-        [self.currentIntersitial setAppstoreContainerView:_appstoreContainerView]; //specifies the appstore container view
+        if ((self.type == IN_APP_CROSS_SELLING) || (self.type == IN_APP_PROMOTION)) {
+            //Get the sources for the current CampaignType
+            NSArray *selectionCampaignsArray;
+            if (self.type == IN_APP_CROSS_SELLING) {
+                //gets the one that fits better depending on the weight of the campaign
+                selectionCampaignsArray = [[NSArray alloc] initWithObjects:[self getCampaignPerWeight], nil];
+            } else {
+                selectionCampaignsArray = [[self getPromotionCampaignsArray] retain];
+            }
+            
+            self.bannersArray = [[NSMutableArray alloc] init];
+            
+            for (int i=0;i<[selectionCampaignsArray count];i++) {
+                //creates a banner with the specifications
+                MCMIntersitialBannerViewController *bannerViewController = [[MCMIntersitialBannerViewController alloc] initInView:_campaignContainerView andCampaign:[selectionCampaignsArray objectAtIndex:i]];
+                [bannerViewController setDelegate:self];
+                [bannerViewController.view setTag:i];
+                
+                if (self.type == IN_APP_CROSS_SELLING)
+                    [bannerViewController setAppstoreContainerView:_appstoreContainerView]; //specifies the appstore container view
+                
+                [self.bannersArray addObject:bannerViewController];
+            }
+            
+            
+            [selectionCampaignsArray release];
+        }
         
 
         [MCMLog log:@"Malcom Campaign - MCMCampaignManager Starting campaign displaying..."
@@ -214,12 +259,109 @@
     
 }
 
+/**
+ 
+ */
+- (void)placePromotionBanners:(NSArray*)bannersArray inView:(UIView *)containerView {
+    [MCMLog log:@"Malcom Campaign - MCMCampaignManager placeBanners" 
+         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    
+    int yOffset = 0;
+    
+    for (int i=0; i<[bannersArray count]; i++) {
+        
+        [MCMLog log:[NSString stringWithFormat:@"MCMCampaignManager placing banner %d - offset %d",i,yOffset]
+             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        
+        MCMIntersitialBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
+        
+        CGRect frame = currentBanner.view.frame;
+        frame.origin.y = yOffset;
+        [currentBanner.view setFrame:frame];
+        
+        yOffset += frame.size.height;
+        
+        //Remove the view from container
+        [currentBanner.view removeFromSuperview];
+        //Add current view in proper location
+        [containerView addSubview:currentBanner.view];
+        
+    }
+}
+
+- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView {
+    //adds the banner to the view
+    [containerView addSubview:bannerViewController.view];
+    
+    [bannerViewController.view setAlpha:0.0f];
+    
+    //depending on the type of position it will show a bouncing animation
+    if((bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) ||
+       (bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+        
+        
+        [bannerViewController.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
+        [bannerViewController.backgroundFadedView setAlpha:0.0f];
+        [bannerViewController.closeButton setAlpha:0.0f];
+        
+        [UIView animateWithDuration: 0.3
+                         animations: ^{
+                             bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                             [bannerViewController.view setAlpha:1.0f];
+                             [bannerViewController.backgroundFadedView setAlpha:0.7f];
+                             
+                         }
+                         completion: ^(BOOL finished){
+                             [UIView animateWithDuration:1.0/10.0
+                                              animations: ^{
+                                                  bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
+                                              }
+                                              completion: ^(BOOL finished){
+                                                  [UIView animateWithDuration:1.0/5.0
+                                                                   animations: ^{
+                                                                       bannerViewController.bannerButton.transform = CGAffineTransformIdentity;
+                                                                       [bannerViewController.closeButton setAlpha:1.0f];
+                                                                       
+                                                                   }completion:^(BOOL finished) {
+                                                                   }];
+                                              }];
+                         }];
+        
+        
+    }else{ //or a simple animation of fade in
+        
+        [UIView animateWithDuration: 0.3 animations: ^{
+            [bannerViewController.view setAlpha:1.0f];
+        }
+                         completion: ^(BOOL finished){}];
+    }
+    
+    
+    
+    //clears the timer
+    if(self.durationTimer && [self.durationTimer isValid]){
+        [self.durationTimer invalidate];
+        self.durationTimer = nil;
+    }
+    
+    
+    //if duration is not 0 it will create a timer in order to remove and finish the campaign
+    if(self.duration != 0){
+        self.durationTimer = [NSTimer scheduledTimerWithTimeInterval:self.duration
+                                                              target:self
+                                                            selector:@selector(finishCampaignView)
+                                                            userInfo:nil
+                                                             repeats:NO];
+    }
+    
+}
+
 
 /**
  Method that detects the app did becoming to active and displays another campaign
  @since 2.0.0
  */
--(void)appDidBecomeActiveNotification:(NSNotification *)notification{
+- (void)appDidBecomeActiveNotification:(NSNotification *)notification{
 
     if(_campaignsEnabled){
         [self requestCampaign];
@@ -230,7 +372,7 @@
  Method that finishes the campaign
  @since 2.0.0
  */
--(void)hideCampaignView{
+- (void)hideCampaignView{
     
     if(self.currentIntersitial.view.superview){
         [self.currentIntersitial.view removeFromSuperview];
@@ -239,7 +381,7 @@
     self.currentIntersitial = nil;
 }
 
--(void)finishCampaignView{
+- (void)finishCampaignView{
   
     if (self.currentIntersitial && self.currentIntersitial.view.window) {
         [self hideCampaignView];
@@ -252,13 +394,44 @@
     
 }
 
+- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign{
+    
+    //url
+    NSString *path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL,
+                      campaign,
+                      action,
+                      [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
+                      [MCMCoreUtils uniqueIdentifier]];
+    
+    NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
+    
+    //request
+    MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
+    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"campaingHit",nil]];
+    [request startSynchronous];
+    
+    
+    NSError *error = [request error];
+    
+    if ((!error) && ([request responseStatusCode]<402)) {
+        NSLog(@"Todo ok: %d", [request responseStatusCode]);
+    }
+    else {
+        
+        [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]]
+             inLine:__LINE__
+         fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    }
+    
+}
+
 #pragma mark ----
 #pragma mark ASIHTTPRequest delegate methods
 #pragma mark ----
 
 - (void)requestFinished:(MCMASIHTTPRequest *)request {
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]<402]
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 
         
@@ -310,43 +483,14 @@
     
 }
 
-/**
- Method that sends to Malcom servers that the campaign was tapped.
- @since 2.0.0
- */
-- (void)campaingHit:(NSNotification *)notification {
-    
-    //url
-    NSString *path = [NSString stringWithFormat:@"v1/campaigns/%@/hit/%@/application/%@/udid/%@", self.currentCampaignModel.campaignId, notification.object, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
-    
-    NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
-        
-    //request
-    MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"campaingHit",nil]];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    
-    if ((!error) && ([request responseStatusCode]<402)) {
-        NSLog(@"Todo ok: %d", [request responseStatusCode]);
-    }
-    else {
-        
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    }
-    
-}
-
 
 
 #pragma mark - MCMIntersitialBannerViewControllerDelegate Methods
 
--(void)mediaFinishLoading{
+- (void)mediaFinishLoading:(MCMCampaignModel *)campaign{
     
     //sends a notification to capture the impression of the view in server
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"CAMPAINGHIT" object:@"IMPRESSION"];
+    [self notifyServer:@"IMPRESSION" andCampaign:campaign];
     
     UIView *containerView;
     
@@ -359,79 +503,20 @@
         
         containerView = [[window subviews] objectAtIndex:0];
         
-//        containerView = [[[UIApplication sharedApplication] delegate] window];
+        //        containerView = [[[UIApplication sharedApplication] delegate] window];
         
     }else{ //adds to the specified view
         containerView = _campaignContainerView;
         
     }
-
-    //adds the banner to the view
-    [containerView addSubview:self.currentIntersitial.view];
     
-    
-    
-    [self.currentIntersitial.view setAlpha:0.0f];
-
-    //depending on the type of position it will show a bouncing animation
-    if([self.currentCampaignModel.position isEqualToString:MIDDLE_LANDSCAPE] || [self.currentCampaignModel.position isEqualToString:MIDDLE_PORTRAIT]){
+    if (self.type == IN_APP_CROSS_SELLING) {
         
-
-        [self.currentIntersitial.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
-        [self.currentIntersitial.backgroundFadedView setAlpha:0.0f];
-        [self.currentIntersitial.closeButton setAlpha:0.0f];
-
-        [UIView animateWithDuration: 0.3
-                         animations: ^{
-                             self.currentIntersitial.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                             [self.currentIntersitial.view setAlpha:1.0f];
-                             [self.currentIntersitial.backgroundFadedView setAlpha:0.7f];
-                             
-                         }
-                         completion: ^(BOOL finished){
-                             [UIView animateWithDuration:1.0/10.0
-                                              animations: ^{
-                                                  self.currentIntersitial.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
-                                              }
-                                              completion: ^(BOOL finished){
-                                                  [UIView animateWithDuration:1.0/5.0
-                                                                   animations: ^{
-                                                                       self.currentIntersitial.bannerButton.transform = CGAffineTransformIdentity;
-                                                                       [self.currentIntersitial.closeButton setAlpha:1.0f];
-
-                                                                   }completion:^(BOOL finished) {
-                                                                   }];
-                                              }];
-                         }];
+        [self placeCrossSellingBanner:[self.bannersArray objectAtIndex:0] inView:containerView];
         
-
-    }else{ //or a simple animation of fade in
+    } else if (self.type == IN_APP_PROMOTION) {
         
-        [UIView animateWithDuration: 0.3
-                         animations: ^{
-                             [self.currentIntersitial.view setAlpha:1.0f];
-                             
-                         }
-                         completion: ^(BOOL finished){
-                         }];
-    }
-    
-        
-    
-    //clears the timer
-    if(self.durationTimer && [self.durationTimer isValid]){
-        [self.durationTimer invalidate];
-        self.durationTimer = nil;
-    }
-    
-    
-    //if duration is not 0 it will create a timer in order to remove and finish the campaign
-    if(self.duration != 0){
-        self.durationTimer = [NSTimer scheduledTimerWithTimeInterval:self.duration
-                                                              target:self
-                                                            selector:@selector(finishCampaignView)
-                                                            userInfo:nil
-                                                             repeats:NO];
+        [self placePromotionBanners:self.bannersArray inView:containerView];
     }
 
     //notifies it is being shown
@@ -442,10 +527,9 @@
     [MCMLog log:@"Malcom Campaign - MCMCampaignManager Displaying a campaign..."
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
-    
 }
 
--(void)mediaFailedLoading{
+- (void)mediaFailedLoading{
  
     //notifies delegate fail
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
@@ -458,10 +542,25 @@
     
 }
 
--(void)mediaClosed{
+- (void)mediaClosed{
     
     [self finishCampaignView];
     
+}
+
+- (void)bannerPressed:(MCMCampaignModel *)campaign{
+    
+    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Pressed %@",campaign]
+         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    
+    //notifies it is being shown
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
+        
+        [self.delegate campaignPressed:campaign.promotionFeature.promotionIdentifier];
+    }
+    
+    [self notifyServer:@"CLICK" andCampaign:campaign];
+
 }
 
 @end
