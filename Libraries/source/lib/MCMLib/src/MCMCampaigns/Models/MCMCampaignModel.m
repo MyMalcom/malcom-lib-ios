@@ -51,8 +51,8 @@
     if([data objectForKey:@"promotionFeature"]){
         self.promotionFeature = [[MCMCampaignPromotionFeatureModel alloc] initWithDictionary:[data objectForKey:@"promotionFeature"]];
     }
-    if([data objectForKey:@"promotionFeature"]){
-        self.promotionFeature = [[MCMCampaignPromotionFeatureModel alloc] initWithDictionary:[data objectForKey:@"promotionFeature"]];
+    if([data objectForKey:@"clientLimitFeature"]){
+        self.clientLimitFeature = [[MCMCampaignClientLimitFeatureModel alloc] initWithDictionary:[data objectForKey:@"clientLimitFeature"]];
     }
     if([data objectForKey:@"serverOrderFeature"]){
         if ([[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"]) {
