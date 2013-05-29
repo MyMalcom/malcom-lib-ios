@@ -37,15 +37,17 @@
     
     //url
     NSString *path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL,
-                      campaign,
+                      [campaign campaignId],
                       action,
                       [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
                       [MCMCoreUtils uniqueIdentifier]];
+    NSString *urlString = [[MCMCoreManager sharedInstance] malcomUrlForPath:path];
     
-    NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
+    NSURL *url = [NSURL URLWithString:urlString];
     
     //request
     MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
+    
     [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"campaingHit",nil]];
     [request startSynchronous];
     

@@ -114,7 +114,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     _campaignContainerView = nil;
     self.completionBlock = completion;
     
-    //recupero el json, lo parseo
+    //Get the json and parse it to get the banners
     [self requestCampaign];
     
     //filtro el array con las campañas del tipo type

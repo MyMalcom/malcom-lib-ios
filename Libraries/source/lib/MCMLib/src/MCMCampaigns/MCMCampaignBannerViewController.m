@@ -80,9 +80,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    
-    [self configureView];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarFrameOrOrientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
@@ -102,6 +99,11 @@
 
 - (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self configureView];
 }
 
 #pragma mark - Public methods
@@ -138,25 +140,6 @@
     }
 
 }
-
-// problem: it loses the button responses once is rotated :( 
-//- (void)rotateAccordingToStatusBarOrientationAndSupportedOrientations
-//{
-//
-//    CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
-//    CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
-//
-//    NSLog(@">> before: %@ ",NSStringFromCGRect(self.view.frame));
-//    [self.view setFrame:frameScreen];
-//    NSLog(@">> after: %@",NSStringFromCGRect(self.view.frame));
-//    
-//    [self.backgroundFadedView setFrame:frameScreen];
-//    
-//    self.bannerButton.center = center;
-//    self.bannerButton.layer.frame = self.bannerButton.frame;
-//    
-//}
-//
 
 
 /**
@@ -275,13 +258,17 @@
     
     //reframes the size of the view
     if (![self.currentCampaignModel showOnWindow]) {
-        if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
-            
-            frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
-            
-        } else { //top & default cases
-            
-            frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
+        if (self.containerView!=nil) {
+            if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
+                
+                frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
+                
+            } else { //top & default cases
+                
+                frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
+            }
+        } else {
+            frame = CGRectMake(0, 0, 320, bannerHeight);
         }
     }
     
