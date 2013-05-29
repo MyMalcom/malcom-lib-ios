@@ -54,11 +54,7 @@
     
     NSError *error = [request error];
     
-    if ((!error) && ([request responseStatusCode]<402)) {
-        NSLog(@"Todo ok: %d", [request responseStatusCode]);
-    }
-    else {
-        
+    if ((error) || ([request responseStatusCode]<402)) {
         [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]]
              inLine:__LINE__
          fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];

@@ -160,7 +160,7 @@
         [self.delegate bannerPressed:self.currentCampaignModel];
     }
     
-    NSLog(@"banner Pushed: %@",self.currentCampaignModel.name);
+//    NSLog(@"banner Pushed: %@",self.currentCampaignModel.name);
     
     if (self.currentCampaignModel.type == IN_APP_CROSS_SELLING) {
         
@@ -168,7 +168,7 @@
         
     } else if (self.currentCampaignModel.type == IN_APP_PROMOTION) {
         
-        NSLog(@"Se ha pulsado una campaña");
+//        NSLog(@"Se ha pulsado una campaña");
         
     }
     
@@ -250,7 +250,7 @@
  */
 - (void)showImage{
     
-    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
+//    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
     
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
