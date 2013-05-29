@@ -46,5 +46,12 @@
  */
 - (void)removeCurrentBanner;
 
+/**
+ Method that request the available campaigns from server, filters them and executes the completion block with the result
+ @param type the campaign type to filter the server response
+ @param ^completion block that will be execute with the filtered response
+ */
+- (void)requestBannersType:(CampaignType)type completion:( void ( ^ )(NSArray * campaignBannersVC) )completion;
+
 
 @end

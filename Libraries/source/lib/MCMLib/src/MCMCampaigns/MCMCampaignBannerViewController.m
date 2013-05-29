@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 Malcom. All rights reserved.
 //
 #import <QuartzCore/QuartzCore.h>
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignBannerViewController.h"
 #import "MCMCore.h"
+#import "MCMCampaignsHelper.h"
 
 
 #define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
@@ -22,7 +23,7 @@
 #define middlePortraitWidth 240.0f
 #define middlePortraitHeight 350.0f
 
-@interface MCMIntersitialBannerViewController (private)
+@interface MCMCampaignBannerViewController (private)
 
 - (void)close;
 - (void)configureView;
@@ -47,7 +48,7 @@
 
 @end
 
-@implementation MCMIntersitialBannerViewController
+@implementation MCMCampaignBannerViewController
 
 @synthesize currentCampaignModel = _currentCampaignModel;
 @synthesize containerView = _containerView;
@@ -169,6 +170,8 @@
 }
 
 - (void)bannerPressed{
+    
+    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignModel];
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(bannerPressed:)]) {
         [self.delegate bannerPressed:self.currentCampaignModel];
@@ -425,6 +428,9 @@
     //when connection is finished and self.dataMedia is not nill
     if(self.dataMedia != nil){
         [self showImage];	 //shows the image
+        
+        //Notify the impression to Malcom server
+        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignModel];
         
         //calls the delegate to advise that the image is loaded.
         [self.delegate mediaFinishLoading:self.currentCampaignModel];

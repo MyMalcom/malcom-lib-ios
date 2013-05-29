@@ -387,4 +387,12 @@
  */
 + (void)setCampaignDuration:(int)duration;
 
+
+/**
+ Method that request the available campaign banners from server and creates an array with the banners view controller.
+ @param ^completion block that will be executed when the proccess will finnish
+ @since 2.0.1
+ */
++ (void)requestCampaignPromotions:( void ( ^ )(NSArray * campaignBannersVC) )completion;
+
 @end

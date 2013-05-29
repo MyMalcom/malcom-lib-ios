@@ -17,26 +17,22 @@
 #import "MCMCoreManager.h"
 #import "MCMCore.h"
 #import "MCMCampaignModel.h"
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignBannerViewController.h"
 #import "MCMCoreUtils.h"
+#import "MCMCampaignsHelper.h"
+#import "MCMCampaignsDefines.h"
 
-#define MCMCAMPAIGN_URL @"v2/campaigns/application/%@/udid/%@"
-//#define MCMCAMPAIGN_URL @"http://malcom-api-dev.elasticbeanstalk.com/v2/campaigns/application/%@/udid/%@"          //DEV
-#define MCMCAMPAIGN_HIT_URL @"v2/campaigns/%@/hit/%@/application/%@/udid/%@"
+typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
-#define CURRENT_CAMPAIGN_VIEW_TAG 100
-#define DEFAULT_DURATION 15
-
-@interface MCMCampaignsManager () <MCMIntersitialBannerViewControllerDelegate>
+@interface MCMCampaignsManager () <MCMCampaignBannerViewControllerDelegate>
 - (void)requestCampaign;
 - (MCMCampaignModel*)getCampaignPerWeight;
-- (void)displayCampaign;
+- (void)displayCampaigns:(NSArray *)campaigns;
 - (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
-- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView;
+- (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView;
 - (void)appDidBecomeActiveNotification:(NSNotification *)notification;
 - (void)hideCampaignView;
 - (void)finishCampaignView;
-- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign;
 
 
 @property (nonatomic, retain) UIView *campaignContainerView;    //view that contains the banner.
@@ -44,13 +40,15 @@
 @property (nonatomic, assign) BOOL campaignsEnabled;            //boolean indicating the campaigns enabling.
 
 @property (nonatomic, retain) NSMutableArray *campaignsArray;
-@property (nonatomic, retain) MCMIntersitialBannerViewController *currentIntersitial;
+@property (nonatomic, retain) MCMCampaignBannerViewController *currentIntersitial;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
 @property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
-@property (nonatomic, retain) NSMutableArray *bannersArray;     //
+@property (nonatomic, retain) NSArray *bannersArray;     //
 
-@property (nonatomic, assign) BOOL deletedView;  
+@property (nonatomic, assign) BOOL deletedView;
+
+@property (nonatomic, copy) CompletionBlock completionBlock;
 
 @end
 
@@ -91,12 +89,14 @@
     //specifies the container view for the appstore
     _appstoreContainerView = appstoreView;
     
+    //There is no completionBlock
+    self.completionBlock = nil;
+    
     //request a campaign to the server. this has to be called everytime it's needed to show it.
     [self requestCampaign];
     
     _campaignsEnabled = YES;
 }
-
 
 - (void)removeCurrentBanner{
     
@@ -109,6 +109,22 @@
     self.currentIntersitial = nil;
 
 }
+
+- (void)requestBannersType:(CampaignType)type completion:( void ( ^ )(NSArray * campaignBannersVC) )completion{
+    _campaignContainerView = nil;
+    self.completionBlock = completion;
+    
+    //recupero el json, lo parseo
+    [self requestCampaign];
+    
+    //filtro el array con las campañas del tipo type
+    
+    //creo un array de banners
+    
+    //ejecuto el bloque con el array de banners
+    
+}
+
 - (void)dealloc{
         
     if(self.durationTimer && [self.durationTimer isValid]){
@@ -127,8 +143,6 @@
  @since 2.0.0
  */
 - (void)requestCampaign{
-    
-//    NSString *url = @"https://dl.dropboxusercontent.com/u/23103432/campaignsV2.json";
     
     NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
     url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
@@ -149,70 +163,10 @@
 
 
 /**
- Method that gets randomly weighted a campaign to serve.
- @return MCMCampaignModel campaign selected.
- @since 2.0.0
- */
-- (MCMCampaignModel *)getCampaignPerWeight{
-    
-    
-    NSMutableArray *weightedArray = [[NSMutableArray alloc] init];
-    
-    //generates the array to random weighted selection
-    for(int i=0; i<[self.campaignsArray count]; i++){
-        
-        MCMCampaignModel *campaignModel = [self.campaignsArray objectAtIndex:i];
-        
-        //adds to the weighted array as ids as weight has
-        for(int j=0; j<campaignModel.weight;j++){
-            [weightedArray addObject:[NSNumber numberWithInt:i]];
-        }
-        
-    }
-
-    //generates random number
-    int selection = arc4random()%[weightedArray count];
-
-    //gets the random position and gets the id written on it. It will be one of the campaigns
-    MCMCampaignModel *selectedCampaignModel = [self.campaignsArray objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
-    [weightedArray release];
-    
-    return selectedCampaignModel;
-
-}
-
- 
-             
-/**
-Method that gets randomly weighted a campaign to serve.
-@return MCMCampaignModel campaign selected.
-@since 2.0.0
-*/
-- (NSMutableArray *)getPromotionCampaignsArray{
-    
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
-    //generates the array with only the promotion campaigns
-    for(int i=0; i<[self.campaignsArray count]; i++){
-        
-        MCMCampaignModel *campaignModel = [self.campaignsArray objectAtIndex:i];
-        
-        if (campaignModel.type == IN_APP_PROMOTION) {
-            [resultArray addObject:campaignModel];
-        }
-             
-    }
-             
-    return [resultArray autorelease];
-             
-}
-
-
-/**
  Method that shows the selected campaign in the screen.
  @since 2.0.0
  */
-- (void)displayCampaign{
+- (void)displayCampaigns:(NSArray *)campaigns{
     
 
     //if there are parsed campaigns
@@ -223,34 +177,15 @@ Method that gets randomly weighted a campaign to serve.
             [self hideCampaignView];
         }
         
-        if ((self.type == IN_APP_CROSS_SELLING) || (self.type == IN_APP_PROMOTION)) {
-            //Get the sources for the current CampaignType
-            NSArray *selectionCampaignsArray;
-            if (self.type == IN_APP_CROSS_SELLING) {
-                //gets the one that fits better depending on the weight of the campaign
-                selectionCampaignsArray = [[NSArray alloc] initWithObjects:[self getCampaignPerWeight], nil];
-            } else {
-                selectionCampaignsArray = [[self getPromotionCampaignsArray] retain];
-            }
-            
-            self.bannersArray = [[NSMutableArray alloc] init];
-            
-            for (int i=0;i<[selectionCampaignsArray count];i++) {
-                //creates a banner with the specifications
-                MCMIntersitialBannerViewController *bannerViewController = [[MCMIntersitialBannerViewController alloc] initInView:_campaignContainerView andCampaign:[selectionCampaignsArray objectAtIndex:i]];
-                [bannerViewController setDelegate:self];
-                [bannerViewController.view setTag:i];
-                
-                if (self.type == IN_APP_CROSS_SELLING)
-                    [bannerViewController setAppstoreContainerView:_appstoreContainerView]; //specifies the appstore container view
-                
-                [self.bannersArray addObject:bannerViewController];
-            }
-            
-            
-            [selectionCampaignsArray release];
-        }
+        //Create the banners
+        self.bannersArray = [MCMCampaignsHelper createBannersForCampaigns:campaigns inView:_campaignContainerView];
         
+        for (MCMCampaignBannerViewController *bannerViewController in self.bannersArray) {
+            [bannerViewController setDelegate:self];
+            //Specifies the appstore container view (only for in_app_cross_selling)
+            if (self.type == IN_APP_CROSS_SELLING)
+                [bannerViewController setAppstoreContainerView:_appstoreContainerView];
+        }
 
         [MCMLog log:@"Malcom Campaign - MCMCampaignManager Starting campaign displaying..."
              inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
@@ -273,7 +208,7 @@ Method that gets randomly weighted a campaign to serve.
         [MCMLog log:[NSString stringWithFormat:@"MCMCampaignManager placing banner %d - offset %d",i,yOffset]
              inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
-        MCMIntersitialBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
+        MCMCampaignBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
         
         CGRect frame = currentBanner.view.frame;
         frame.origin.y = yOffset;
@@ -289,7 +224,7 @@ Method that gets randomly weighted a campaign to serve.
     }
 }
 
-- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView {
+- (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView {
     //adds the banner to the view
     [containerView addSubview:bannerViewController.view];
     
@@ -394,37 +329,6 @@ Method that gets randomly weighted a campaign to serve.
     
 }
 
-- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign{
-    
-    //url
-    NSString *path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL,
-                      campaign,
-                      action,
-                      [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
-                      [MCMCoreUtils uniqueIdentifier]];
-    
-    NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
-    
-    //request
-    MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"campaingHit",nil]];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    
-    if ((!error) && ([request responseStatusCode]<402)) {
-        NSLog(@"Todo ok: %d", [request responseStatusCode]);
-    }
-    else {
-        
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]]
-             inLine:__LINE__
-         fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    }
-    
-}
-
 #pragma mark ----
 #pragma mark ASIHTTPRequest delegate methods
 #pragma mark ----
@@ -462,8 +366,17 @@ Method that gets randomly weighted a campaign to serve.
             [self.delegate campaignViewWillLoad];
         }
         
-        //shows a campaign
-        [self displayCampaign];
+        //Get the campaigns for the current CampaignType
+        NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
+
+        if (self.completionBlock == nil) {
+            //shows a campaign
+            [self displayCampaigns:selectionCampaignsArray];
+        } else {
+            // execute the completion block
+            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+            self.completionBlock(bannersArray);
+        }
         
     }else{
         //notifies delegate fail
@@ -488,9 +401,6 @@ Method that gets randomly weighted a campaign to serve.
 #pragma mark - MCMIntersitialBannerViewControllerDelegate Methods
 
 - (void)mediaFinishLoading:(MCMCampaignModel *)campaign{
-    
-    //sends a notification to capture the impression of the view in server
-    [self notifyServer:@"IMPRESSION" andCampaign:campaign];
     
     UIView *containerView;
     
@@ -558,8 +468,6 @@ Method that gets randomly weighted a campaign to serve.
         
         [self.delegate campaignPressed:campaign.promotionFeature.promotionIdentifier];
     }
-    
-    [self notifyServer:@"CLICK" andCampaign:campaign];
 
 }
 

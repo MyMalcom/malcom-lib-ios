@@ -9,22 +9,16 @@
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
 #import "MCMCampaignModel.h"
-//
-//#define TOP @"TOP"
-//#define BOTTOM @"BOTTOM"
-//#define FULLSCREEN @"FULL_SCREEN"
-//#define MIDDLE_LANDSCAPE @"MIDDLE_LANDSCAPE"
-//#define MIDDLE_PORTRAIT @"MIDDLE_PORTRAIT"
 
-@protocol MCMIntersitialBannerViewControllerDelegate <NSObject>
+@protocol MCMCampaignBannerViewControllerDelegate <NSObject>
 @optional
-- (void)mediaFinishLoading;
+- (void)mediaFinishLoading:(MCMCampaignModel *)campaign;
 - (void)mediaFailedLoading;
 - (void)mediaClosed;
 - (void)bannerPressed:(MCMCampaignModel *)campaign;
 @end
 
-@interface MCMIntersitialBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
+@interface MCMCampaignBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
 
 @property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;
 @property (nonatomic, retain) UIView *containerView;
@@ -36,7 +30,7 @@
 @property (nonatomic, retain) NSMutableData *dataMedia;
 @property (nonatomic, retain) NSURLConnection *connection;
 
-@property (nonatomic, assign) id <MCMIntersitialBannerViewControllerDelegate> delegate;
+@property (nonatomic, assign) id <MCMCampaignBannerViewControllerDelegate> delegate;
 
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign;
 - (BOOL)needsToDisplayOnWindow;
