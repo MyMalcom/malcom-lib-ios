@@ -4,7 +4,7 @@ Malcom Lib iOS
 Integration
 ------------
 
-* Clone this repository o download the zip:
+* Clone this repository or download the zip:
 
         git://github.com/MyMalcom/malcom-lib-ios.git
     
