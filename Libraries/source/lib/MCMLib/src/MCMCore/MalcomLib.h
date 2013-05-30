@@ -124,7 +124,7 @@
  @param wifiState BOOL value is YES if only send stats when is connecting by wifi
  @since 2.0.0
  */
-+ (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState;
++ (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState __attribute__((deprecated)); 
 
 /**
  End stats and send beacons to Malcom
