@@ -124,6 +124,9 @@
     }
 }
 
+- (void)setUserInteractionEnabled:(BOOL)userInteractionEnabled {
+    [self.bannerButton setUserInteractionEnabled:userInteractionEnabled];
+}
 
 #pragma mark - privated methods
 
@@ -154,8 +157,6 @@
 
 - (void)bannerPressed{
     
-    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignModel];
-    
     if (self.delegate && [self.delegate respondsToSelector:@selector(bannerPressed:)]) {
         [self.delegate bannerPressed:self.currentCampaignModel];
     }
@@ -171,6 +172,8 @@
 //        NSLog(@"Se ha pulsado una campaña");
         
     }
+    
+    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignModel];
     
 }
 
@@ -250,26 +253,31 @@
  */
 - (void)showImage{
     
-//    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
+    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
     
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
     CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
     
+    NSLog(@"ShowImage superview frame %@",NSStringFromCGRect([[self.view superview] frame]));
+    
     //reframes the size of the view
     if (![self.currentCampaignModel showOnWindow]) {
-        if (self.containerView!=nil) {
-            if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
-                
-                frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
-                
-            } else { //top & default cases
-                
-                frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
-            }
-        } else {
-            frame = CGRectMake(0, 0, 320, bannerHeight);
-        }
+        CGRect newFrame = [[self.view superview] frame];
+        newFrame.origin = CGPointMake(0, 0);
+        frame = newFrame;
+//        if (self.containerView!=nil) {
+//            if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
+//                
+//                frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
+//                
+//            } else { //top & default cases
+//                
+//                frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
+//            }
+//        } else {
+//            frame = CGRectMake(0, 0, 320, bannerHeight);
+//        }
     }
     
     //sets the color and the new frame
@@ -336,7 +344,7 @@
     //[self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
     //[self.bannerButton setBackgroundColor:[UIColor blackColor]];
-    [self.bannerButton setBackgroundColor:[UIColor redColor]];
+    [self.bannerButton setBackgroundColor:[UIColor clearColor]];
 
     [self.view addSubview:self.bannerButton];
     
@@ -416,11 +424,13 @@
     if(self.dataMedia != nil){
         [self showImage];	 //shows the image
         
+        //calls the delegate to advise that the image is loaded.
+        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
+            [self.delegate mediaFinishLoading:self.currentCampaignModel];
+        }
+        
         //Notify the impression to Malcom server
         [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignModel];
-        
-        //calls the delegate to advise that the image is loaded.
-        [self.delegate mediaFinishLoading:self.currentCampaignModel];
     }
 
 }

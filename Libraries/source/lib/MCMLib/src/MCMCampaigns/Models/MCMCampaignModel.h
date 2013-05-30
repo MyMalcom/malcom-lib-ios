@@ -28,6 +28,7 @@ typedef enum _CampaignType {
 @property (nonatomic,retain) MCMCampaignMediaFeatureModel *mediaFeature;
 @property (nonatomic,retain) MCMCampaignPromotionFeatureModel *promotionFeature;
 @property (nonatomic,retain) MCMCampaignClientLimitFeatureModel *clientLimitFeature;
+@property (nonatomic,copy) NSDictionary *customParams;    //Custom parameters defined in malcom
 @property (nonatomic,assign) int weight;                  //this value is used to random weighted selection once the total weight is known
 
 - (id)initWithDictionary:(NSDictionary *)dict;
@@ -37,6 +38,8 @@ typedef enum _CampaignType {
  @since 2.0
  */
 - (BOOL)showOnWindow;
+
+- (NSObject *)getCustomParam:(NSString *)key;
 
 @end
 

@@ -26,6 +26,7 @@
 @property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
 @property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
 @property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
+@property (nonatomic,getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
 
 @property (nonatomic, retain) NSMutableData *dataMedia;
 @property (nonatomic, retain) NSURLConnection *connection;
@@ -34,4 +35,6 @@
 
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign;
 - (BOOL)needsToDisplayOnWindow;
+
+- (void)setUserInteractionEnabled:(BOOL)userInteractionEnabled;
 @end

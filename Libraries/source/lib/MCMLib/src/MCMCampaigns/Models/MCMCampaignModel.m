@@ -54,6 +54,9 @@
     if([data objectForKey:@"clientLimitFeature"]){
         self.clientLimitFeature = [[MCMCampaignClientLimitFeatureModel alloc] initWithDictionary:[data objectForKey:@"clientLimitFeature"]];
     }
+    if([data objectForKey:@"customParamsFeature"] && [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"]){
+        self.customParams = [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"];
+    }
     if([data objectForKey:@"serverOrderFeature"]){
         if ([[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"]) {
             self.weight = [[[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"] intValue];
@@ -76,8 +79,12 @@
     }
 }
 
+- (NSObject *)getCustomParam:(NSString *)key {
+    return [self.customParams objectForKey:key];
+}
+
 - (NSString *)description{
-    return [NSString stringWithFormat:@"Campaign: %@ promotionIdentifier: %d", self.name, self.promotionFeature.promotionIdentifier];
+    return [NSString stringWithFormat:@"Campaign: %@", self.name];
 }
 
 @end
