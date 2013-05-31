@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 
 @interface MCMCampaignsHelper : NSObject
 
-+ (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign;
++ (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignDTO *)campaign;
 
 + (NSArray *)filterCampaigns:(NSArray *)campaigns forType:(CampaignType)type;
 

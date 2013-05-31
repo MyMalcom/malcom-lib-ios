@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Malcom. All rights reserved.
 //
 
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 
 #define kTypeIN_APP_PROMOTION @"IN_APP_PROMOTION"
 #define kTypeIN_APP_RATE_MY_APP @"IN_APP_RATE_MY_APP"
@@ -18,7 +18,7 @@
 #define kPositionMIDDLE_PORTRAIT @"MIDDLE_PORTRAIT"
 #define kPositionFULL_SCREEN @"FULL_SCREEN"
 
-@interface MCMCampaignModel()
+@interface MCMCampaignDTO()
 
 - (void)hydrateMediaFeature:(NSDictionary *)data;
 - (void)hydratePromotionFeature:(NSDictionary *)data;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation MCMCampaignModel
+@implementation MCMCampaignDTO
 
 - (id)initWithDictionary:(NSDictionary *)dict{
     

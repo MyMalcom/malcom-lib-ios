@@ -54,7 +54,7 @@
 @synthesize containerView = _containerView;
 @synthesize appstoreContainerView = _appstoreContainerView;
 
-- (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign
+- (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign
 {
     self = [super init];
     if (self) {

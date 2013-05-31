@@ -8,19 +8,19 @@
 
 #import <UIKit/UIKit.h>
 #import <StoreKit/StoreKit.h>
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 
 @protocol MCMCampaignBannerViewControllerDelegate <NSObject>
 @optional
-- (void)mediaFinishLoading:(MCMCampaignModel *)campaign;
+- (void)mediaFinishLoading:(MCMCampaignDTO *)campaign;
 - (void)mediaFailedLoading;
 - (void)mediaClosed;
-- (void)bannerPressed:(MCMCampaignModel *)campaign;
+- (void)bannerPressed:(MCMCampaignDTO *)campaign;
 @end
 
 @interface MCMCampaignBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
 
-@property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;
+@property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;
 @property (nonatomic, retain) UIView *containerView;
 @property (nonatomic, retain) UIView *appstoreContainerView;
 @property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
@@ -33,7 +33,7 @@
 
 @property (nonatomic, assign) id <MCMCampaignBannerViewControllerDelegate> delegate;
 
-- (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign;
+- (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign;
 - (BOOL)needsToDisplayOnWindow;
 
 - (void)setUserInteractionEnabled:(BOOL)userInteractionEnabled;

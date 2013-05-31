@@ -16,7 +16,7 @@
 #import "MCMCoreAPIRequest.h"
 #import "MCMCoreManager.h"
 #import "MCMCore.h"
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCoreUtils.h"
 #import "MCMCampaignsHelper.h"
@@ -43,7 +43,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 @property (nonatomic, retain) NSMutableArray *campaignsArray;
 @property (nonatomic, retain) MCMCampaignBannerViewController *currentIntersitial;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
-@property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;       //current campaign selected
+@property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
 @property (nonatomic, retain) NSArray *bannersArray;     //
 
@@ -176,7 +176,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
         //gets the first element of the dictionary
         NSDictionary *dict = [items objectAtIndex:i];
         
-        MCMCampaignModel *campaignModel = [[MCMCampaignModel alloc] initWithDictionary:dict];
+        MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
         [self.campaignsArray addObject:campaignModel];
         
     }
@@ -418,7 +418,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
 #pragma mark - MCMIntersitialBannerViewControllerDelegate Methods
 
-- (void)mediaFinishLoading:(MCMCampaignModel *)campaign{
+- (void)mediaFinishLoading:(MCMCampaignDTO *)campaign{
     
     UIView *containerView;
     
@@ -476,7 +476,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
 }
 
-- (void)bannerPressed:(MCMCampaignModel *)campaign{
+- (void)bannerPressed:(MCMCampaignDTO *)campaign{
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Pressed %@",campaign]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];

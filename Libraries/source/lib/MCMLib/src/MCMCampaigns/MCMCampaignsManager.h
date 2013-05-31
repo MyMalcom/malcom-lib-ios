@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "MCMCampaignsManagerDelegate.h"
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 
 @interface MCMCampaignsManager : NSObject
 

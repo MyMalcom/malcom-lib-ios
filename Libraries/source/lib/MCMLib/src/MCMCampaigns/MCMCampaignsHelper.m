@@ -20,7 +20,7 @@
  @return MCMCampaignModel campaign selected.
  @since 2.0.0
  */
-+ (MCMCampaignModel *)getCampaignPerWeight:(NSArray *)campaigns;
++ (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns;
 
 /**
  Method that gets the promotion campaigns from multitype campaigns array
@@ -33,7 +33,7 @@
 
 @implementation MCMCampaignsHelper
 
-+ (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign{
++ (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignDTO *)campaign{
     
     //url
     NSString *path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL,
@@ -94,7 +94,7 @@
 
 #pragma mark - Private methods
 
-+ (MCMCampaignModel *)getCampaignPerWeight:(NSArray *)campaigns{
++ (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns{
     
     
     NSMutableArray *weightedArray = [[NSMutableArray alloc] init];
@@ -102,7 +102,7 @@
     //generates the array to random weighted selection
     for(int i=0; i<[campaigns count]; i++){
         
-        MCMCampaignModel *campaignModel = [campaigns objectAtIndex:i];
+        MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
         
         //adds to the weighted array as ids as weight has
         for(int j=0; j<campaignModel.weight;j++){
@@ -115,7 +115,7 @@
     int selection = arc4random()%[weightedArray count];
     
     //gets the random position and gets the id written on it. It will be one of the campaigns
-    MCMCampaignModel *selectedCampaignModel = [campaigns objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
+    MCMCampaignDTO *selectedCampaignModel = [campaigns objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
     [weightedArray release];
     
     return selectedCampaignModel;
@@ -130,7 +130,7 @@
     //generates the array with only the promotion campaigns
     for(int i=0; i<[campaigns count]; i++){
         
-        MCMCampaignModel *campaignModel = [campaigns objectAtIndex:i];
+        MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
         
         if (campaignModel.type == IN_APP_PROMOTION) {
             [resultArray addObject:campaignModel];

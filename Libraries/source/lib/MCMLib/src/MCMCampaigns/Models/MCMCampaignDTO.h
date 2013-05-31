@@ -22,7 +22,7 @@ typedef enum _CampaignPosition {
     FULL_SCREEN = 4
 } CampaignPosition;
 
-@interface MCMCampaignModel : NSObject
+@interface MCMCampaignDTO : NSObject
 
 @property (nonatomic,retain) NSString *campaignId;          //campaign id
 @property (nonatomic,retain) NSString *name;                //campaign name
