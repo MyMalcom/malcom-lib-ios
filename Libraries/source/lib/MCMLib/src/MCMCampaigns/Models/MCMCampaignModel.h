@@ -7,15 +7,20 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "MCMCampaignMediaFeatureModel.h"
-#import "MCMCampaignPromotionFeatureModel.h"
-#import "MCMCampaignClientLimitFeatureModel.h"
 
 typedef enum _CampaignType {
 	IN_APP_PROMOTION = 0,
 	IN_APP_RATE_MY_APP = 1,
 	IN_APP_CROSS_SELLING = 2
 } CampaignType;
+
+typedef enum _CampaignPosition {
+    TOP = 0,
+    BOTTOM = 1,
+    MIDDLE_LANDSCAPE = 2,
+    MIDDLE_PORTRAIT = 3,
+    FULL_SCREEN = 4
+} CampaignPosition;
 
 @interface MCMCampaignModel : NSObject
 
@@ -24,10 +29,13 @@ typedef enum _CampaignType {
 @property (nonatomic,retain) NSString *start;               //campaign start date
 @property (nonatomic,retain) NSString *end;                 //campaign end date
 @property (nonatomic,retain) NSString *createdOn;           //campaign creation date
-@property (nonatomic,assign) CampaignType type;            //type of campaign: cross-selling, etc
-@property (nonatomic,retain) MCMCampaignMediaFeatureModel *mediaFeature;
-@property (nonatomic,retain) MCMCampaignPromotionFeatureModel *promotionFeature;
-@property (nonatomic,retain) MCMCampaignClientLimitFeatureModel *clientLimitFeature;
+@property (nonatomic,assign) CampaignType type;             //type of campaign: cross-selling, etc
+@property (nonatomic,retain) NSString *media;               //image of the banner or campaign to show
+@property (nonatomic,assign) CampaignPosition position;     //position in screen
+@property (nonatomic,retain) NSString *promotionType;       //campaign id
+@property (nonatomic,retain) NSString *promotionIdentifier; //app store identifier
+@property (nonatomic,retain) NSString *clientLimitType;       //the client limit indicator
+@property (nonatomic,assign) int limitValue;                  //this value is used to random weighted selection once the total weight is known
 @property (nonatomic,copy) NSDictionary *customParams;    //Custom parameters defined in malcom
 @property (nonatomic,assign) int weight;                  //this value is used to random weighted selection once the total weight is known
 
@@ -39,6 +47,10 @@ typedef enum _CampaignType {
  */
 - (BOOL)showOnWindow;
 
+/**
+ Return the parameters defined on malcom
+ @since 2.0.1
+ */
 - (NSObject *)getCustomParam:(NSString *)key;
 
 @end

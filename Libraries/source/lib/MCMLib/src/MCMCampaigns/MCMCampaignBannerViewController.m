@@ -117,7 +117,7 @@
 -(BOOL)needsToDisplayOnWindow{
     
     //in case the type is TOP or BOTTOM it will be shown in the specified view
-    if ((self.currentCampaignModel.mediaFeature.position == TOP) || (self.currentCampaignModel.mediaFeature.position == BOTTOM)) {
+    if ((self.currentCampaignModel.position == TOP) || (self.currentCampaignModel.position == BOTTOM)) {
         return NO;
     }else{ //otherwise it needs to be displayed on the window on the top of everyview (navbars, tabbars..)
         return YES;
@@ -136,7 +136,7 @@
      This notification is most likely triggered inside an animation block,
      therefore no animation is needed to perform this nice transition.
      */
-    if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+    if((self.currentCampaignModel.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.position == MIDDLE_PORTRAIT)){
 //        [self rotateAccordingToStatusBarOrientationAndSupportedOrientations]; //use this method if you want to rotate everything
         
         [self close];
@@ -193,7 +193,7 @@
         // [NSNumber numberWithInt:581665873];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         [f setNumberStyle:NSNumberFormatterDecimalStyle];
-        NSNumber * idApple = [f numberFromString:self.currentCampaignModel.promotionFeature.promotionIdentifier];
+        NSNumber * idApple = [f numberFromString:self.currentCampaignModel.promotionIdentifier];
         [f release];
         NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : idApple };
         
@@ -218,7 +218,7 @@
         
     } else { // Before iOS 6, we can only open the URL
               
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignModel.promotionFeature.promotionIdentifier]]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignModel.promotionIdentifier]]];
         
     }
     
@@ -236,7 +236,7 @@
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
-    NSURL *url = [NSURL URLWithString:self.currentCampaignModel.mediaFeature.media];
+    NSURL *url = [NSURL URLWithString:self.currentCampaignModel.media];
     
     //launches the new connection asynchronously
     NSURLRequest* request = [NSURLRequest requestWithURL:url
@@ -301,15 +301,15 @@
     [self.bannerButton setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     
     //in case it is a "middle" it needs to be centered and add a background view with alpha 0.7
-    if ((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) || (self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)) {
+    if ((self.currentCampaignModel.position == MIDDLE_LANDSCAPE) || (self.currentCampaignModel.position == MIDDLE_PORTRAIT)) {
        
         int width = 0;
         int height = 0;
 
-        if(self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE){
+        if(self.currentCampaignModel.position == MIDDLE_LANDSCAPE){
             width = middleLandscapeWidth;
             height = middleLandscapeHeight;
-        }else if(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT){
+        }else if(self.currentCampaignModel.position == MIDDLE_PORTRAIT){
             width = middlePortraitWidth;
             height = middlePortraitHeight;
         }
@@ -380,7 +380,7 @@
         CGRect auxFrame = self.closeButton.frame;
         
         //sets the position of the X button in case it is MIDDLE LANDSCAPE OR PORTRAIT in the top right corner
-        if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+        if((self.currentCampaignModel.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.position == MIDDLE_PORTRAIT)){
             
             auxFrame.origin.x =  self.bannerButton.frame.size.width - self.closeButton.frame.size.width/2;
             auxFrame.origin.y =  - self.closeButton.frame.size.height/2;

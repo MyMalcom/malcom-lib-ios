@@ -25,8 +25,9 @@
 typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
 @interface MCMCampaignsManager () <MCMCampaignBannerViewControllerDelegate>
+
 - (void)requestCampaign;
-- (MCMCampaignModel*)getCampaignPerWeight;
+- (void)processCampaignResponse:(NSArray *)items;
 - (void)displayCampaigns:(NSArray *)campaigns;
 - (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
 - (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView;
@@ -161,6 +162,43 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
 }
 
+/**
+ Processes the information from response of campaign's request
+ @since 2.0.1
+ */
+- (void)processCampaignResponse:(NSArray *)items{
+    
+    self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
+    
+    //parses all the campaigns
+    for(int i=0; i<[items count];i++){
+        
+        //gets the first element of the dictionary
+        NSDictionary *dict = [items objectAtIndex:i];
+        
+        MCMCampaignModel *campaignModel = [[MCMCampaignModel alloc] initWithDictionary:dict];
+        [self.campaignsArray addObject:campaignModel];
+        
+    }
+    
+    //notifies it will be shown
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+        [self.delegate campaignViewWillLoad];
+    }
+    
+    //Get the campaigns for the current CampaignType
+    NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
+    
+    if (self.completionBlock == nil) {
+        //shows a campaign
+        [self displayCampaigns:selectionCampaignsArray];
+    } else {
+        // execute the completion block
+        NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+        self.completionBlock(bannersArray);
+    }
+    
+}
 
 /**
  Method that shows the selected campaign in the screen.
@@ -231,8 +269,8 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     [bannerViewController.view setAlpha:0.0f];
     
     //depending on the type of position it will show a bouncing animation
-    if((bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) ||
-       (bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+    if((bannerViewController.currentCampaignModel.position == MIDDLE_LANDSCAPE) ||
+       (bannerViewController.currentCampaignModel.position == MIDDLE_PORTRAIT)){
         
         
         [bannerViewController.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
@@ -346,44 +384,24 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
         NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
                                                              options:kNilOptions
                                                                error:nil];
-        NSArray *items = [json objectForKey:@"campaigns"];
         
-        self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
-        
-        //parses all the campaigns
-        for(int i=0; i<[items count];i++){
+        //Check if the response contains campaigns
+        if ([json objectForKey:@"campaigns"]){
+            NSArray *items = [json objectForKey:@"campaigns"];
             
-            //gets the first element of the dictionary
-            NSDictionary *dict = [items objectAtIndex:i];
+            [self processCampaignResponse:items];
             
-            MCMCampaignModel *campaignModel = [[MCMCampaignModel alloc] initWithDictionary:dict];
-            [self.campaignsArray addObject:campaignModel];
-
+            //if everything was ok return
+            return;
         }
         
-        //notifies it will be shown
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-            [self.delegate campaignViewWillLoad];
-        }
-        
-        //Get the campaigns for the current CampaignType
-        NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
-
-        if (self.completionBlock == nil) {
-            //shows a campaign
-            [self displayCampaigns:selectionCampaignsArray];
-        } else {
-            // execute the completion block
-            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
-            self.completionBlock(bannersArray);
-        }
-        
-    }else{
-        //notifies delegate fail
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-            [self.delegate campaignViewDidFailRequest];
-        }
     }
+    
+    //if something was wrong notifies delegate fail
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+        [self.delegate campaignViewDidFailRequest];
+    }
+    
     
 }
 
@@ -466,7 +484,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
         
-        [self.delegate campaignPressed:campaign.promotionFeature.promotionIdentifier];
+        [self.delegate campaignPressed:campaign.promotionIdentifier];
     }
 
 }
