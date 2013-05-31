@@ -12,29 +12,52 @@
 
 @protocol MCMCampaignBannerViewControllerDelegate <NSObject>
 @optional
+
+/**
+ Method called when the campaign's media is loaded successfully
+ @since 2.0.1
+ */
 - (void)mediaFinishLoading:(MCMCampaignDTO *)campaign;
+/**
+ Method called when something fails while the campaign's media is loading
+ @since 2.0
+ */
 - (void)mediaFailedLoading;
+/**
+ Method called when the campaign's banner was closed
+ @since 2.0
+ */
 - (void)mediaClosed;
+/**
+ Method called when the user presses on campaign's banner
+ @since 2.0.1
+ */
 - (void)bannerPressed:(MCMCampaignDTO *)campaign;
+
 @end
 
 @interface MCMCampaignBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
 
-@property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;
-@property (nonatomic, retain) UIView *containerView;
-@property (nonatomic, retain) UIView *appstoreContainerView;
-@property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
-@property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
-@property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
-@property (nonatomic,getter=isUserInteractionEnabled) BOOL userInteractionEnabled;
-
-@property (nonatomic, retain) NSMutableData *dataMedia;
-@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, retain) MCMCampaignDTO *currentCampaignDTO;
 
 @property (nonatomic, assign) id <MCMCampaignBannerViewControllerDelegate> delegate;
 
+
+/**
+ Method that initialize the campaign's banner in a view
+ @since 2.0
+ */
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign;
+
+/**
+ Method that shows the cross campaign banner with animation
+ @since 2.0.1
+ */
+- (void)showCrossCampaignBannerAnimated;
+
+/**
+ Method to know if the bannerView should be present on full screen
+ */
 - (BOOL)needsToDisplayOnWindow;
 
-- (void)setUserInteractionEnabled:(BOOL)userInteractionEnabled;
 @end

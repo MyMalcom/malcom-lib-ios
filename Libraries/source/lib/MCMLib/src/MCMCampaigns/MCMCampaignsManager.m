@@ -266,50 +266,8 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     //adds the banner to the view
     [containerView addSubview:bannerViewController.view];
     
-    [bannerViewController.view setAlpha:0.0f];
-    
-    //depending on the type of position it will show a bouncing animation
-    if((bannerViewController.currentCampaignModel.position == MIDDLE_LANDSCAPE) ||
-       (bannerViewController.currentCampaignModel.position == MIDDLE_PORTRAIT)){
-        
-        
-        [bannerViewController.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
-        [bannerViewController.backgroundFadedView setAlpha:0.0f];
-        [bannerViewController.closeButton setAlpha:0.0f];
-        
-        [UIView animateWithDuration: 0.3
-                         animations: ^{
-                             bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                             [bannerViewController.view setAlpha:1.0f];
-                             [bannerViewController.backgroundFadedView setAlpha:0.7f];
-                             
-                         }
-                         completion: ^(BOOL finished){
-                             [UIView animateWithDuration:1.0/10.0
-                                              animations: ^{
-                                                  bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
-                                              }
-                                              completion: ^(BOOL finished){
-                                                  [UIView animateWithDuration:1.0/5.0
-                                                                   animations: ^{
-                                                                       bannerViewController.bannerButton.transform = CGAffineTransformIdentity;
-                                                                       [bannerViewController.closeButton setAlpha:1.0f];
-                                                                       
-                                                                   }completion:^(BOOL finished) {
-                                                                   }];
-                                              }];
-                         }];
-        
-        
-    }else{ //or a simple animation of fade in
-        
-        [UIView animateWithDuration: 0.3 animations: ^{
-            [bannerViewController.view setAlpha:1.0f];
-        }
-                         completion: ^(BOOL finished){}];
-    }
-    
-    
+    //shows the banner
+    [bannerViewController showCrossCampaignBannerAnimated];
     
     //clears the timer
     if(self.durationTimer && [self.durationTimer isValid]){
