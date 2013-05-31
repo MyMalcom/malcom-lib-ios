@@ -7,9 +7,9 @@
 
 #define MCMCloseIntersitialNotification @"MCMCloseIntersitialNotification"
 
-//#define kMCMBaseUrl @"https://api.mymalcom.com/"
 //#define kMCMBaseUrl @"http://malcom-api-dev.elasticbeanstalk.com/"
-#define kMCMBaseUrl @"http://malcom-api-pre.elasticbeanstalk.com/"
+//#define kMCMBaseUrl @"http://malcom-api-pre.elasticbeanstalk.com/"
+#define kMCMBaseUrl @"https://api.mymalcom.com/"
 
 #define kMCMAdwhirlURL @"https://ads.mymalcom.com/"
 

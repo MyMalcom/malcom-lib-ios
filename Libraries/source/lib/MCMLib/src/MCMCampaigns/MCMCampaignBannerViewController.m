@@ -23,7 +23,7 @@
 #define middlePortraitWidth 240.0f
 #define middlePortraitHeight 350.0f
 
-@interface MCMCampaignBannerViewController (private)
+@interface MCMCampaignBannerViewController ()
 
 @property (nonatomic, retain) UIView *containerView;
 @property (nonatomic, retain) UIView *appstoreContainerView;
@@ -60,6 +60,13 @@
 @implementation MCMCampaignBannerViewController
 
 @synthesize currentCampaignDTO = _currentCampaignModel;
+@synthesize containerView;
+@synthesize appstoreContainerView;
+@synthesize backgroundFadedView;
+@synthesize closeButton;
+@synthesize bannerButton;
+@synthesize dataMedia;
+@synthesize connection;
 
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign
 {

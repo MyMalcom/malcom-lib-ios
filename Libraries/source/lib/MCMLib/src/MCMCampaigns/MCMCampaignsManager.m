@@ -51,6 +51,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
 @property (nonatomic, copy) CompletionBlock completionBlock;
 
+
 @end
 
 @implementation MCMCampaignsManager SYNTHESIZE_SINGLETON_FOR_CLASS(MCMCampaignsManager)
