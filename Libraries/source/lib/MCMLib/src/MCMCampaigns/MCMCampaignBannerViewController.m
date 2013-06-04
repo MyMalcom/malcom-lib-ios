@@ -499,7 +499,9 @@
 	self.dataMedia = nil;
     
     //calls the delegate telling that the loading failed
-    [self.delegate mediaFailedLoading];
+    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading)]) {
+        [self.delegate mediaFailedLoading];
+    }
 	
 }
 

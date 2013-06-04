@@ -504,7 +504,7 @@
     [[MCMCampaignsManager sharedInstance] setDuration:duration];
 }
 
-+ (void)requestCampaignPromotions:( void ( ^ )(NSArray * campaignBannersVC) )completion{
++ (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
     [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion];
 }
 

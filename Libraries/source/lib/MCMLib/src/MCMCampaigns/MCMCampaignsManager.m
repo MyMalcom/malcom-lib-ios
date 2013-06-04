@@ -22,7 +22,8 @@
 #import "MCMCampaignsHelper.h"
 #import "MCMCampaignsDefines.h"
 
-typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
+typedef void(^CompletionBlock)(NSArray* campaignBannersVC);
+typedef void(^ErrorBlock)(NSString* errorMessage);
 
 @interface MCMCampaignsManager () <MCMCampaignBannerViewControllerDelegate>
 
@@ -50,7 +51,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 @property (nonatomic, assign) BOOL deletedView;
 
 @property (nonatomic, copy) CompletionBlock completionBlock;
-
+@property (nonatomic, copy) ErrorBlock errorBlock;
 
 @end
 
@@ -93,6 +94,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
     //There is no completionBlock
     self.completionBlock = nil;
+    self.errorBlock = nil;
     
     //request a campaign to the server. this has to be called everytime it's needed to show it.
     [self requestCampaign];
@@ -112,9 +114,10 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
 }
 
-- (void)requestBannersType:(CampaignType)type completion:( void ( ^ )(NSArray * campaignBannersVC) )completion{
+- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
     _campaignContainerView = nil;
     self.completionBlock = completion;
+    self.errorBlock = error;
     
     //Get the json and parse it to get the banners
     [self requestCampaign];
@@ -335,32 +338,47 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 
+    if ([request responseStatusCode] < 400) {
         
-    //parses the response
-    if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
-        
-        NSData *data = [request responseData];
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
-                                                             options:kNilOptions
-                                                               error:nil];
-        
-        //Check if the response contains campaigns
-        if ([json objectForKey:@"campaigns"]){
-            NSArray *items = [json objectForKey:@"campaigns"];
+        //parses the response
+        if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
             
-            [self processCampaignResponse:items];
+            NSData *data = [request responseData];
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
+                                                                 options:kNilOptions
+                                                                   error:nil];
             
-            //if everything was ok return
-            return;
+            //Check if the response contains campaigns
+            if ([json objectForKey:@"campaigns"]){
+                NSArray *items = [json objectForKey:@"campaigns"];
+                
+                [self processCampaignResponse:items];
+                
+                //if everything was ok return
+                return;
+            }
+            
         }
         
     }
-    
+        
     //if something was wrong notifies delegate fail
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
         [self.delegate campaignViewDidFailRequest];
     }
     
+    if (self.errorBlock != nil) {
+        NSString *errorMessage;
+        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:[request responseData]
+                                                                options:kNilOptions
+                                                                  error:nil];
+        if (json!=nil && [json objectForKey:@"description"]) {
+            errorMessage = (NSString *)[json objectForKey:@"description"];
+        } else {
+            errorMessage = @"";
+        }
+        self.errorBlock(errorMessage);
+    }
     
 }
 
@@ -370,6 +388,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error receiving campaing file: %@", [err description]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    
     
 }
 
