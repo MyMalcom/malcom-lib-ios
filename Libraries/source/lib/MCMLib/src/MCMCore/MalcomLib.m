@@ -505,9 +505,12 @@
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion];
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:nil];
 }
 
++ (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
+}
 
 
 #pragma mark UIAlertViewDelegate method
