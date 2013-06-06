@@ -29,6 +29,7 @@ typedef enum _CampaignPosition {
 @property (nonatomic,retain) NSString *start;               //campaign start date
 @property (nonatomic,retain) NSString *end;                 //campaign end date
 @property (nonatomic,retain) NSString *createdOn;           //campaign creation date
+@property (nonatomic,retain) NSString *campaignDescription; //campaign description field
 @property (nonatomic,assign) CampaignType type;             //type of campaign: cross-selling, etc
 @property (nonatomic,retain) NSString *media;               //image of the banner or campaign to show
 @property (nonatomic,assign) CampaignPosition position;     //position in screen

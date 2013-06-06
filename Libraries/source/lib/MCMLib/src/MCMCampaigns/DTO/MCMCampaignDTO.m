@@ -49,6 +49,8 @@
 		self.end = [data objectForKey:@"end"];
     if ([data objectForKey:@"createdOn"])
 		self.createdOn = [data objectForKey:@"createdOn"];
+    if ([data objectForKey:@"descriptionFeature"] && [[data objectForKey:@"descriptionFeature"] objectForKey:@"promotionDescription"])
+        self.campaignDescription = [[data objectForKey:@"descriptionFeature"] objectForKey:@"promotionDescription"];    
     if ([data objectForKey:@"type"]){
         NSString *dataType = [data objectForKey:@"type"];
         if ([dataType isEqualToString:kTypeIN_APP_PROMOTION]) {
