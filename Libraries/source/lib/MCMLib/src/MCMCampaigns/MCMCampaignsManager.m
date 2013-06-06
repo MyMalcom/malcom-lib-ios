@@ -130,7 +130,7 @@
     
     //NSString *url = @"https://dl.dropbox.com/u/53608360/campaing.json";
     
-    NSString *url = [NSString stringWithFormat:@"v1/campaigns/application/%@/udid/%@", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
+    NSString *url = [NSString stringWithFormat:@"v2/campaigns/application/%@/udid/%@", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
     url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager url: %@", url]
