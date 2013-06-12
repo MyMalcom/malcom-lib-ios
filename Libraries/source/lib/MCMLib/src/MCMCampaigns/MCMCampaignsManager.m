@@ -16,17 +16,19 @@
 #import "MCMCoreAPIRequest.h"
 #import "MCMCoreManager.h"
 #import "MCMCore.h"
-#import "MCMCampaignModel.h"
+#import "MCMCampaignDTO.h"
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCoreUtils.h"
 #import "MCMCampaignsHelper.h"
 #import "MCMCampaignsDefines.h"
 
-typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
+typedef void(^CompletionBlock)(NSArray* campaignBannersVC);
+typedef void(^ErrorBlock)(NSString* errorMessage);
 
 @interface MCMCampaignsManager () <MCMCampaignBannerViewControllerDelegate>
+
 - (void)requestCampaign;
-- (MCMCampaignModel*)getCampaignPerWeight;
+- (void)processCampaignResponse:(NSArray *)items;
 - (void)displayCampaigns:(NSArray *)campaigns;
 - (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
 - (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView;
@@ -42,13 +44,14 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 @property (nonatomic, retain) NSMutableArray *campaignsArray;
 @property (nonatomic, retain) MCMCampaignBannerViewController *currentIntersitial;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
-@property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;       //current campaign selected
+@property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
 @property (nonatomic, retain) NSArray *bannersArray;     //
 
 @property (nonatomic, assign) BOOL deletedView;
 
 @property (nonatomic, copy) CompletionBlock completionBlock;
+@property (nonatomic, copy) ErrorBlock errorBlock;
 
 @end
 
@@ -91,6 +94,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
     //There is no completionBlock
     self.completionBlock = nil;
+    self.errorBlock = nil;
     
     //request a campaign to the server. this has to be called everytime it's needed to show it.
     [self requestCampaign];
@@ -110,9 +114,10 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
 
 }
 
-- (void)requestBannersType:(CampaignType)type completion:( void ( ^ )(NSArray * campaignBannersVC) )completion{
+- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
     _campaignContainerView = nil;
     self.completionBlock = completion;
+    self.errorBlock = error;
     
     //Get the json and parse it to get the banners
     [self requestCampaign];
@@ -161,6 +166,43 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
 }
 
+/**
+ Processes the information from response of campaign's request
+ @since 2.0.1
+ */
+- (void)processCampaignResponse:(NSArray *)items{
+    
+    self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
+    
+    //parses all the campaigns
+    for(int i=0; i<[items count];i++){
+        
+        //gets the first element of the dictionary
+        NSDictionary *dict = [items objectAtIndex:i];
+        
+        MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
+        [self.campaignsArray addObject:campaignModel];
+        
+    }
+    
+    //notifies it will be shown
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+        [self.delegate campaignViewWillLoad];
+    }
+    
+    //Get the campaigns for the current CampaignType
+    NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
+    
+    if (self.completionBlock == nil) {
+        //shows a campaign
+        [self displayCampaigns:selectionCampaignsArray];
+    } else {
+        // execute the completion block
+        NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+        self.completionBlock(bannersArray);
+    }
+    
+}
 
 /**
  Method that shows the selected campaign in the screen.
@@ -228,50 +270,8 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     //adds the banner to the view
     [containerView addSubview:bannerViewController.view];
     
-    [bannerViewController.view setAlpha:0.0f];
-    
-    //depending on the type of position it will show a bouncing animation
-    if((bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) ||
-       (bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
-        
-        
-        [bannerViewController.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
-        [bannerViewController.backgroundFadedView setAlpha:0.0f];
-        [bannerViewController.closeButton setAlpha:0.0f];
-        
-        [UIView animateWithDuration: 0.3
-                         animations: ^{
-                             bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                             [bannerViewController.view setAlpha:1.0f];
-                             [bannerViewController.backgroundFadedView setAlpha:0.7f];
-                             
-                         }
-                         completion: ^(BOOL finished){
-                             [UIView animateWithDuration:1.0/10.0
-                                              animations: ^{
-                                                  bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
-                                              }
-                                              completion: ^(BOOL finished){
-                                                  [UIView animateWithDuration:1.0/5.0
-                                                                   animations: ^{
-                                                                       bannerViewController.bannerButton.transform = CGAffineTransformIdentity;
-                                                                       [bannerViewController.closeButton setAlpha:1.0f];
-                                                                       
-                                                                   }completion:^(BOOL finished) {
-                                                                   }];
-                                              }];
-                         }];
-        
-        
-    }else{ //or a simple animation of fade in
-        
-        [UIView animateWithDuration: 0.3 animations: ^{
-            [bannerViewController.view setAlpha:1.0f];
-        }
-                         completion: ^(BOOL finished){}];
-    }
-    
-    
+    //shows the banner
+    [bannerViewController showCrossCampaignBannerAnimated];
     
     //clears the timer
     if(self.durationTimer && [self.durationTimer isValid]){
@@ -338,51 +338,46 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
 
+    if ([request responseStatusCode] < 400) {
         
-    //parses the response
-    if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
-        
-        NSData *data = [request responseData];
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
-                                                             options:kNilOptions
-                                                               error:nil];
-        NSArray *items = [json objectForKey:@"campaigns"];
-        
-        self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
-        
-        //parses all the campaigns
-        for(int i=0; i<[items count];i++){
+        //parses the response
+        if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
             
-            //gets the first element of the dictionary
-            NSDictionary *dict = [items objectAtIndex:i];
+            NSData *data = [request responseData];
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
+                                                                 options:kNilOptions
+                                                                   error:nil];
             
-            MCMCampaignModel *campaignModel = [[MCMCampaignModel alloc] initWithDictionary:dict];
-            [self.campaignsArray addObject:campaignModel];
-
+            //Check if the response contains campaigns
+            if ([json objectForKey:@"campaigns"]){
+                NSArray *items = [json objectForKey:@"campaigns"];
+                
+                [self processCampaignResponse:items];
+                
+                //if everything was ok return
+                return;
+            }
+            
         }
         
-        //notifies it will be shown
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-            [self.delegate campaignViewWillLoad];
-        }
+    }
         
-        //Get the campaigns for the current CampaignType
-        NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
-
-        if (self.completionBlock == nil) {
-            //shows a campaign
-            [self displayCampaigns:selectionCampaignsArray];
+    //if something was wrong notifies delegate fail
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+        [self.delegate campaignViewDidFailRequest];
+    }
+    
+    if (self.errorBlock != nil) {
+        NSString *errorMessage;
+        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:[request responseData]
+                                                                options:kNilOptions
+                                                                  error:nil];
+        if (json!=nil && [json objectForKey:@"description"]) {
+            errorMessage = (NSString *)[json objectForKey:@"description"];
         } else {
-            // execute the completion block
-            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
-            self.completionBlock(bannersArray);
+            errorMessage = @"";
         }
-        
-    }else{
-        //notifies delegate fail
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-            [self.delegate campaignViewDidFailRequest];
-        }
+        self.errorBlock(errorMessage);
     }
     
 }
@@ -394,13 +389,14 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error receiving campaing file: %@", [err description]]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
+    
 }
 
 
 
 #pragma mark - MCMIntersitialBannerViewControllerDelegate Methods
 
-- (void)mediaFinishLoading:(MCMCampaignModel *)campaign{
+- (void)mediaFinishLoading:(MCMCampaignDTO *)campaign{
     
     UIView *containerView;
     
@@ -458,7 +454,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     
 }
 
-- (void)bannerPressed:(MCMCampaignModel *)campaign{
+- (void)bannerPressed:(MCMCampaignDTO *)campaign{
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Pressed %@",campaign]
          inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
@@ -466,7 +462,7 @@ typedef void(^CompletionBlock)(NSArray * campaignBannersVC);
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
         
-        [self.delegate campaignPressed:campaign.promotionFeature.promotionIdentifier];
+        [self.delegate campaignPressed:campaign.promotionIdentifier];
     }
 
 }
