@@ -124,7 +124,7 @@
  @param wifiState BOOL value is YES if only send stats when is connecting by wifi
  @since 2.0.0
  */
-+ (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState __attribute__((deprecated)); 
++ (void)initAndStartBeacon:(BOOL)userLocation useOnlyWiFi:(BOOL)wifiState __attribute__((deprecated("use initAndStartBeacon instead")));
 
 /**
  End stats and send beacons to Malcom
@@ -298,7 +298,7 @@
  @param view UIView where is going to be placed the banner. If the server sends fullscreen or middle type it will be placed above the window (not the specified view) in order to get the fullscreen or middle visualization. Otherwise it will be placed only in this view, so the logic thing is to send here the whole view of the viewcontroller to achieve the correct position of the banner sent from server (top, bottom).
  @since 2.0.0
  */
-+ (void)addCampaignBanner:(UIView*)view __attribute__((deprecated));
++ (void)addCampaignBanner:(UIView*)view __attribute__((deprecated("use addCampaign_type method instead")));
 
 /**
  Method that enables the campaigns banner retrieved from server and places it on the window. Duration by default is 15 seconds. Time can be setted with setCampaignDuration:.
