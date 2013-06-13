@@ -22,7 +22,7 @@
  Method called when something fails while the campaign's media is loading
  @since 2.0
  */
-- (void)mediaFailedLoading;
+- (void)mediaFailedLoading:(MCMCampaignDTO *)campaign;
 /**
  Method called when the campaign's banner was closed
  @since 2.0
@@ -50,10 +50,10 @@
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign;
 
 /**
- Method that shows the cross campaign banner with animation
+ Method that shows the campaign banner with animation
  @since 2.0.1
  */
-- (void)showCrossCampaignBannerAnimated;
+- (void)showCampaignBannerAnimated;
 
 /**
  Method to know if the bannerView should be present on full screen

@@ -23,14 +23,6 @@
  */
 + (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns;
 
-/**
- Method that gets the campaigns with the selected type from multitype campaigns array.
- @param campaigns that will be filtered to get only the selected type.
- @return NSArray with the selected type campaigns.
- @since 2.0.1
- */
-+ (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
-
 @end
 
 @implementation MCMCampaignsHelper
@@ -62,21 +54,19 @@
     
 }
 
-+ (NSArray *)filterCampaigns:(NSArray *)campaigns forType:(CampaignType)type{
++ (MCMCampaignDTO *)selectCampaign:(NSArray *)campaigns forType:(CampaignType)type{
     //Get the sources for the current CampaignType
-    NSArray *selectionCampaignsArray = [[NSArray alloc] init];
-    if (type == IN_APP_CROSS_SELLING) {
+    MCMCampaignDTO *selectedCampaign = nil;
+    if (type == IN_APP_CROSS_SELLING || type == IN_APP_PROMOTION) {
         //Gets the one that fits better depending on the weight of the campaign
-        NSArray *crossSellingCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:IN_APP_CROSS_SELLING];
+        NSArray *filteredCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:type];
         //Should have at least one campaign
-        if ([crossSellingCampaigns count] > 0) {
-            selectionCampaignsArray = [[NSArray alloc] initWithObjects:[MCMCampaignsHelper getCampaignPerWeight:crossSellingCampaigns], nil];
+        if ([filteredCampaigns count] > 0) {
+            selectedCampaign = [MCMCampaignsHelper getCampaignPerWeight:filteredCampaigns];
         }
-    } else if (type == IN_APP_PROMOTION) {
-        selectionCampaignsArray = [[MCMCampaignsHelper getCampaignsArray:campaigns forType:IN_APP_PROMOTION] retain];
     }
     
-    return [selectionCampaignsArray autorelease];
+    return [selectedCampaign autorelease];
 }
 
 + (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView{
@@ -92,6 +82,25 @@
     }
     
     return [NSArray arrayWithArray:bannersArray];
+}
+
++ (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type{
+    
+    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
+    
+    //generates the array with only the promotion campaigns
+    for(int i=0; i<[campaigns count]; i++){
+        
+        MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
+        
+        if (campaignModel.type == type) {
+            [resultArray addObject:campaignModel];
+        }
+        
+    }
+    
+    return [resultArray autorelease];
+    
 }
 
 #pragma mark - Private methods
@@ -121,25 +130,6 @@
     [weightedArray release];
     
     return selectedCampaignModel;
-    
-}
-
-+ (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type{
-    
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
-    //generates the array with only the promotion campaigns
-    for(int i=0; i<[campaigns count]; i++){
-        
-        MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
-        
-        if (campaignModel.type == type) {
-            [resultArray addObject:campaignModel];
-        }
-        
-    }
-    
-    return [resultArray autorelease];
     
 }
 

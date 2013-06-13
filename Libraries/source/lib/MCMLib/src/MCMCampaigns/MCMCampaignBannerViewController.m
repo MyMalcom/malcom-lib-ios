@@ -121,7 +121,7 @@
 
 #pragma mark - Public methods
 
-- (void)showCrossCampaignBannerAnimated {
+- (void)showCampaignBannerAnimated {
     
     [self.view setAlpha:0.0f];
     
@@ -216,15 +216,11 @@
         [self.delegate bannerPressed:self.currentCampaignDTO];
     }
     
-//    NSLog(@"banner Pushed: %@",self.currentCampaignModel.name);
-    
     if (self.currentCampaignDTO.type == IN_APP_CROSS_SELLING) {
         
         [self openURLAppstore];
         
     } else if (self.currentCampaignDTO.type == IN_APP_PROMOTION) {
-        
-//        NSLog(@"Se ha pulsado una campaña");
         
     }
     
@@ -244,8 +240,6 @@
         SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
         storeController.delegate = self; // productViewControllerDidFinish
         
-        // Example app_store_id (e.g. for Words With Friends)
-        // [NSNumber numberWithInt:581665873];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         [f setNumberStyle:NSNumberFormatterDecimalStyle];
         NSNumber * idApple = [f numberFromString:self.currentCampaignDTO.promotionIdentifier];
@@ -493,8 +487,8 @@
 	self.dataMedia = nil;
     
     //calls the delegate telling that the loading failed
-    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading)]) {
-        [self.delegate mediaFailedLoading];
+    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
+        [self.delegate mediaFailedLoading:self.currentCampaignDTO];
     }
 	
 }

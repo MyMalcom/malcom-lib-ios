@@ -29,24 +29,23 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 - (void)requestCampaign;
 - (void)processCampaignResponse:(NSArray *)items;
-- (void)displayCampaigns:(NSArray *)campaigns;
-- (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
-- (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView;
+- (void)displayCampaign:(MCMCampaignDTO *)campaign;
+- (void)showBanner:(MCMCampaignBannerViewController *)bannerViewController;
 - (void)appDidBecomeActiveNotification:(NSNotification *)notification;
 - (void)hideCampaignView;
 - (void)finishCampaignView;
+- (void)notifyErrorLoadingCampaign:(NSString *)errorMessage;
+- (UIView *)getContainerViewForCurrentBanner;
 
 
 @property (nonatomic, retain) UIView *campaignContainerView;    //view that contains the banner.
 @property (nonatomic, retain) UIView *appstoreContainerView;    //view that contains the appstore.
 @property (nonatomic, assign) BOOL campaignsEnabled;            //boolean indicating the campaigns enabling.
 
-@property (nonatomic, retain) NSMutableArray *campaignsArray;
-@property (nonatomic, retain) MCMCampaignBannerViewController *currentIntersitial;
+@property (nonatomic, retain) MCMCampaignBannerViewController *currentBanner;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
 @property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
-@property (nonatomic, retain) NSArray *bannersArray;     //
 
 @property (nonatomic, assign) BOOL deletedView;
 
@@ -61,9 +60,6 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 @synthesize appstoreContainerView = _appstoreContainerView;
 @synthesize campaignsEnabled = _campaignsEnabled;
 @synthesize delegate = _delegate;
-
-@synthesize bannersArray = _bannersArray;
-
 
 
 #pragma mark - public methods
@@ -105,12 +101,12 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 - (void)removeCurrentBanner{
     
     //removes the current one
-    if(self.currentIntersitial){
+    if(self.currentBanner){
         [self hideCampaignView];
     }
 
     _campaignsEnabled = NO;
-    self.currentIntersitial = nil;
+    self.currentBanner = nil;
 
 }
 
@@ -173,7 +169,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  */
 - (void)processCampaignResponse:(NSArray *)items{
     
-    self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
+    NSMutableArray *campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
     
     //parses all the campaigns
     for(int i=0; i<[items count];i++){
@@ -182,36 +178,39 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         NSDictionary *dict = [items objectAtIndex:i];
         
         MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
-        [self.campaignsArray addObject:campaignModel];
+        [campaignsArray addObject:campaignModel];
         
     }
     
-    //Get the campaigns for the current CampaignType
-    NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
-    
-    //If there is enough campaigns show them, otherwise notify the error
-    if ([selectionCampaignsArray count] > 0) {
+    if ([campaignsArray count] > 0) {
         
-        //notifies it will be shown
-        if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-            [self.delegate campaignViewWillLoad];
-        }
-        
+        //If there is no completitionBlock the library should show the campaign
         if (self.completionBlock == nil) {
-            //shows a campaign
-            [self displayCampaigns:selectionCampaignsArray];
+            
+            //Get the campaign selected for the current CampaignType
+            MCMCampaignDTO *selectedCampaign = [MCMCampaignsHelper selectCampaign:campaignsArray forType:self.type];
+            
+            //notifies it will be shown
+            if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+                [self.delegate campaignViewWillLoad];
+            }
+            //shows the campaign
+            [self displayCampaign:selectedCampaign];
+            
         } else {
+            
+            //Otherwise, the developer is who should show
+            NSArray *selectionCampaignsArray = [MCMCampaignsHelper getCampaignsArray:campaignsArray forType:self.type];
+            
             // execute the completion block
             NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
             self.completionBlock(bannersArray);
+            
         }
     } else {
         MCMLog(@"There is no campaign to show");
         
-        //Reports the error
-        if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-            [self.delegate campaignViewDidFailRequest:@"There is no campaign to show"];
-        }
+        [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
         
         //Calls the error block
         if (self.errorBlock != nil) {
@@ -225,72 +224,41 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  Method that shows the selected campaign in the screen.
  @since 2.0.0
  */
-- (void)displayCampaigns:(NSArray *)campaigns{
+- (void)displayCampaign:(MCMCampaignDTO *)campaign{
     
-
-    //if there are parsed campaigns
-    if ([self.campaignsArray count] > 0) {
+    if (campaign) {
         
         //if previously there is some banner it will be removed in order to be replaced.
-        if(self.currentIntersitial){
+        if(self.currentBanner){
             [self hideCampaignView];
         }
         
-        //Create the banners
-        self.bannersArray = [MCMCampaignsHelper createBannersForCampaigns:campaigns inView:_campaignContainerView];
+        //Create the banner
+        self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView andCampaign:campaign];
         
-        for (MCMCampaignBannerViewController *bannerViewController in self.bannersArray) {
-            //Configure banners
-            [bannerViewController setDelegate:self];
-            if (self.type == IN_APP_CROSS_SELLING){
-                //Specifies the appstore container view (only for in_app_cross_selling)
-                [bannerViewController setAppstoreContainerView:_appstoreContainerView];
-            }
-            
-            MCMLog(@"Vamos a mostrar la campaña: %@",bannerViewController.currentCampaignDTO);
-            
-            //Show banners
-            [_campaignContainerView addSubview:bannerViewController.view];
+        //Configure banner
+        [self.currentBanner setDelegate:self];
+        if (self.type == IN_APP_CROSS_SELLING){
+            //Specifies the appstore container view (only for in_app_cross_selling)
+            [self.currentBanner setAppstoreContainerView:_appstoreContainerView];
         }
-
-        MCMLog(@"Starting campaign displaying...");
         
+        //Show banner
+        UIView *containerView = [self getContainerViewForCurrentBanner];
+        [containerView addSubview:self.currentBanner.view];
+        
+        MCMLog(@"Start display %@",campaign);
+        
+    } else {
+        [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
     }
     
 }
 
-/**
- 
- */
-- (void)placePromotionBanners:(NSArray*)bannersArray inView:(UIView *)containerView {
-    MCMLog(@"Placing banners");
-    
-    int yOffset = 0;
-    
-    for (int i=0; i<[bannersArray count]; i++) {
-        
-        MCMCampaignBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
-        
-        CGRect frame = currentBanner.view.frame;
-        frame.origin.y = yOffset;
-        [currentBanner.view setFrame:frame];
-        
-        yOffset += frame.size.height;
-        
-        //Remove the view from container
-//        [currentBanner.view removeFromSuperview];
-//        //Add current view in proper location
-//        [containerView addSubview:currentBanner.view];
-        
-    }
-}
-
-- (void)placeCrossSellingBanner:(MCMCampaignBannerViewController *)bannerViewController inView:(UIView *)containerView {
-    //adds the banner to the view
-    [containerView addSubview:bannerViewController.view];
+- (void)showBanner:(MCMCampaignBannerViewController *)bannerViewController {
     
     //shows the banner
-    [bannerViewController showCrossCampaignBannerAnimated];
+    [bannerViewController showCampaignBannerAnimated];
     
     //clears the timer
     if(self.durationTimer && [self.durationTimer isValid]){
@@ -328,16 +296,16 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  */
 - (void)hideCampaignView{
     
-    if(self.currentIntersitial.view.superview){
-        [self.currentIntersitial.view removeFromSuperview];
+    if(self.currentBanner.view.superview){
+        [self.currentBanner.view removeFromSuperview];
     }
 
-    self.currentIntersitial = nil;
+    self.currentBanner = nil;
 }
 
 - (void)finishCampaignView{
   
-    if (self.currentIntersitial && self.currentIntersitial.view.window) {
+    if (self.currentBanner && self.currentBanner.view.window) {
         [self hideCampaignView];
         
         //notifies by the delegate that the campaign has been finished
@@ -346,6 +314,37 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         }
     }
     
+}
+
+- (void)notifyErrorLoadingCampaign:(NSString *)errorMessage{
+    
+    //Reports the error
+    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+        [self.delegate campaignViewDidFailRequest:errorMessage];
+    }
+}
+
+- (UIView *)getContainerViewForCurrentBanner{
+    
+    UIView *containerView;
+    
+    //depending on the situation it will show it in window or in the container view.
+    if([self.currentBanner needsToDisplayOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+        
+        UIWindow* window = [UIApplication sharedApplication].keyWindow;
+        if (!window)
+            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        
+        containerView = [[window subviews] objectAtIndex:0];
+        
+        containerView = [[[UIApplication sharedApplication] delegate] window];
+        
+    }else{ //adds to the specified view
+        containerView = _campaignContainerView;
+        
+    }
+    
+    return containerView;
 }
 
 #pragma mark ----
@@ -421,31 +420,10 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 - (void)mediaFinishLoading:(MCMCampaignDTO *)campaign{
     
-    UIView *containerView;
-    
-    //depending on the situation it will show it in window or in the container view.
-    if([self.currentIntersitial needsToDisplayOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+    if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION) {
         
-        UIWindow* window = [UIApplication sharedApplication].keyWindow;
-        if (!window)
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        [self showBanner:self.currentBanner];
         
-        containerView = [[window subviews] objectAtIndex:0];
-        
-        //        containerView = [[[UIApplication sharedApplication] delegate] window];
-        
-    }else{ //adds to the specified view
-        containerView = _campaignContainerView;
-        
-    }
-    
-    if (self.type == IN_APP_CROSS_SELLING) {
-        
-        [self placeCrossSellingBanner:[self.bannersArray objectAtIndex:0] inView:containerView];
-        
-    } else if (self.type == IN_APP_PROMOTION) {
-        
-        [self placePromotionBanners:self.bannersArray inView:containerView];
     }
 
     //notifies it is being shown
@@ -457,13 +435,16 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
 }
 
-- (void)mediaFailedLoading{
+- (void)mediaFailedLoading:(MCMCampaignDTO *)campaign{
     
-    MCMLog(@"Failed campaign displaying...");
+    NSString* errorMessage = [NSString stringWithFormat:@"Failed displaying campaign: %@",[campaign name]];
+    
+    //This is to show the message removing the warning
+    MCMLog(@"%@",errorMessage);
  
     //notifies delegate fail
-    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-        [self.delegate campaignViewDidFailRequest:@"Failed campaign displaying..."];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest:)]){
+        [self.delegate campaignViewDidFailRequest:errorMessage];
     }
     
     
@@ -477,7 +458,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 - (void)bannerPressed:(MCMCampaignDTO *)campaign{
     
-    MCMLog("Pressed %@",campaign);
+    MCMLog(@"Pressed %@",campaign);
     
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
