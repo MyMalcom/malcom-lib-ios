@@ -26,7 +26,6 @@
 @interface MCMCampaignBannerViewController ()
 
 @property (nonatomic, retain) UIView *containerView;
-@property (nonatomic, retain) UIView *appstoreContainerView;
 @property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
 @property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
 @property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
@@ -262,7 +261,7 @@
 //                    id rootVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
                     [rootVC presentViewController:storeController animated:YES completion:nil];
                 }else{ //if it is specified, it will be placed on the appstoreContainerView 
-                    [[self.appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
+                    [(UIViewController *)[self.appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
 
                 }
                 
@@ -309,13 +308,9 @@
  */
 - (void)showImage{
     
-//    NSLog(@"Show Image for campaign: %@",self.currentCampaignDTO);
-    
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
     CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
-    
-//    NSLog(@"ShowImage superview frame %@",NSStringFromCGRect([[self.view superview] frame]));
     
     //reframes the size of the view
     if (![self.currentCampaignDTO showOnWindow]) {
@@ -493,8 +488,7 @@
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Failed campaign loagin... %@",[error description]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Failed campaign loagin... %@",[error description]);
     
 	self.dataMedia = nil;
     

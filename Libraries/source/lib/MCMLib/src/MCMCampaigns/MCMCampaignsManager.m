@@ -115,6 +115,8 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 }
 
 - (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
+    
+    self.type = type;
     _campaignContainerView = nil;
     self.completionBlock = completion;
     self.errorBlock = error;
@@ -152,8 +154,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
     url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager url: %@", url]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"url: %@", url);
     
     MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
     [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
@@ -185,21 +186,37 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         
     }
     
-    //notifies it will be shown
-    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-        [self.delegate campaignViewWillLoad];
-    }
-    
     //Get the campaigns for the current CampaignType
     NSArray *selectionCampaignsArray = [MCMCampaignsHelper filterCampaigns:self.campaignsArray forType:self.type];
     
-    if (self.completionBlock == nil) {
-        //shows a campaign
-        [self displayCampaigns:selectionCampaignsArray];
+    //If there is enough campaigns show them, otherwise notify the error
+    if ([selectionCampaignsArray count] > 0) {
+        
+        //notifies it will be shown
+        if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+            [self.delegate campaignViewWillLoad];
+        }
+        
+        if (self.completionBlock == nil) {
+            //shows a campaign
+            [self displayCampaigns:selectionCampaignsArray];
+        } else {
+            // execute the completion block
+            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+            self.completionBlock(bannersArray);
+        }
     } else {
-        // execute the completion block
-        NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
-        self.completionBlock(bannersArray);
+        MCMLog(@"There is no campaign to show");
+        
+        //Reports the error
+        if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+            [self.delegate campaignViewDidFailRequest:@"There is no campaign to show"];
+        }
+        
+        //Calls the error block
+        if (self.errorBlock != nil) {
+            self.errorBlock(@"There is no campaign to show");
+        }
     }
     
 }
@@ -223,14 +240,20 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         self.bannersArray = [MCMCampaignsHelper createBannersForCampaigns:campaigns inView:_campaignContainerView];
         
         for (MCMCampaignBannerViewController *bannerViewController in self.bannersArray) {
+            //Configure banners
             [bannerViewController setDelegate:self];
-            //Specifies the appstore container view (only for in_app_cross_selling)
-            if (self.type == IN_APP_CROSS_SELLING)
+            if (self.type == IN_APP_CROSS_SELLING){
+                //Specifies the appstore container view (only for in_app_cross_selling)
                 [bannerViewController setAppstoreContainerView:_appstoreContainerView];
+            }
+            
+            MCMLog(@"Vamos a mostrar la campaña: %@",bannerViewController.currentCampaignDTO);
+            
+            //Show banners
+            [_campaignContainerView addSubview:bannerViewController.view];
         }
 
-        [MCMLog log:@"Malcom Campaign - MCMCampaignManager Starting campaign displaying..."
-             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        MCMLog(@"Starting campaign displaying...");
         
     }
     
@@ -240,15 +263,11 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  
  */
 - (void)placePromotionBanners:(NSArray*)bannersArray inView:(UIView *)containerView {
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager placeBanners" 
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Placing banners");
     
     int yOffset = 0;
     
     for (int i=0; i<[bannersArray count]; i++) {
-        
-        [MCMLog log:[NSString stringWithFormat:@"MCMCampaignManager placing banner %d - offset %d",i,yOffset]
-             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
         MCMCampaignBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
         
@@ -259,9 +278,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         yOffset += frame.size.height;
         
         //Remove the view from container
-        [currentBanner.view removeFromSuperview];
-        //Add current view in proper location
-        [containerView addSubview:currentBanner.view];
+//        [currentBanner.view removeFromSuperview];
+//        //Add current view in proper location
+//        [containerView addSubview:currentBanner.view];
         
     }
 }
@@ -334,9 +353,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 #pragma mark ----
 
 - (void)requestFinished:(MCMASIHTTPRequest *)request {
+    MCMLog(@"HTTP CODE: %d", [request responseStatusCode]);
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    BOOL error = true;
 
     if ([request responseStatusCode] < 400) {
         
@@ -355,29 +374,35 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
                 [self processCampaignResponse:items];
                 
                 //if everything was ok return
-                return;
+                error = false;
             }
             
         }
         
     }
-        
-    //if something was wrong notifies delegate fail
-    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-        [self.delegate campaignViewDidFailRequest];
-    }
     
-    if (self.errorBlock != nil) {
+    if (error) {
+        //Try to gets the error message
         NSString *errorMessage;
         NSDictionary* json = [NSJSONSerialization JSONObjectWithData:[request responseData]
-                                                                options:kNilOptions
-                                                                  error:nil];
+                                                             options:kNilOptions
+                                                               error:nil];
         if (json!=nil && [json objectForKey:@"description"]) {
             errorMessage = (NSString *)[json objectForKey:@"description"];
         } else {
-            errorMessage = @"";
+            errorMessage = [NSString stringWithFormat:@"Response code: %d", [request responseStatusCode]];
         }
-        self.errorBlock(errorMessage);
+        
+        
+        //Notifies delegate fail
+        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+            [self.delegate campaignViewDidFailRequest:errorMessage];
+        }
+        
+        //Calls the error block
+        if (self.errorBlock != nil) {
+            self.errorBlock(errorMessage);
+        }
     }
     
 }
@@ -386,9 +411,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     NSError *err = [request error];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error receiving campaing file: %@", [err description]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-    
+    MCMLog(@"Error receiving campaing file: %@", [err description]);
     
 }
 
@@ -430,20 +453,18 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         [self.delegate campaignViewDidLoad];
     }
     
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager Displaying a campaign..."
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Displaying a campaign...");
     
 }
 
 - (void)mediaFailedLoading{
+    
+    MCMLog(@"Failed campaign displaying...");
  
     //notifies delegate fail
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-        [self.delegate campaignViewDidFailRequest];
+        [self.delegate campaignViewDidFailRequest:@"Failed campaign displaying..."];
     }
-    
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager Failed campaign displaying..."
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     
 }
@@ -456,8 +477,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 - (void)bannerPressed:(MCMCampaignDTO *)campaign{
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Pressed %@",campaign]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog("Pressed %@",campaign);
     
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){

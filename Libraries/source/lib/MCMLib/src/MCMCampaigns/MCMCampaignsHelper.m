@@ -17,17 +17,19 @@
 
 /**
  Method that gets randomly weighted a campaign to serve.
+ @param NSArray campaigs that only one will be selected based on their weight.
  @return MCMCampaignModel campaign selected.
  @since 2.0.0
  */
 + (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns;
 
 /**
- Method that gets the promotion campaigns from multitype campaigns array
- @return NSArray with all promotion campaigns.
+ Method that gets the campaigns with the selected type from multitype campaigns array.
+ @param campaigns that will be filtered to get only the selected type.
+ @return NSArray with the selected type campaigns.
  @since 2.0.1
  */
-+ (NSMutableArray *)getPromotionCampaignsArray:(NSArray *)campaigns;
++ (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
 
 @end
 
@@ -55,23 +57,23 @@
     NSError *error = [request error];
     
     if ((error) || ([request responseStatusCode]>=400)) {
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]]
-             inLine:__LINE__
-         fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        MCMLog(@" Error sending: %@", [request responseStatusMessage]);
     }
     
 }
 
 + (NSArray *)filterCampaigns:(NSArray *)campaigns forType:(CampaignType)type{
     //Get the sources for the current CampaignType
-    NSArray *selectionCampaignsArray;
+    NSArray *selectionCampaignsArray = [[NSArray alloc] init];
     if (type == IN_APP_CROSS_SELLING) {
-        //gets the one that fits better depending on the weight of the campaign
-        selectionCampaignsArray = [[[NSArray alloc] initWithObjects:[MCMCampaignsHelper getCampaignPerWeight:campaigns], nil] retain];
+        //Gets the one that fits better depending on the weight of the campaign
+        NSArray *crossSellingCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:IN_APP_CROSS_SELLING];
+        //Should have at least one campaign
+        if ([crossSellingCampaigns count] > 0) {
+            selectionCampaignsArray = [[NSArray alloc] initWithObjects:[MCMCampaignsHelper getCampaignPerWeight:crossSellingCampaigns], nil];
+        }
     } else if (type == IN_APP_PROMOTION) {
-        selectionCampaignsArray = [[MCMCampaignsHelper getPromotionCampaignsArray:campaigns] retain];
-    } else {
-        selectionCampaignsArray = [[NSArray alloc] init];
+        selectionCampaignsArray = [[MCMCampaignsHelper getCampaignsArray:campaigns forType:IN_APP_PROMOTION] retain];
     }
     
     return [selectionCampaignsArray autorelease];
@@ -122,8 +124,7 @@
     
 }
 
-
-+ (NSMutableArray *)getPromotionCampaignsArray:(NSArray *)campaigns{
++ (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type{
     
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     
@@ -132,7 +133,7 @@
         
         MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
         
-        if (campaignModel.type == IN_APP_PROMOTION) {
+        if (campaignModel.type == type) {
             [resultArray addObject:campaignModel];
         }
         

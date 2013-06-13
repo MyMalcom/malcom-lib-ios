@@ -39,7 +39,7 @@
 @interface MCMCampaignBannerViewController : UIViewController<SKStoreProductViewControllerDelegate>
 
 @property (nonatomic, retain) MCMCampaignDTO *currentCampaignDTO;
-
+@property (nonatomic, retain) UIView *appstoreContainerView;
 @property (nonatomic, assign) id <MCMCampaignBannerViewControllerDelegate> delegate;
 
 
