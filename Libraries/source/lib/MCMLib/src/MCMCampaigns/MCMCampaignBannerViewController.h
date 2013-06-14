@@ -50,7 +50,7 @@
 - (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign;
 
 /**
- Method that shows the campaign banner with animation
+ Method that shows the cross campaign banner with animation
  @since 2.0.1
  */
 - (void)showCampaignBannerAnimated;

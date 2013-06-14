@@ -175,12 +175,7 @@
  */
 - (BOOL)needsToDisplayOnWindow{
     
-    //in case the type is TOP or BOTTOM it will be shown in the specified view
-    if ((self.currentCampaignDTO.position == TOP) || (self.currentCampaignDTO.position == BOTTOM)) {
-        return NO;
-    }else{ //otherwise it needs to be displayed on the window on the top of everyview (navbars, tabbars..)
-        return YES;
-    }
+    return [self.currentCampaignDTO showOnWindow];
 }
 
 #pragma mark - privated methods
@@ -207,7 +202,9 @@
 - (void)close{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.delegate mediaClosed];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaClosed)]){
+        [self.delegate mediaClosed];
+    }
 }
 
 - (void)bannerPressed{
@@ -217,11 +214,12 @@
     }
     
     if (self.currentCampaignDTO.type == IN_APP_CROSS_SELLING) {
+        MCMLog(@"IN_APP_CROSS_SELLING banner pressed");
         
         [self openURLAppstore];
         
     } else if (self.currentCampaignDTO.type == IN_APP_PROMOTION) {
-        
+        MCMLog(@"IN_APP_PROMOTION banner pressed");
     }
     
     [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignDTO];
@@ -271,7 +269,7 @@
         
     }
     
-    if ([self needsToDisplayOnWindow]) {
+    if ([self.currentCampaignDTO showOnWindow]) {
         [self close];
     }
 }
@@ -311,18 +309,6 @@
         CGRect newFrame = [[self.view superview] frame];
         newFrame.origin = CGPointMake(0, 0);
         frame = newFrame;
-//        if (self.containerView!=nil) {
-//            if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
-//                
-//                frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
-//                
-//            } else { //top & default cases
-//                
-//                frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
-//            }
-//        } else {
-//            frame = CGRectMake(0, 0, 320, bannerHeight);
-//        }
     }
     
     //sets the color and the new frame

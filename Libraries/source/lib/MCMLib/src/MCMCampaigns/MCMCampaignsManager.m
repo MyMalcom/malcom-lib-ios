@@ -245,6 +245,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         
         //Show banner
         UIView *containerView = [self getContainerViewForCurrentBanner];
+        MCMLog(@"ContainerView frame: %@",NSStringFromCGRect(containerView.frame));
+        MCMLog(@"currentBannerView frame: %@",NSStringFromCGRect(self.currentBanner.view.frame));
+        
         [containerView addSubview:self.currentBanner.view];
         
         MCMLog(@"Start display %@",campaign);
@@ -329,7 +332,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     UIView *containerView;
     
     //depending on the situation it will show it in window or in the container view.
-    if([self.currentBanner needsToDisplayOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+    if([self.currentBanner.currentCampaignDTO showOnWindow] || _campaignContainerView == nil ){ //adds it to the window
         
         UIWindow* window = [UIApplication sharedApplication].keyWindow;
         if (!window)
@@ -343,6 +346,8 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         containerView = _campaignContainerView;
         
     }
+    
+    MCMLog(@"Screen size %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
     
     return containerView;
 }

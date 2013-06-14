@@ -14,7 +14,7 @@
 
 #define kPositionTOP @"TOP"
 #define kPositionBOTTOM @"BOTTOM"
-#define kPositionMIDDLE_LANDSCAPE @"TOP"
+#define kPositionMIDDLE_LANDSCAPE @"MIDDLE_LANDSCAPE"
 #define kPositionMIDDLE_PORTRAIT @"MIDDLE_PORTRAIT"
 #define kPositionFULL_SCREEN @"FULL_SCREEN"
 
@@ -96,8 +96,9 @@
 - (BOOL)showOnWindow{
     
     if (self.media!=nil) {
+        //in case the type is TOP or BOTTOM it will be shown in the specified view
         CampaignPosition campPosition = self.position;
-        return (campPosition == FULL_SCREEN) && (campPosition == MIDDLE_LANDSCAPE) && (campPosition == MIDDLE_PORTRAIT);
+        return (campPosition == FULL_SCREEN) || (campPosition == MIDDLE_LANDSCAPE) || (campPosition == MIDDLE_PORTRAIT);
     } else {
         return NO;
     }
