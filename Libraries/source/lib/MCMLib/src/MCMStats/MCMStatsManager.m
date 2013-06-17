@@ -224,7 +224,7 @@
                                 MCMVersionSDK, @"lib_version",
 								applicationCode_, @"application_code",
                                 userMetadata?userMetadata:@"", @"user_metadata",
-								[MCMCoreUtils machinePlatform], @"device_model",
+								[MCMCoreUtils machinePlatformName], @"device_model",
 								[MCMCoreUtils systemVersion], @"device_os",
                                 [MCMCoreUtils platform], @"device_platform",
 								[NSDictionary dictionaryWithObjectsAndKeys:
