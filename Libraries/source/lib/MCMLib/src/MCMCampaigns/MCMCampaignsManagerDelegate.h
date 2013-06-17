@@ -13,8 +13,8 @@
 
 - (void)campaignViewWillLoad;
 - (void)campaignViewDidLoad;
-- (void)campaignViewDidFailRequest;
+- (void)campaignViewDidFailRequest:(NSString *)errorMessage;
 - (void)campaignViewDidFinish;
-- (void)campaignPressed:(NSString *) promotionCode;
+- (void)campaignPressed:(NSString *)promotionCode;
 
 @end

@@ -16,41 +16,41 @@
 #import "MCMCoreAPIRequest.h"
 #import "MCMCoreManager.h"
 #import "MCMCore.h"
-#import "MCMCampaignModel.h"
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignDTO.h"
+#import "MCMCampaignBannerViewController.h"
 #import "MCMCoreUtils.h"
+#import "MCMCampaignsHelper.h"
+#import "MCMCampaignsDefines.h"
 
-#define MCMCAMPAIGN_URL @"v2/campaigns/application/%@/udid/%@"
-//#define MCMCAMPAIGN_URL @"http://malcom-api-dev.elasticbeanstalk.com/v2/campaigns/application/%@/udid/%@"          //DEV
-#define MCMCAMPAIGN_HIT_URL @"v2/campaigns/%@/hit/%@/application/%@/udid/%@"
+typedef void(^CompletionBlock)(NSArray* campaignBannersVC);
+typedef void(^ErrorBlock)(NSString* errorMessage);
 
-#define CURRENT_CAMPAIGN_VIEW_TAG 100
-#define DEFAULT_DURATION 15
+@interface MCMCampaignsManager () <MCMCampaignBannerViewControllerDelegate>
 
-@interface MCMCampaignsManager () <MCMIntersitialBannerViewControllerDelegate>
 - (void)requestCampaign;
-- (MCMCampaignModel*)getCampaignPerWeight;
-- (void)displayCampaign;
-- (void)placePromotionBanners:(NSArray *)bannersArray inView:(UIView *)containerView;
-- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView;
+- (void)processCampaignResponse:(NSArray *)items;
+- (void)displayCampaign:(MCMCampaignDTO *)campaign;
+- (void)showBanner:(MCMCampaignBannerViewController *)bannerViewController;
 - (void)appDidBecomeActiveNotification:(NSNotification *)notification;
 - (void)hideCampaignView;
 - (void)finishCampaignView;
-- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign;
+- (void)notifyErrorLoadingCampaign:(NSString *)errorMessage;
+- (UIView *)getContainerViewForCurrentBanner;
 
 
 @property (nonatomic, retain) UIView *campaignContainerView;    //view that contains the banner.
 @property (nonatomic, retain) UIView *appstoreContainerView;    //view that contains the appstore.
 @property (nonatomic, assign) BOOL campaignsEnabled;            //boolean indicating the campaigns enabling.
 
-@property (nonatomic, retain) NSMutableArray *campaignsArray;
-@property (nonatomic, retain) MCMIntersitialBannerViewController *currentIntersitial;
+@property (nonatomic, retain) MCMCampaignBannerViewController *currentBanner;
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
-@property (nonatomic, retain) MCMCampaignModel *currentCampaignModel;       //current campaign selected
+@property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
-@property (nonatomic, retain) NSMutableArray *bannersArray;     //
 
-@property (nonatomic, assign) BOOL deletedView;  
+@property (nonatomic, assign) BOOL deletedView;
+
+@property (nonatomic, copy) CompletionBlock completionBlock;
+@property (nonatomic, copy) ErrorBlock errorBlock;
 
 @end
 
@@ -60,9 +60,6 @@
 @synthesize appstoreContainerView = _appstoreContainerView;
 @synthesize campaignsEnabled = _campaignsEnabled;
 @synthesize delegate = _delegate;
-
-@synthesize bannersArray = _bannersArray;
-
 
 
 #pragma mark - public methods
@@ -91,24 +88,46 @@
     //specifies the container view for the appstore
     _appstoreContainerView = appstoreView;
     
+    //There is no completionBlock
+    self.completionBlock = nil;
+    self.errorBlock = nil;
+    
     //request a campaign to the server. this has to be called everytime it's needed to show it.
     [self requestCampaign];
     
     _campaignsEnabled = YES;
 }
 
-
 - (void)removeCurrentBanner{
     
     //removes the current one
-    if(self.currentIntersitial){
+    if(self.currentBanner){
         [self hideCampaignView];
     }
 
     _campaignsEnabled = NO;
-    self.currentIntersitial = nil;
+    self.currentBanner = nil;
 
 }
+
+- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
+    
+    self.type = type;
+    _campaignContainerView = nil;
+    self.completionBlock = completion;
+    self.errorBlock = error;
+    
+    //Get the json and parse it to get the banners
+    [self requestCampaign];
+    
+    //filtro el array con las campañas del tipo type
+    
+    //creo un array de banners
+    
+    //ejecuto el bloque con el array de banners
+    
+}
+
 - (void)dealloc{
         
     if(self.durationTimer && [self.durationTimer isValid]){
@@ -128,13 +147,10 @@
  */
 - (void)requestCampaign{
     
-//    NSString *url = @"https://dl.dropboxusercontent.com/u/23103432/campaignsV2.json";
-    
     NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
     url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager url: %@", url]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"url: %@", url);
     
     MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
     [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
@@ -147,196 +163,105 @@
     
 }
 
-
 /**
- Method that gets randomly weighted a campaign to serve.
- @return MCMCampaignModel campaign selected.
- @since 2.0.0
+ Processes the information from response of campaign's request
+ @since 2.0.1
  */
-- (MCMCampaignModel *)getCampaignPerWeight{
+- (void)processCampaignResponse:(NSArray *)items{
     
+    NSMutableArray *campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
     
-    NSMutableArray *weightedArray = [[NSMutableArray alloc] init];
-    
-    //generates the array to random weighted selection
-    for(int i=0; i<[self.campaignsArray count]; i++){
+    //parses all the campaigns
+    for(int i=0; i<[items count];i++){
         
-        MCMCampaignModel *campaignModel = [self.campaignsArray objectAtIndex:i];
+        //gets the first element of the dictionary
+        NSDictionary *dict = [items objectAtIndex:i];
         
-        //adds to the weighted array as ids as weight has
-        for(int j=0; j<campaignModel.weight;j++){
-            [weightedArray addObject:[NSNumber numberWithInt:i]];
-        }
+        MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
+        [campaignsArray addObject:campaignModel];
         
     }
-
-    //generates random number
-    int selection = arc4random()%[weightedArray count];
-
-    //gets the random position and gets the id written on it. It will be one of the campaigns
-    MCMCampaignModel *selectedCampaignModel = [self.campaignsArray objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
-    [weightedArray release];
     
-    return selectedCampaignModel;
-
-}
-
- 
-             
-/**
-Method that gets randomly weighted a campaign to serve.
-@return MCMCampaignModel campaign selected.
-@since 2.0.0
-*/
-- (NSMutableArray *)getPromotionCampaignsArray{
-    
-    NSMutableArray *resultArray = [[NSMutableArray alloc] init];
-    
-    //generates the array with only the promotion campaigns
-    for(int i=0; i<[self.campaignsArray count]; i++){
+    if ([campaignsArray count] > 0) {
         
-        MCMCampaignModel *campaignModel = [self.campaignsArray objectAtIndex:i];
-        
-        if (campaignModel.type == IN_APP_PROMOTION) {
-            [resultArray addObject:campaignModel];
+        //If there is no completitionBlock the library should show the campaign
+        if (self.completionBlock == nil) {
+            
+            //Get the campaign selected for the current CampaignType
+            MCMCampaignDTO *selectedCampaign = [MCMCampaignsHelper selectCampaign:campaignsArray forType:self.type];
+            
+            //notifies it will be shown
+            if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+                [self.delegate campaignViewWillLoad];
+            }
+            //shows the campaign
+            [self displayCampaign:selectedCampaign];
+            
+        } else {
+            
+            //Otherwise, the developer is who should show
+            NSArray *selectionCampaignsArray = [MCMCampaignsHelper getCampaignsArray:campaignsArray forType:self.type];
+            
+            // execute the completion block
+            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+            self.completionBlock(bannersArray);
+            
         }
-             
+    } else {
+        MCMLog(@"There is no campaign to show");
+        
+        [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
+        
+        //Calls the error block
+        if (self.errorBlock != nil) {
+            self.errorBlock(@"There is no campaign to show");
+        }
     }
-             
-    return [resultArray autorelease];
-             
+    
 }
-
 
 /**
  Method that shows the selected campaign in the screen.
  @since 2.0.0
  */
-- (void)displayCampaign{
+- (void)displayCampaign:(MCMCampaignDTO *)campaign{
     
-
-    //if there are parsed campaigns
-    if ([self.campaignsArray count] > 0) {
+    if (campaign) {
         
         //if previously there is some banner it will be removed in order to be replaced.
-        if(self.currentIntersitial){
+        if(self.currentBanner){
             [self hideCampaignView];
         }
         
-        if ((self.type == IN_APP_CROSS_SELLING) || (self.type == IN_APP_PROMOTION)) {
-            //Get the sources for the current CampaignType
-            NSArray *selectionCampaignsArray;
-            if (self.type == IN_APP_CROSS_SELLING) {
-                //gets the one that fits better depending on the weight of the campaign
-                selectionCampaignsArray = [[NSArray alloc] initWithObjects:[self getCampaignPerWeight], nil];
-            } else {
-                selectionCampaignsArray = [[self getPromotionCampaignsArray] retain];
-            }
-            
-            self.bannersArray = [[NSMutableArray alloc] init];
-            
-            for (int i=0;i<[selectionCampaignsArray count];i++) {
-                //creates a banner with the specifications
-                MCMIntersitialBannerViewController *bannerViewController = [[MCMIntersitialBannerViewController alloc] initInView:_campaignContainerView andCampaign:[selectionCampaignsArray objectAtIndex:i]];
-                [bannerViewController setDelegate:self];
-                [bannerViewController.view setTag:i];
-                
-                if (self.type == IN_APP_CROSS_SELLING)
-                    [bannerViewController setAppstoreContainerView:_appstoreContainerView]; //specifies the appstore container view
-                
-                [self.bannersArray addObject:bannerViewController];
-            }
-            
-            
-            [selectionCampaignsArray release];
+        //Create the banner
+        self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView andCampaign:campaign];
+        
+        //Configure banner
+        [self.currentBanner setDelegate:self];
+        if (self.type == IN_APP_CROSS_SELLING){
+            //Specifies the appstore container view (only for in_app_cross_selling)
+            [self.currentBanner setAppstoreContainerView:_appstoreContainerView];
         }
         
-
-        [MCMLog log:@"Malcom Campaign - MCMCampaignManager Starting campaign displaying..."
-             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        //Show banner
+        UIView *containerView = [self getContainerViewForCurrentBanner];
+        MCMLog(@"ContainerView frame: %@",NSStringFromCGRect(containerView.frame));
+        MCMLog(@"currentBannerView frame: %@",NSStringFromCGRect(self.currentBanner.view.frame));
         
+        [containerView addSubview:self.currentBanner.view];
+        
+        MCMLog(@"Start display %@",campaign);
+        
+    } else {
+        [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
     }
     
 }
 
-/**
- 
- */
-- (void)placePromotionBanners:(NSArray*)bannersArray inView:(UIView *)containerView {
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager placeBanners" 
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+- (void)showBanner:(MCMCampaignBannerViewController *)bannerViewController {
     
-    int yOffset = 0;
-    
-    for (int i=0; i<[bannersArray count]; i++) {
-        
-        [MCMLog log:[NSString stringWithFormat:@"MCMCampaignManager placing banner %d - offset %d",i,yOffset]
-             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-        
-        MCMIntersitialBannerViewController *currentBanner = [bannersArray objectAtIndex:i];
-        
-        CGRect frame = currentBanner.view.frame;
-        frame.origin.y = yOffset;
-        [currentBanner.view setFrame:frame];
-        
-        yOffset += frame.size.height;
-        
-        //Remove the view from container
-        [currentBanner.view removeFromSuperview];
-        //Add current view in proper location
-        [containerView addSubview:currentBanner.view];
-        
-    }
-}
-
-- (void)placeCrossSellingBanner:(MCMIntersitialBannerViewController *)bannerViewController inView:(UIView *)containerView {
-    //adds the banner to the view
-    [containerView addSubview:bannerViewController.view];
-    
-    [bannerViewController.view setAlpha:0.0f];
-    
-    //depending on the type of position it will show a bouncing animation
-    if((bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) ||
-       (bannerViewController.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
-        
-        
-        [bannerViewController.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
-        [bannerViewController.backgroundFadedView setAlpha:0.0f];
-        [bannerViewController.closeButton setAlpha:0.0f];
-        
-        [UIView animateWithDuration: 0.3
-                         animations: ^{
-                             bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
-                             [bannerViewController.view setAlpha:1.0f];
-                             [bannerViewController.backgroundFadedView setAlpha:0.7f];
-                             
-                         }
-                         completion: ^(BOOL finished){
-                             [UIView animateWithDuration:1.0/10.0
-                                              animations: ^{
-                                                  bannerViewController.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
-                                              }
-                                              completion: ^(BOOL finished){
-                                                  [UIView animateWithDuration:1.0/5.0
-                                                                   animations: ^{
-                                                                       bannerViewController.bannerButton.transform = CGAffineTransformIdentity;
-                                                                       [bannerViewController.closeButton setAlpha:1.0f];
-                                                                       
-                                                                   }completion:^(BOOL finished) {
-                                                                   }];
-                                              }];
-                         }];
-        
-        
-    }else{ //or a simple animation of fade in
-        
-        [UIView animateWithDuration: 0.3 animations: ^{
-            [bannerViewController.view setAlpha:1.0f];
-        }
-                         completion: ^(BOOL finished){}];
-    }
-    
-    
+    //shows the banner
+    [bannerViewController showCampaignBannerAnimated];
     
     //clears the timer
     if(self.durationTimer && [self.durationTimer isValid]){
@@ -374,16 +299,16 @@ Method that gets randomly weighted a campaign to serve.
  */
 - (void)hideCampaignView{
     
-    if(self.currentIntersitial.view.superview){
-        [self.currentIntersitial.view removeFromSuperview];
+    if(self.currentBanner.view.superview){
+        [self.currentBanner.view removeFromSuperview];
     }
 
-    self.currentIntersitial = nil;
+    self.currentBanner = nil;
 }
 
 - (void)finishCampaignView{
   
-    if (self.currentIntersitial && self.currentIntersitial.view.window) {
+    if (self.currentBanner && self.currentBanner.view.window) {
         [self hideCampaignView];
         
         //notifies by the delegate that the campaign has been finished
@@ -394,35 +319,37 @@ Method that gets randomly weighted a campaign to serve.
     
 }
 
-- (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignModel *)campaign{
+- (void)notifyErrorLoadingCampaign:(NSString *)errorMessage{
     
-    //url
-    NSString *path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL,
-                      campaign,
-                      action,
-                      [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
-                      [MCMCoreUtils uniqueIdentifier]];
-    
-    NSURL *url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
-    
-    //request
-    MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:url];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"type", @"campaingHit",nil]];
-    [request startSynchronous];
-    
-    
-    NSError *error = [request error];
-    
-    if ((!error) && ([request responseStatusCode]<402)) {
-        NSLog(@"Todo ok: %d", [request responseStatusCode]);
+    //Reports the error
+    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+        [self.delegate campaignViewDidFailRequest:errorMessage];
     }
-    else {
+}
+
+- (UIView *)getContainerViewForCurrentBanner{
+    
+    UIView *containerView;
+    
+    //depending on the situation it will show it in window or in the container view.
+    if([self.currentBanner.currentCampaignDTO showOnWindow] || _campaignContainerView == nil ){ //adds it to the window
         
-        [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error sending: %@", [request responseStatusMessage]]
-             inLine:__LINE__
-         fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        UIWindow* window = [UIApplication sharedApplication].keyWindow;
+        if (!window)
+            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        
+        containerView = [[window subviews] objectAtIndex:0];
+        
+        containerView = [[[UIApplication sharedApplication] delegate] window];
+        
+    }else{ //adds to the specified view
+        containerView = _campaignContainerView;
+        
     }
     
+    MCMLog(@"Screen size %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
+    
+    return containerView;
 }
 
 #pragma mark ----
@@ -430,45 +357,55 @@ Method that gets randomly weighted a campaign to serve.
 #pragma mark ----
 
 - (void)requestFinished:(MCMASIHTTPRequest *)request {
+    MCMLog(@"HTTP CODE: %d", [request responseStatusCode]);
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager HTTP CODE: %d", [request responseStatusCode]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    BOOL error = true;
 
+    if ([request responseStatusCode] < 400) {
         
-    //parses the response
-    if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
+        //parses the response
+        if ([[request.userInfo objectForKey:@"type"] isEqualToString:@"jsonDownloaded"]) {
+            
+            NSData *data = [request responseData];
+            NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
+                                                                 options:kNilOptions
+                                                                   error:nil];
+            
+            //Check if the response contains campaigns
+            if ([json objectForKey:@"campaigns"]){
+                NSArray *items = [json objectForKey:@"campaigns"];
+                
+                [self processCampaignResponse:items];
+                
+                //if everything was ok return
+                error = false;
+            }
+            
+        }
         
-        NSData *data = [request responseData];
-        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:data
+    }
+    
+    if (error) {
+        //Try to gets the error message
+        NSString *errorMessage;
+        NSDictionary* json = [NSJSONSerialization JSONObjectWithData:[request responseData]
                                                              options:kNilOptions
                                                                error:nil];
-        NSArray *items = [json objectForKey:@"campaigns"];
-        
-        self.campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
-        
-        //parses all the campaigns
-        for(int i=0; i<[items count];i++){
-            
-            //gets the first element of the dictionary
-            NSDictionary *dict = [items objectAtIndex:i];
-            
-            MCMCampaignModel *campaignModel = [[MCMCampaignModel alloc] initWithDictionary:dict];
-            [self.campaignsArray addObject:campaignModel];
-
+        if (json!=nil && [json objectForKey:@"description"]) {
+            errorMessage = (NSString *)[json objectForKey:@"description"];
+        } else {
+            errorMessage = [NSString stringWithFormat:@"Response code: %d", [request responseStatusCode]];
         }
         
-        //notifies it will be shown
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-            [self.delegate campaignViewWillLoad];
-        }
         
-        //shows a campaign
-        [self displayCampaign];
-        
-    }else{
-        //notifies delegate fail
+        //Notifies delegate fail
         if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-            [self.delegate campaignViewDidFailRequest];
+            [self.delegate campaignViewDidFailRequest:errorMessage];
+        }
+        
+        //Calls the error block
+        if (self.errorBlock != nil) {
+            self.errorBlock(errorMessage);
         }
     }
     
@@ -478,8 +415,7 @@ Method that gets randomly weighted a campaign to serve.
     
     NSError *err = [request error];
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Error receiving campaing file: %@", [err description]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Error receiving campaing file: %@", [err description]);
     
 }
 
@@ -487,36 +423,12 @@ Method that gets randomly weighted a campaign to serve.
 
 #pragma mark - MCMIntersitialBannerViewControllerDelegate Methods
 
-- (void)mediaFinishLoading:(MCMCampaignModel *)campaign{
+- (void)mediaFinishLoading:(MCMCampaignDTO *)campaign{
     
-    //sends a notification to capture the impression of the view in server
-    [self notifyServer:@"IMPRESSION" andCampaign:campaign];
-    
-    UIView *containerView;
-    
-    //depending on the situation it will show it in window or in the container view.
-    if([self.currentIntersitial needsToDisplayOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+    if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION) {
         
-        UIWindow* window = [UIApplication sharedApplication].keyWindow;
-        if (!window)
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+        [self showBanner:self.currentBanner];
         
-        containerView = [[window subviews] objectAtIndex:0];
-        
-        //        containerView = [[[UIApplication sharedApplication] delegate] window];
-        
-    }else{ //adds to the specified view
-        containerView = _campaignContainerView;
-        
-    }
-    
-    if (self.type == IN_APP_CROSS_SELLING) {
-        
-        [self placeCrossSellingBanner:[self.bannersArray objectAtIndex:0] inView:containerView];
-        
-    } else if (self.type == IN_APP_PROMOTION) {
-        
-        [self placePromotionBanners:self.bannersArray inView:containerView];
     }
 
     //notifies it is being shown
@@ -524,20 +436,21 @@ Method that gets randomly weighted a campaign to serve.
         [self.delegate campaignViewDidLoad];
     }
     
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager Displaying a campaign..."
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Displaying a campaign...");
     
 }
 
-- (void)mediaFailedLoading{
+- (void)mediaFailedLoading:(MCMCampaignDTO *)campaign{
+    
+    NSString* errorMessage = [NSString stringWithFormat:@"Failed displaying campaign: %@",[campaign name]];
+    
+    //This is to show the message removing the warning
+    MCMLog(@"%@",errorMessage);
  
     //notifies delegate fail
-    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
-        [self.delegate campaignViewDidFailRequest];
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest:)]){
+        [self.delegate campaignViewDidFailRequest:errorMessage];
     }
-    
-    [MCMLog log:@"Malcom Campaign - MCMCampaignManager Failed campaign displaying..."
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     
 }
@@ -548,18 +461,15 @@ Method that gets randomly weighted a campaign to serve.
     
 }
 
-- (void)bannerPressed:(MCMCampaignModel *)campaign{
+- (void)bannerPressed:(MCMCampaignDTO *)campaign{
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Pressed %@",campaign]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Pressed %@",campaign);
     
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
         
-        [self.delegate campaignPressed:campaign.promotionFeature.promotionIdentifier];
+        [self.delegate campaignPressed:campaign.promotionIdentifier];
     }
-    
-    [self notifyServer:@"CLICK" andCampaign:campaign];
 
 }
 

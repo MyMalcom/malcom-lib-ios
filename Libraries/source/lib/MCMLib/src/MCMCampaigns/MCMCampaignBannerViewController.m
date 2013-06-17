@@ -6,8 +6,9 @@
 //  Copyright (c) 2013 Malcom. All rights reserved.
 //
 #import <QuartzCore/QuartzCore.h>
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignBannerViewController.h"
 #import "MCMCore.h"
+#import "MCMCampaignsHelper.h"
 
 
 #define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
@@ -22,7 +23,15 @@
 #define middlePortraitWidth 240.0f
 #define middlePortraitHeight 350.0f
 
-@interface MCMIntersitialBannerViewController (private)
+@interface MCMCampaignBannerViewController ()
+
+@property (nonatomic, retain) UIView *containerView;
+@property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
+@property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
+@property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
+
+@property (nonatomic, retain) NSMutableData *dataMedia;
+@property (nonatomic, retain) NSURLConnection *connection;
 
 - (void)close;
 - (void)configureView;
@@ -47,19 +56,24 @@
 
 @end
 
-@implementation MCMIntersitialBannerViewController
+@implementation MCMCampaignBannerViewController
 
-@synthesize currentCampaignModel = _currentCampaignModel;
-@synthesize containerView = _containerView;
-@synthesize appstoreContainerView = _appstoreContainerView;
+@synthesize currentCampaignDTO = _currentCampaignModel;
+@synthesize containerView;
+@synthesize appstoreContainerView;
+@synthesize backgroundFadedView;
+@synthesize closeButton;
+@synthesize bannerButton;
+@synthesize dataMedia;
+@synthesize connection;
 
-- (id)initInView:(UIView *)view andCampaign:(MCMCampaignModel*)campaign
+- (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign
 {
     self = [super init];
     if (self) {
         // Custom initialization
         self.containerView = view;
-        self.currentCampaignModel = campaign;
+        self.currentCampaignDTO = campaign;
     }
     return self;
 }
@@ -79,9 +93,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    
-    [self configureView];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarFrameOrOrientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
@@ -103,24 +114,69 @@
     return UIInterfaceOrientationMaskAll;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [self configureView];
+}
+
 #pragma mark - Public methods
 
+- (void)showCampaignBannerAnimated {
+    
+    [self.view setAlpha:0.0f];
+    
+    //depending on the type of position it will show a bouncing animation
+    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE) ||
+       (self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){
+        
+        
+        [self.bannerButton setTransform:CGAffineTransformMakeScale(0.1, 0.1)];
+        [self.backgroundFadedView setAlpha:0.0f];
+        [self.closeButton setAlpha:0.0f];
+        
+        [UIView animateWithDuration: 0.3
+                         animations: ^{
+                             self.bannerButton.transform = CGAffineTransformMakeScale(1.2, 1.2);
+                             [self.view setAlpha:1.0f];
+                             [self.backgroundFadedView setAlpha:0.7f];
+                             
+                         }
+                         completion: ^(BOOL finished){
+                             [UIView animateWithDuration:1.0/10.0
+                                              animations: ^{
+                                                  self.bannerButton.transform = CGAffineTransformMakeScale(0.9, 0.9);
+                                              }
+                                              completion: ^(BOOL finished){
+                                                  [UIView animateWithDuration:1.0/5.0
+                                                                   animations: ^{
+                                                                       self.bannerButton.transform = CGAffineTransformIdentity;
+                                                                       [self.closeButton setAlpha:1.0f];
+                                                                       
+                                                                   }completion:^(BOOL finished) {
+                                                                   }];
+                                              }];
+                         }];
+        
+        
+    }else{ //or a simple animation of fade in
+        
+        [UIView animateWithDuration: 0.3 animations: ^{
+            [self.view setAlpha:1.0f];
+        }
+                         completion: ^(BOOL finished){}];
+    }
+    
+}
 
 /**
  Method that returns if the banner needs to be shown on the main window or in another specified view.
  @param BOOL Yes if it needs to be displayed on the main window and Not if in a specified view.
  @since 2.0.0
  */
--(BOOL)needsToDisplayOnWindow{
+- (BOOL)needsToDisplayOnWindow{
     
-    //in case the type is TOP or BOTTOM it will be shown in the specified view
-    if ((self.currentCampaignModel.mediaFeature.position == TOP) || (self.currentCampaignModel.mediaFeature.position == BOTTOM)) {
-        return NO;
-    }else{ //otherwise it needs to be displayed on the window on the top of everyview (navbars, tabbars..)
-        return YES;
-    }
+    return [self.currentCampaignDTO showOnWindow];
 }
-
 
 #pragma mark - privated methods
 
@@ -130,32 +186,13 @@
      This notification is most likely triggered inside an animation block,
      therefore no animation is needed to perform this nice transition.
      */
-    if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){
 //        [self rotateAccordingToStatusBarOrientationAndSupportedOrientations]; //use this method if you want to rotate everything
         
         [self close];
     }
 
 }
-
-// problem: it loses the button responses once is rotated :( 
-//- (void)rotateAccordingToStatusBarOrientationAndSupportedOrientations
-//{
-//
-//    CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
-//    CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
-//
-//    NSLog(@">> before: %@ ",NSStringFromCGRect(self.view.frame));
-//    [self.view setFrame:frameScreen];
-//    NSLog(@">> after: %@",NSStringFromCGRect(self.view.frame));
-//    
-//    [self.backgroundFadedView setFrame:frameScreen];
-//    
-//    self.bannerButton.center = center;
-//    self.bannerButton.layer.frame = self.bannerButton.frame;
-//    
-//}
-//
 
 
 /**
@@ -165,26 +202,27 @@
 - (void)close{
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [self.delegate mediaClosed];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(mediaClosed)]){
+        [self.delegate mediaClosed];
+    }
 }
 
 - (void)bannerPressed{
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(bannerPressed:)]) {
-        [self.delegate bannerPressed:self.currentCampaignModel];
+        [self.delegate bannerPressed:self.currentCampaignDTO];
     }
     
-    NSLog(@"banner Pushed: %@",self.currentCampaignModel.name);
-    
-    if (self.currentCampaignModel.type == IN_APP_CROSS_SELLING) {
+    if (self.currentCampaignDTO.type == IN_APP_CROSS_SELLING) {
+        MCMLog(@"IN_APP_CROSS_SELLING banner pressed");
         
         [self openURLAppstore];
         
-    } else if (self.currentCampaignModel.type == IN_APP_PROMOTION) {
-        
-        NSLog(@"Se ha pulsado una campaña");
-        
+    } else if (self.currentCampaignDTO.type == IN_APP_PROMOTION) {
+        MCMLog(@"IN_APP_PROMOTION banner pressed");
     }
+    
+    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignDTO];
     
 }
 
@@ -200,11 +238,9 @@
         SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
         storeController.delegate = self; // productViewControllerDidFinish
         
-        // Example app_store_id (e.g. for Words With Friends)
-        // [NSNumber numberWithInt:581665873];
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         [f setNumberStyle:NSNumberFormatterDecimalStyle];
-        NSNumber * idApple = [f numberFromString:self.currentCampaignModel.promotionFeature.promotionIdentifier];
+        NSNumber * idApple = [f numberFromString:self.currentCampaignDTO.promotionIdentifier];
         [f release];
         NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : idApple };
         
@@ -212,12 +248,12 @@
         [storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
             if (result) {
 			//if it doesnt have where to place the appstoreView it will place it on the VC handler of the banner container view
-                if(!_appstoreContainerView){
+                if(!self.appstoreContainerView){
                     id rootVC = [self.containerView nextResponder];
 //                    id rootVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
                     [rootVC presentViewController:storeController animated:YES completion:nil];
                 }else{ //if it is specified, it will be placed on the appstoreContainerView 
-                    [[_appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
+                    [(UIViewController *)[self.appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
 
                 }
                 
@@ -229,11 +265,11 @@
         
     } else { // Before iOS 6, we can only open the URL
               
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignModel.promotionFeature.promotionIdentifier]]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignDTO.promotionIdentifier]]];
         
     }
     
-    if ([self needsToDisplayOnWindow]) {
+    if ([self.currentCampaignDTO showOnWindow]) {
         [self close];
     }
 }
@@ -247,7 +283,7 @@
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
-    NSURL *url = [NSURL URLWithString:self.currentCampaignModel.mediaFeature.media];
+    NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
     //launches the new connection asynchronously
     NSURLRequest* request = [NSURLRequest requestWithURL:url
@@ -264,22 +300,15 @@
  */
 - (void)showImage{
     
-    NSLog(@"Show Image for campaign: %@",self.currentCampaignModel);
-    
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
     CGPoint center = CGPointMake(frameScreen.size.width/2.0, frameScreen.size.height/2.0);
     
     //reframes the size of the view
-    if (![self.currentCampaignModel showOnWindow]) {
-        if ((self.currentCampaignModel.mediaFeature.position == BOTTOM)) { //bottom case
-            
-            frame = CGRectMake(0, self.containerView.frame.size.height - bannerHeight, self.containerView.frame.size.width, bannerHeight);
-            
-        } else { //top & default cases
-            
-            frame = CGRectMake(0, 0, self.containerView.frame.size.width, bannerHeight);
-        }
+    if (![self.currentCampaignDTO showOnWindow]) {
+        CGRect newFrame = [[self.view superview] frame];
+        newFrame.origin = CGPointMake(0, 0);
+        frame = newFrame;
     }
     
     //sets the color and the new frame
@@ -288,7 +317,7 @@
     [self.view setFrame:frame];
     
     //just in case the campaign is middle or fullscreen
-    if([self.currentCampaignModel showOnWindow]){
+    if([self.currentCampaignDTO showOnWindow]){
         
         //creates the backgroundView
         self.backgroundFadedView = [[UIView alloc] initWithFrame:[MCMCoreUtils rectForViewScreen]];
@@ -303,15 +332,15 @@
     [self.bannerButton setFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     
     //in case it is a "middle" it needs to be centered and add a background view with alpha 0.7
-    if ((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE) || (self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)) {
+    if ((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE) || (self.currentCampaignDTO.position == MIDDLE_PORTRAIT)) {
        
         int width = 0;
         int height = 0;
 
-        if(self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE){
+        if(self.currentCampaignDTO.position == MIDDLE_LANDSCAPE){
             width = middleLandscapeWidth;
             height = middleLandscapeHeight;
-        }else if(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT){
+        }else if(self.currentCampaignDTO.position == MIDDLE_PORTRAIT){
             width = middlePortraitWidth;
             height = middlePortraitHeight;
         }
@@ -346,14 +375,14 @@
     //[self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
     //[self.bannerButton setBackgroundColor:[UIColor blackColor]];
-    [self.bannerButton setBackgroundColor:[UIColor redColor]];
+    [self.bannerButton setBackgroundColor:[UIColor clearColor]];
 
     [self.view addSubview:self.bannerButton];
     
     //unhides the view
     [self.view setHidden:NO];
     
-    if([self.currentCampaignModel showOnWindow]){
+    if([self.currentCampaignDTO showOnWindow]){
         
         int yOffset = 0;
         //if the status bar is visible
@@ -382,7 +411,7 @@
         CGRect auxFrame = self.closeButton.frame;
         
         //sets the position of the X button in case it is MIDDLE LANDSCAPE OR PORTRAIT in the top right corner
-        if((self.currentCampaignModel.mediaFeature.position == MIDDLE_LANDSCAPE)||(self.currentCampaignModel.mediaFeature.position == MIDDLE_PORTRAIT)){
+        if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){
             
             auxFrame.origin.x =  self.bannerButton.frame.size.width - self.closeButton.frame.size.width/2;
             auxFrame.origin.y =  - self.closeButton.frame.size.height/2;
@@ -427,20 +456,26 @@
         [self showImage];	 //shows the image
         
         //calls the delegate to advise that the image is loaded.
-        [self.delegate mediaFinishLoading:self.currentCampaignModel];
+        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
+            [self.delegate mediaFinishLoading:self.currentCampaignDTO];
+        }
+        
+        //Notify the impression to Malcom server
+        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
     }
 
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom Campaign - MCMCampaignManager Failed campaign loagin... %@",[error description]]
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"Failed campaign loagin... %@",[error description]);
     
 	self.dataMedia = nil;
     
     //calls the delegate telling that the loading failed
-    [self.delegate mediaFailedLoading];
+    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
+        [self.delegate mediaFailedLoading:self.currentCampaignDTO];
+    }
 	
 }
 

@@ -9,7 +9,7 @@
 
 #import "MCMASIHTTPRequest.h"
 #import "MCMASIDownloadCache.h"
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignBannerViewController.h"
 
 @interface MCMConfigManager(private) <MCMASIHTTPRequestDelegate>
 

@@ -10,6 +10,6 @@
 
 @interface MCMLog : NSObject
 
-+ (void)log:(NSString *)string inLine:(NSInteger)line fromMethod:(NSString *)method;
++ (void)log:(NSString *)string inLine:(NSInteger)line fromMethod:(NSString *)method __attribute__ ((deprecated("Use MCMLog() instead")));
 
 @end

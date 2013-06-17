@@ -56,18 +56,16 @@
     [settings setValue:uuid forKey:kMCMCoreKeyMalcomAppId];
     [settings setValue:secretKey forKey:kMCMCoreKeyAssetsAppSecretKey];
     
+    //[settings setValue:kMCMBaseUrl forKey:kMCMCoreKeyMalcomBaseUrl];
+    [settings setValue:urlApi forKey:kMCMCoreKeyMalcomBaseUrl];
+    [settings setValue:kMCMAdwhirlURL forKey:@"AdWhirlBaseUrl"];
+    [settings setValue:adId forKey:@"AdWhirlId"];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:settings forKey:kMCMCoreInfoPlistName];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     if (bundlePath != nil) {
         [settings writeToFile:bundlePath atomically:YES];
-    }
-    else {
-        
-        //[settings setValue:kMCMBaseUrl forKey:kMCMCoreKeyMalcomBaseUrl];
-        [settings setValue:urlApi forKey:kMCMCoreKeyMalcomBaseUrl];
-        [settings setValue:kMCMAdwhirlURL forKey:@"AdWhirlBaseUrl"];
-        [settings setValue:adId forKey:@"AdWhirlId"];
-        
-        [[NSUserDefaults standardUserDefaults]  setObject:settings  forKey:kMCMCoreInfoPlistName];
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -506,6 +504,13 @@
     [[MCMCampaignsManager sharedInstance] setDuration:duration];
 }
 
++ (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:nil];
+}
+
++ (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
+}
 
 
 #pragma mark UIAlertViewDelegate method

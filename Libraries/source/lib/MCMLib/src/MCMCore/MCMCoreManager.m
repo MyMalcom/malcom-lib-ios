@@ -73,30 +73,28 @@
             }
         }
         
-        //Try to read the bundle distribution file if no one previously assigned
-        if (bundlePath==nil){
-            bundlePath = [[NSBundle mainBundle] pathForResource:kMCMCoreInfoPlistName ofType:nil];
-        }
+        //Try to read the settings from userDefaults
+        settings_ = [[NSUserDefaults standardUserDefaults] objectForKey:kMCMCoreInfoPlistName];
         
-        //If no configuration file included, raise an exception
-        if (bundlePath==nil){                  
+        if (settings_ == nil) {
             
-            settings_ = [[NSUserDefaults standardUserDefaults] objectForKey:kMCMCoreInfoPlistName];
-            
-            if (settings_ == nil) {
-            
-                [[NSException exceptionWithName:[NSString stringWithFormat:@"%@ not found", kMCMCoreInfoPlistName] reason:[NSString stringWithFormat:@"There is no configuration file in the bundle. You should include a configuration file named '%@' with the required constants of your project", kMCMCoreInfoPlistName] userInfo:nil] raise];    
-            
+            //Try to read the bundle distribution file if no one previously assigned
+            if (bundlePath==nil){
+                bundlePath = [[NSBundle mainBundle] pathForResource:kMCMCoreInfoPlistName ofType:nil];
             }
             
+            //If no configuration file included, raise an exception
+            if (bundlePath==nil){
+                
+                [[NSException exceptionWithName:[NSString stringWithFormat:@"%@ not found", kMCMCoreInfoPlistName] reason:[NSString stringWithFormat:@"There is no configuration file in the bundle. You should include a configuration file named '%@' with the required constants of your project", kMCMCoreInfoPlistName] userInfo:nil] raise];
+                
+            } else {
+                
+                //Read the configuration and close
+                settings_ = [[NSDictionary alloc] initWithContentsOfFile:bundlePath];
+                
+            }
         }
-        else {
-        
-            //Read the configuration and close
-            settings_ = [[NSDictionary alloc] initWithContentsOfFile:bundlePath];	
-        
-        }
-            
     }
     
     return [settings_ valueForKey:key];

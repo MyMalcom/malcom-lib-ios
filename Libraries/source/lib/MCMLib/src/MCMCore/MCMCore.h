@@ -7,9 +7,9 @@
 
 #define MCMCloseIntersitialNotification @"MCMCloseIntersitialNotification"
 
-#define kMCMBaseUrl @"https://api.mymalcom.com/"
 //#define kMCMBaseUrl @"http://malcom-api-dev.elasticbeanstalk.com/"
 //#define kMCMBaseUrl @"http://malcom-api-pre.elasticbeanstalk.com/"
+#define kMCMBaseUrl @"https://api.mymalcom.com/"
 
 #define kMCMAdwhirlURL @"https://ads.mymalcom.com/"
 
@@ -28,3 +28,11 @@
 #import "MCMLog.h"
 #import "MCMCoreUtils.h"
 #import "MCMCampaignsManager.h"
+
+
+//Malcom log (Only show logs on DEBUG mode)
+#ifdef DEBUG
+#   define MCMLog(s, ...) NSLog(@"%s [Line %d] %@", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__]);
+#else
+#   define MCMLog(...);
+#endif
