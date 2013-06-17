@@ -77,7 +77,7 @@
 }
 
 - (NSString *)description{
-    return [NSString stringWithFormat:@"Campaign: %@ promotionIdentifier: %d", self.name, self.promotionFeature.promotionIdentifier];
+    return [NSString stringWithFormat:@"Campaign: %@ promotionIdentifier: %@", self.name, self.promotionFeature.promotionIdentifier];
 }
 
 @end
