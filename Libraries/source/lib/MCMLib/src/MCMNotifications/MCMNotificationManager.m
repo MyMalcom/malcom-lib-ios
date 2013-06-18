@@ -50,7 +50,6 @@ static NSData *sDevToken=nil;
     sDevToken = devToken;        
     
     //Compose the URL
-    //url = [url stringByAppendingString:kMCMNotificationsRegisterURI(appId)];
 	NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationRegisterURL];
     
     [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: url: %@", url] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
@@ -120,13 +119,6 @@ static NSData *sDevToken=nil;
     if (notificationId>0){        
                         
         NSString *url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationACKURL];
-//        if ([[MCMCoreManager sharedInstance] developmentMode]){
-//            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPathSandbox];
-//        }
-//        else{
-//            url = [[MCMCoreManager sharedInstance] malcomUrlForPath:kMCMNotificationsAPIPath];
-//        }
-//        url = [url stringByAppendingString:kMCMNotificationsEfficacyURI(notificationId)];
         
         NSString *timeStamp = [[NSDate date] description];
         
