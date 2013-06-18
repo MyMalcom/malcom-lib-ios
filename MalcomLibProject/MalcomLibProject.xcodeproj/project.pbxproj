@@ -6,6 +6,22 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		C10857E71770AAB500845353 /* MalcomLib-ios */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C10857EA1770AAB500845353 /* Build configuration list for PBXAggregateTarget "MalcomLib-ios" */;
+			buildPhases = (
+				C158F7431770ABD2009EA8A0 /* ShellScript */,
+				C158F7441770AC28009EA8A0 /* ShellScript */,
+				C158F7451770AC3B009EA8A0 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "MalcomLib-ios";
+			productName = "MalcomLibProject-ios";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		C10857471770A5F500845353 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
 		C10857491770A5F500845353 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857481770A5F500845353 /* CoreGraphics.framework */; };
@@ -19,6 +35,12 @@
 		C10857621770A5F500845353 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C108574A1770A5F500845353 /* UIKit.framework */; };
 		C108576A1770A5F500845353 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C10857681770A5F500845353 /* InfoPlist.strings */; };
 		C108576C1770A5F500845353 /* MalcomLibProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C108576B1770A5F500845353 /* MalcomLibProjectTests.m */; };
+		C10857A01770A99500845353 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
+		C10857A51770A99500845353 /* MalcomLim_phonesimulator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C10857A41770A99500845353 /* MalcomLim_phonesimulator.h */; };
+		C10857A71770A99500845353 /* MalcomLim_phonesimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = C10857A61770A99500845353 /* MalcomLim_phonesimulator.m */; };
+		C10857C61770A9F300845353 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
+		C10857CB1770A9F300845353 /* MalcomLib_iphoneos.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C10857CA1770A9F300845353 /* MalcomLib_iphoneos.h */; };
+		C10857CD1770A9F300845353 /* MalcomLib_iphoneos.m in Sources */ = {isa = PBXBuildFile; fileRef = C10857CC1770A9F300845353 /* MalcomLib_iphoneos.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +52,29 @@
 			remoteInfo = MalcomLibProject;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		C108579D1770A99500845353 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				C10857A51770A99500845353 /* MalcomLim_phonesimulator.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10857C31770A9F300845353 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+				C10857CB1770A9F300845353 /* MalcomLib_iphoneos.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		C10857431770A5F500845353 /* MalcomDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -54,6 +99,20 @@
 		C108578F1770A7DE00845353 /* MalcomLib-iphonesimulatorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MalcomLib-iphonesimulatorTests-Info.plist"; sourceTree = "<group>"; };
 		C10857911770A7DE00845353 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		C10857931770A7DE00845353 /* MalcomLib_iphonesimulatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLib_iphonesimulatorTests.m; sourceTree = "<group>"; };
+		C108579F1770A99500845353 /* libMalcomLim-phonesimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libMalcomLim-phonesimulator.a"; path = "libMalcomLib-iphonesimulator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C10857A31770A99500845353 /* MalcomLim-phonesimulator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MalcomLim-phonesimulator-Prefix.pch"; sourceTree = "<group>"; };
+		C10857A41770A99500845353 /* MalcomLim_phonesimulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MalcomLim_phonesimulator.h; sourceTree = "<group>"; };
+		C10857A61770A99500845353 /* MalcomLim_phonesimulator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLim_phonesimulator.m; sourceTree = "<group>"; };
+		C10857B51770A99500845353 /* MalcomLim-phonesimulatorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MalcomLim-phonesimulatorTests-Info.plist"; sourceTree = "<group>"; };
+		C10857B71770A99500845353 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C10857B91770A99500845353 /* MalcomLim_phonesimulatorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLim_phonesimulatorTests.m; sourceTree = "<group>"; };
+		C10857C51770A9F300845353 /* libMalcomLib-iphoneos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libMalcomLib-iphoneos.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C10857C91770A9F300845353 /* MalcomLib-iphoneos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MalcomLib-iphoneos-Prefix.pch"; sourceTree = "<group>"; };
+		C10857CA1770A9F300845353 /* MalcomLib_iphoneos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MalcomLib_iphoneos.h; sourceTree = "<group>"; };
+		C10857CC1770A9F300845353 /* MalcomLib_iphoneos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLib_iphoneos.m; sourceTree = "<group>"; };
+		C10857DB1770A9F400845353 /* MalcomLib-iphoneosTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MalcomLib-iphoneosTests-Info.plist"; sourceTree = "<group>"; };
+		C10857DD1770A9F400845353 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		C10857DF1770A9F400845353 /* MalcomLib_iphoneosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLib_iphoneosTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +136,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C108579C1770A99500845353 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10857A01770A99500845353 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10857C21770A9F300845353 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10857C61770A9F300845353 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -87,6 +162,10 @@
 				C10857651770A5F500845353 /* MalcomLibProjectTests */,
 				C108577B1770A7DD00845353 /* MalcomLib-iphonesimulator */,
 				C108578D1770A7DE00845353 /* MalcomLib-iphonesimulatorTests */,
+				C10857A11770A99500845353 /* MalcomLim-phonesimulator */,
+				C10857B31770A99500845353 /* MalcomLim-phonesimulatorTests */,
+				C10857C71770A9F300845353 /* MalcomLib-iphoneos */,
+				C10857D91770A9F400845353 /* MalcomLib-iphoneosTests */,
 				C10857451770A5F500845353 /* Frameworks */,
 				C10857441770A5F500845353 /* Products */,
 			);
@@ -97,6 +176,8 @@
 			children = (
 				C10857431770A5F500845353 /* MalcomDemo.app */,
 				C108575E1770A5F500845353 /* MalcomLibProjectTests.xctest */,
+				C108579F1770A99500845353 /* libMalcomLim-phonesimulator.a */,
+				C10857C51770A9F300845353 /* libMalcomLib-iphoneos.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -188,6 +269,78 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		C10857A11770A99500845353 /* MalcomLim-phonesimulator */ = {
+			isa = PBXGroup;
+			children = (
+				C10857A41770A99500845353 /* MalcomLim_phonesimulator.h */,
+				C10857A61770A99500845353 /* MalcomLim_phonesimulator.m */,
+				C10857A21770A99500845353 /* Supporting Files */,
+			);
+			path = "MalcomLim-phonesimulator";
+			sourceTree = "<group>";
+		};
+		C10857A21770A99500845353 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C10857A31770A99500845353 /* MalcomLim-phonesimulator-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C10857B31770A99500845353 /* MalcomLim-phonesimulatorTests */ = {
+			isa = PBXGroup;
+			children = (
+				C10857B91770A99500845353 /* MalcomLim_phonesimulatorTests.m */,
+				C10857B41770A99500845353 /* Supporting Files */,
+			);
+			path = "MalcomLim-phonesimulatorTests";
+			sourceTree = "<group>";
+		};
+		C10857B41770A99500845353 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C10857B51770A99500845353 /* MalcomLim-phonesimulatorTests-Info.plist */,
+				C10857B61770A99500845353 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C10857C71770A9F300845353 /* MalcomLib-iphoneos */ = {
+			isa = PBXGroup;
+			children = (
+				C10857CA1770A9F300845353 /* MalcomLib_iphoneos.h */,
+				C10857CC1770A9F300845353 /* MalcomLib_iphoneos.m */,
+				C10857C81770A9F300845353 /* Supporting Files */,
+			);
+			path = "MalcomLib-iphoneos";
+			sourceTree = "<group>";
+		};
+		C10857C81770A9F300845353 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C10857C91770A9F300845353 /* MalcomLib-iphoneos-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C10857D91770A9F400845353 /* MalcomLib-iphoneosTests */ = {
+			isa = PBXGroup;
+			children = (
+				C10857DF1770A9F400845353 /* MalcomLib_iphoneosTests.m */,
+				C10857DA1770A9F400845353 /* Supporting Files */,
+			);
+			path = "MalcomLib-iphoneosTests";
+			sourceTree = "<group>";
+		};
+		C10857DA1770A9F400845353 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				C10857DB1770A9F400845353 /* MalcomLib-iphoneosTests-Info.plist */,
+				C10857DC1770A9F400845353 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -226,6 +379,40 @@
 			productReference = C108575E1770A5F500845353 /* MalcomLibProjectTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		C108579E1770A99500845353 /* MalcomLib-iphonesimulator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10857BB1770A99500845353 /* Build configuration list for PBXNativeTarget "MalcomLib-iphonesimulator" */;
+			buildPhases = (
+				C108579B1770A99500845353 /* Sources */,
+				C108579C1770A99500845353 /* Frameworks */,
+				C108579D1770A99500845353 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MalcomLib-iphonesimulator";
+			productName = "MalcomLim-phonesimulator";
+			productReference = C108579F1770A99500845353 /* libMalcomLim-phonesimulator.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		C10857C41770A9F300845353 /* MalcomLib-iphoneos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C10857E11770A9F400845353 /* Build configuration list for PBXNativeTarget "MalcomLib-iphoneos" */;
+			buildPhases = (
+				C10857C11770A9F300845353 /* Sources */,
+				C10857C21770A9F300845353 /* Frameworks */,
+				C10857C31770A9F300845353 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "MalcomLib-iphoneos";
+			productName = "MalcomLib-iphoneos";
+			productReference = C10857C51770A9F300845353 /* libMalcomLib-iphoneos.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -237,6 +424,9 @@
 				ORGANIZATIONNAME = Malcom;
 				TargetAttributes = {
 					C108575D1770A5F500845353 = {
+						TestTargetID = C10857421770A5F500845353;
+					};
+					C10857E71770AAB500845353 = {
 						TestTargetID = C10857421770A5F500845353;
 					};
 				};
@@ -255,6 +445,9 @@
 			targets = (
 				C10857421770A5F500845353 /* MalcomLibProject */,
 				C108575D1770A5F500845353 /* MalcomLibProjectTests */,
+				C108579E1770A99500845353 /* MalcomLib-iphonesimulator */,
+				C10857C41770A9F300845353 /* MalcomLib-iphoneos */,
+				C10857E71770AAB500845353 /* MalcomLib-ios */,
 			);
 		};
 /* End PBXProject section */
@@ -279,6 +472,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		C158F7431770ABD2009EA8A0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "xcodebuild -target MalcomLib-iphoneos -configuration Debug -sdk iphoneos \"CONFIGURATION_BUILD_DIR=${BUILT_PRODUCTS_DIR}/\" clean build\n";
+		};
+		C158F7441770AC28009EA8A0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "xcodebuild -target MalcomLib-iphonesimulator -configuration Debug -sdk iphonesimulator \"CONFIGURATION_BUILD_DIR=${BUILT_PRODUCTS_DIR}/\" clean build";
+		};
+		C158F7451770AC3B009EA8A0 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "LibraryPath=\"${SRCROOT}/../Libraries/static library/lib/\"\nLibraryFilePath=$LibraryPath\"libMalcomLib-ios.a\"\n\nrm -f $LibraryFilePath\n\nif [ ! -d $LibraryPath ]; then\n    mkdir $LibraryPath\nfi\n\nlipo -create \"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphonesimulator.a\" \\\n\"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphoneos.a\" -output \\\n\"$LibraryFilePath\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		C108573F1770A5F500845353 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -294,6 +529,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				C108576C1770A5F500845353 /* MalcomLibProjectTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C108579B1770A99500845353 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10857A71770A99500845353 /* MalcomLim_phonesimulator.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C10857C11770A9F300845353 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C10857CD1770A9F300845353 /* MalcomLib_iphoneos.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,6 +579,22 @@
 			isa = PBXVariantGroup;
 			children = (
 				C10857911770A7DE00845353 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C10857B61770A99500845353 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C10857B71770A99500845353 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		C10857DC1770A9F400845353 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				C10857DD1770A9F400845353 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -473,6 +740,84 @@
 			};
 			name = Release;
 		};
+		C10857BC1770A99500845353 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/MalcomLim_phonesimulator.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomLim-phonesimulator/MalcomLim-phonesimulator-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C10857BD1770A99500845353 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/MalcomLim_phonesimulator.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomLim-phonesimulator/MalcomLim-phonesimulator-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C10857E21770A9F400845353 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/MalcomLib_iphoneos.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomLib-iphoneos/MalcomLib-iphoneos-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C10857E31770A9F400845353 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/MalcomLib_iphoneos.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MalcomLib-iphoneos/MalcomLib-iphoneos-Prefix.pch";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C10857EB1770AAB500845353 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Debug;
+		};
+		C10857EC1770AAB500845353 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -499,6 +844,33 @@
 			buildConfigurations = (
 				C10857731770A5F500845353 /* Debug */,
 				C10857741770A5F500845353 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10857BB1770A99500845353 /* Build configuration list for PBXNativeTarget "MalcomLib-iphonesimulator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C10857BC1770A99500845353 /* Debug */,
+				C10857BD1770A99500845353 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10857E11770A9F400845353 /* Build configuration list for PBXNativeTarget "MalcomLib-iphoneos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C10857E21770A9F400845353 /* Debug */,
+				C10857E31770A9F400845353 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C10857EA1770AAB500845353 /* Build configuration list for PBXAggregateTarget "MalcomLib-ios" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C10857EB1770AAB500845353 /* Debug */,
+				C10857EC1770AAB500845353 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
