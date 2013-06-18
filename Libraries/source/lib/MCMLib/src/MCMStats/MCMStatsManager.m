@@ -219,7 +219,7 @@
     NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
     NSArray *tagsArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
     
-	NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
                                 MCMVersionSDK, @"lib_version",
 								applicationCode_, @"application_code",
@@ -243,7 +243,11 @@
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];
-	
+
+    //Ads the advertising identifier for IOS7 migration
+    IF_IOS6_OR_GREATER (
+       [dictionary setValue:[MCMCoreUtils deviceIdentifier] forKey:@"identifier"]; 
+    )
     
 	NSDictionary *jsonBeacon = [[NSDictionary alloc] initWithObjectsAndKeys:
 								dictionary, @"beacon",

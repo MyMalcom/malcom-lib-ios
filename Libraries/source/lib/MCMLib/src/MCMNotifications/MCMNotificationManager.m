@@ -67,9 +67,11 @@ static NSData *sDevToken=nil;
     
     NSString *json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], @"IOS"];
     
+    IF_IOS6_OR_GREATER(
+                       json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"identifier\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], [MCMCoreUtils deviceIdentifier], @"IOS"];
+                       )
+    
     [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-        
-    //json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"IOS\"}}", [[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier]];
     
     // Malcom's PNS device registration request        
     MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:[NSURL URLWithString:url]];
@@ -150,6 +152,10 @@ static NSData *sDevToken=nil;
         }
         
         NSString *json = [NSString stringWithFormat:@"{\"notificationReceipt\":{\"created\":\"%@\",\"applicationCode\":\"%@\",\"environment\":\"%@\",\"id\":\"%d\",\"udid\":\"%@\", \"segmentId\":\"%@\"}}", timeStamp, [[MCMCoreManager sharedInstance] malcomAppId], environment, notificationId, [MCMCoreUtils uniqueIdentifier],segmentId];
+        
+        IF_IOS6_OR_GREATER(
+                           json = [NSString stringWithFormat:@"{\"notificationReceipt\":{\"created\":\"%@\",\"applicationCode\":\"%@\",\"environment\":\"%@\",\"id\":\"%d\",\"udid\":\"%@\",\"identifier\":\"%@\",\"segmentId\":\"%@\"}}", timeStamp, [[MCMCoreManager sharedInstance] malcomAppId], environment, notificationId, [MCMCoreUtils uniqueIdentifier],[MCMCoreUtils deviceIdentifier],segmentId];
+                           )
           
         [MCMLog log:[NSString stringWithFormat:@"Mobivery APNS Library: efficacy request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
         
