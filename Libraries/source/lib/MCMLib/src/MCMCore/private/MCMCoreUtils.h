@@ -16,7 +16,13 @@
  Returns an alphanumeric string unique to each device based on various hardware details
  @return string with device unique identifier (example: 4e969024c07e24b83e1650404ccf0bb227a051b4)
  */
-+ (NSString *)uniqueIdentifier;
++ (NSString *)uniqueIdentifier DEPRECATED_ATTRIBUTE;
+
+/**
+ Returns an alphanumeric string unique to each device suported by IOS7
+ @return string with device unique identifier (example: 4e969024c07e24b83e1650404ccf0bb227a051b4)
+ */
++ (NSString *)deviceIdentifier;
 
 /** 
  Returns the name of the operating system running on the device represented by the receiver

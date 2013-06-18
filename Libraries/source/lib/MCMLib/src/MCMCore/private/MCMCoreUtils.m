@@ -12,12 +12,18 @@
 #endif
 
 #import "MCMODIN.h"
+#import <AdSupport/AdSupport.h>
 
 @implementation MCMCoreUtils
 
 + (NSString *)uniqueIdentifier {
     
     return MCMODIN1();
+}
+
++ (NSString *)deviceIdentifier {
+    
+    return [[[ASIdentifierManager sharedManager] advertisingIdentifier] UUIDString];
 }
 
 + (NSString *)systemName
