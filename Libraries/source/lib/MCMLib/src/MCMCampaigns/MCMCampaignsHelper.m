@@ -35,6 +35,14 @@
                       action,
                       [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
                       [MCMCoreUtils uniqueIdentifier]];
+    IF_IOS6_OR_GREATER(
+                       path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL_IOS6,
+                               [campaign campaignId],
+                               action,
+                               [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
+                               [MCMCoreUtils deviceIdentifier]];
+    )
+    
     NSString *urlString = [[MCMCoreManager sharedInstance] malcomUrlForPath:path];
     
     NSURL *url = [NSURL URLWithString:urlString];
