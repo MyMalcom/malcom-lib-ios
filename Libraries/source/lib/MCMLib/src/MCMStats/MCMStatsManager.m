@@ -15,8 +15,12 @@
 #import "MCMCJSONSerializer.h"
 #import "MCMReachability.h"
 #import "MCMNotificationUtils.h"
+#import "MCMKeychainItemWrapper.h"
 
-@interface MCMStatsManager (private)
+#define kMalcomIdentifier @"Malcom"
+#define kMalcomAccessGroup @"MALCOM.com.malcom.lib"
+
+@interface MCMStatsManager ()
 
 - (void) sendToAwsSqs;
 - (NSString *) getJSON;
@@ -24,6 +28,16 @@
 + (void) addToJSONCache:(NSString *)json;
 + (NSString *) getCachedJSONForObject:(NSInteger)pos;
 + (NSArray *) getCachedJSON;
+
+/**
+ Process the beacon response to store the internal id into the keychain
+ */
++ (void)processBeaconResponse:(NSDictionary *)json;
+
+/**
+ Gets the internal id from the keychain
+ */
++ (NSString *)getMalcomInternalIdentifier;
 
 @end
 
@@ -187,7 +201,12 @@
         NSError *error = [request error];
                 
         if ((!error) && ([request responseStatusCode]<402)) {
-           [[self class] clearCache]; 
+            // Process the beacon's request response 
+            [MCMStatsManager processBeaconResponse:[NSJSONSerialization JSONObjectWithData:[request responseData]
+                                                                         options:kNilOptions
+                                                                           error:nil]];
+            
+            [[self class] clearCache];
         }
         else {
             
@@ -219,7 +238,7 @@
     NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
     NSArray *tagsArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
     
-	NSDictionary *dictionary = [[NSDictionary alloc] initWithObjectsAndKeys:
+	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
                                 MCMVersionSDK, @"lib_version",
 								applicationCode_, @"application_code",
@@ -243,7 +262,17 @@
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];
-	
+
+    //Adds the advertising identifier for IOS7 migration
+    IF_IOS6_OR_GREATER (
+       [dictionary setValue:[MCMCoreUtils deviceIdentifier] forKey:@"identifier"]; 
+    )
+    
+    //Adds the malcom internal identifier if exists
+    NSString *internalIdentifier = [MCMStatsManager getMalcomInternalIdentifier];
+    if (![internalIdentifier isEqualToString:@""]) {
+        [dictionary setValue:internalIdentifier forKey:@"internalId"];
+    }
     
 	NSDictionary *jsonBeacon = [[NSDictionary alloc] initWithObjectsAndKeys:
 								dictionary, @"beacon",
@@ -302,6 +331,28 @@
         return [NSArray array];
     else
         return cache;
+}
+
++ (void)processBeaconResponse:(NSDictionary *)json {
+    if ((json != nil) && [json objectForKey:@"internalId"]) {
+        MCMLog(@"Received internalId: %@",[json objectForKey:@"internalId"]);
+        
+        MCMKeychainItemWrapper *wrapper = [[MCMKeychainItemWrapper alloc] initWithIdentifier:kMalcomIdentifier
+                                                                                 accessGroup:kMalcomAccessGroup];
+        
+        [wrapper setObject:[json objectForKey:@"internalId"] forKey:kSecValueData];
+    }
+}
+
++ (NSString *)getMalcomInternalIdentifier {
+    NSString *identifier = @"";
+    MCMKeychainItemWrapper *wrapper = [[MCMKeychainItemWrapper alloc] initWithIdentifier:kMalcomIdentifier
+                                                                             accessGroup:kMalcomAccessGroup];
+    if ([wrapper objectForKey:(id)(kSecValueData)]) {
+        identifier = [wrapper objectForKey:(id)(kSecValueData)];
+    }
+    
+    return identifier;
 }
 
 @end

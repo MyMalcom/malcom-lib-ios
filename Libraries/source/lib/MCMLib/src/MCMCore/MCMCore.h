@@ -17,7 +17,7 @@
 #define MCMFailReceiveAd @"mcmFailReceiveAd"
 #define MCMNotificationAdsAreOff @"mcmNotificationAdsAreOff"
 
-#define MCMVersionSDK @"2.0.1"
+#define MCMVersionSDK @"2.0.2"
 
 
 //General imports
@@ -35,4 +35,26 @@
 #   define MCMLog(s, ...) NSLog(@"%s [Line %d] %@", __PRETTY_FUNCTION__, __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__]);
 #else
 #   define MCMLog(...);
+#endif
+
+//IOS 6 check
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0
+#define IF_IOS6_OR_GREATER(...) \
+if([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0) \
+{ \
+__VA_ARGS__;\
+};
+#else
+#define IF_IOS6_OR_GREATER(...)
+#endif
+
+//IOS 7 check
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+#define IF_IOS7_OR_GREATER(...) \
+if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) \
+{ \
+__VA_ARGS__;\
+};
+#else
+#define IF_IOS7_OR_GREATER(...)
 #endif
