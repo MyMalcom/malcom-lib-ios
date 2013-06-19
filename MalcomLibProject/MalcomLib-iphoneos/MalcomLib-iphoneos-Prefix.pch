@@ -1,7 +1,5 @@
 //
-//  Prefix header
-//
-//  The contents of this file are implicitly included at the beginning of every source file.
+// Prefix header for all source files of the 'MalcomLib-iphoneos' target in the 'MalcomLib-iphoneos' project
 //
 
 #ifdef __OBJC__

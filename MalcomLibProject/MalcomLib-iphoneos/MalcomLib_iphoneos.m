@@ -2,7 +2,7 @@
 //  MalcomLib_iphoneos.m
 //  MalcomLib-iphoneos
 //
-//  Created by Pedro Durán on 18/06/13.
+//  Created by Pedro Durán on 19/06/13.
 //  Copyright (c) 2013 Malcom. All rights reserved.
 //
 
