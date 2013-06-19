@@ -34,6 +34,8 @@
 - (CLLocationAccuracy) desiredAccuracy;
 - (double) desiredPrecision;
 
+- (void)updateLocation:(void(^)(CLLocation* location, NSError* error))completion;
+
 + (MCMStatsLocatorService *) sharedInstance;
 
 @end

@@ -19,6 +19,14 @@
 #define HARDCODED_LNG 2.177603 
 #define MIN_MOVEMENT 100
 
+typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
+
+@interface MCMStatsLocatorService ()
+
+@property (nonatomic, copy) CompletionBlock completionBlock;
+
+@end
+
 @implementation MCMStatsLocatorService SYNTHESIZE_SINGLETON_FOR_CLASS(MCMStatsLocatorService);
 
 @synthesize currentLocation, locating, locationSuccessful, locationAllowed;
@@ -57,6 +65,14 @@
 	return	[[desiredPrecisions objectAtIndex:desiredIndex] doubleValue];
 }
 
+- (void)updateLocation:(void(^)(CLLocation* location, NSError* error))completion {
+    
+	self.completionBlock = completion;
+    
+    [self startUpdates];
+}
+
+#pragma mark - CLLocationManagerDelegate methods
 // Delegate method from the CLLocationManagerDelegate protocol. Called when the location is updated
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
@@ -123,17 +139,30 @@
 	} else 
 	{
 		[self setLocationSuccessful:NO];
-	}	
-	
+	}
+    
 #if TARGET_IPHONE_SIMULATOR
-	[[MCMStatsManager sharedInstance] setLocation:currentLocation];
-    [self setCurrentLocation:currentLocation];
+    //Set the location for simulator
+    newLocation = currentLocation;
     
     MCMLog(@"Hardcoded location: %f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
-#else
-		[[MCMStatsManager sharedInstance] setLocation:newLocation];	 
-		[self setCurrentLocation:newLocation];
 #endif
+    
+    //Check if there is not completition block to update the location
+    if (self.completionBlock == nil) {
+        
+		[[MCMStatsManager sharedInstance] setLocation:newLocation];
+		[self setCurrentLocation:newLocation];
+        
+    } else {
+        
+        //Stop the location updates
+        [self cancelUpdates];
+        
+        //Calls the completition block with the location
+        self.completionBlock(newLocation,nil);
+    }
+	
 
 }
 
@@ -145,17 +174,26 @@
 	//	[delegate localizationError: error];
 	[self setLocationAllowed: NO];
 	[self cancelUpdates];
+    
+    //Calls the completition block with the error
+    if (self.completionBlock != nil) {
+        
+        self.completionBlock(nil,error);
+        
+    }
 }
 
 
 - (void) cancelUpdates {
 	[locationManager stopUpdatingLocation];
 	[self setLocating: NO];
+    
+//    self.completionBlock = nil;
 	
 }
 
 - (BOOL) locationEnabledAndAllowed {
-    //	return [locationManager locationServicesEnabled] && locationAllowed;
+    
     return [CLLocationManager locationServicesEnabled] && locationAllowed;
 }
 
