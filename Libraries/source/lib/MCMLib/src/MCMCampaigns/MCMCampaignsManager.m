@@ -12,6 +12,7 @@
 #import "MCMCoreSingleton.h"
 #import "MCMASIHTTPRequest.h"
 #import "MCMASIDownloadCache.h"
+#import "MCMStatsLocatorService.h"
 #import "MCMCoreUtils.h"
 #import "MCMCoreAPIRequest.h"
 #import "MCMCoreManager.h"
@@ -147,22 +148,31 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  */
 - (void)requestCampaign{
     
-    NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
-    IF_IOS7_OR_GREATER(
-                       url = [NSString stringWithFormat:MCMCAMPAIGN_URL_IOS7, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier]];
-    )
-    url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
-    
-    MCMLog(@"url: %@", url);
-    
-    MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
-    [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
-    [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
-    [request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
-    [request setTimeOutSeconds:8];
-    [request setDelegate:self];
-    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"jsonDownloaded", @"type",nil]];
-    [request startAsynchronous];
+    [[MCMStatsLocatorService sharedInstance] updateLocation:^(CLLocation *location, NSError *error) {
+        
+        NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
+        IF_IOS7_OR_GREATER(
+                           url = [NSString stringWithFormat:MCMCAMPAIGN_URL_IOS7, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier]];
+                           )
+        url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
+        
+        if (location != nil) {
+            //Add the location to the request
+            url = [NSString stringWithFormat:@"%@?lat=%.6f&lng=%.6f",url,location.coordinate.latitude,location.coordinate.longitude];
+        }
+        
+        MCMLog(@"url: %@", url);
+        
+        MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+        [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
+        [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
+        [request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
+        [request setTimeOutSeconds:8];
+        [request setDelegate:self];
+        [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"jsonDownloaded", @"type",nil]];
+        [request startAsynchronous];
+        
+    }];
     
 }
 
