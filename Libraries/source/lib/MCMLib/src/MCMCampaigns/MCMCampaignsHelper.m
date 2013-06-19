@@ -35,8 +35,8 @@
                       action,
                       [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],
                       [MCMCoreUtils uniqueIdentifier]];
-    IF_IOS6_OR_GREATER(
-                       path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL_IOS6,
+    IF_IOS7_OR_GREATER(
+                       path = [NSString stringWithFormat:MCMCAMPAIGN_HIT_URL_IOS7,
                                [campaign campaignId],
                                action,
                                [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId],

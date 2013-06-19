@@ -42,9 +42,19 @@
 #define IF_IOS6_OR_GREATER(...) \
 if([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0) \
 { \
-NSLog(@"IOS kCFCoreFoundationVersionNumber %.f",kCFCoreFoundationVersionNumber);\
 __VA_ARGS__;\
 };
 #else
 #define IF_IOS6_OR_GREATER(...)
+#endif
+
+//IOS 7 check
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+#define IF_IOS7_OR_GREATER(...) \
+if([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) \
+{ \
+__VA_ARGS__;\
+};
+#else
+#define IF_IOS7_OR_GREATER(...)
 #endif
