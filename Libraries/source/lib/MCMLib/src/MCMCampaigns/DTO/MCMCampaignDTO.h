@@ -42,6 +42,7 @@ typedef enum _CampaignPosition {
 
 - (id)initWithDictionary:(NSDictionary *)dict;
 - (void)hydrate:(NSDictionary *)data;
+
 /**
  Check if the campaign banner should be shown on full screen
  @since 2.0

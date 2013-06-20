@@ -11,9 +11,11 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = C10857EA1770AAB500845353 /* Build configuration list for PBXAggregateTarget "MalcomLib" */;
 			buildPhases = (
+				C19F4C6B1773084000662F5A /* ShellScript */,
 				C158F7431770ABD2009EA8A0 /* ShellScript */,
 				C158F7441770AC28009EA8A0 /* ShellScript */,
 				C158F7451770AC3B009EA8A0 /* ShellScript */,
+				C19F4C201771F7A900662F5A /* ShellScript */,
 			);
 			dependencies = (
 			);
@@ -24,9 +26,11 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = C158F78B1771C293009EA8A0 /* Build configuration list for PBXAggregateTarget "MalcomAdsLib" */;
 			buildPhases = (
+				C19F4C6A177307EF00662F5A /* ShellScript */,
 				C158F78E1771C2A2009EA8A0 /* ShellScript */,
 				C158F78F1771C2DD009EA8A0 /* ShellScript */,
 				C158F7901771C30B009EA8A0 /* ShellScript */,
+				C19F4C211771FD0400662F5A /* ShellScript */,
 			);
 			dependencies = (
 			);
@@ -54,10 +58,8 @@
 		C158F75E1771C1E7009EA8A0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
 		C158F7691771C21E009EA8A0 /* MalcomLib_iphoneos.m in Sources */ = {isa = PBXBuildFile; fileRef = C10857CC1770A9F300845353 /* MalcomLib_iphoneos.m */; };
 		C158F76F1771C243009EA8A0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
-		C158F7741771C243009EA8A0 /* MalcomAdsLib_iphonesimulator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C158F7731771C243009EA8A0 /* MalcomAdsLib_iphonesimulator.h */; };
 		C158F7761771C243009EA8A0 /* MalcomAdsLib_iphonesimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7751771C243009EA8A0 /* MalcomAdsLib_iphonesimulator.m */; };
 		C158F77F1771C258009EA8A0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
-		C158F7841771C258009EA8A0 /* MalcomAdsLib_iphoneos.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C158F7831771C258009EA8A0 /* MalcomAdsLib_iphoneos.h */; };
 		C158F7861771C258009EA8A0 /* MalcomAdsLib_iphoneos.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7851771C258009EA8A0 /* MalcomAdsLib_iphoneos.m */; };
 		C158F8D31771C4C6009EA8A0 /* MVYFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7991771C4C5009EA8A0 /* MVYFeed.m */; };
 		C158F8D41771C4C6009EA8A0 /* MVYFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7991771C4C5009EA8A0 /* MVYFeed.m */; };
@@ -370,6 +372,32 @@
 		C158FAE71771C626009EA8A0 /* MCMSBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7F91771C4C6009EA8A0 /* MCMSBJsonBase.m */; };
 		C158FAE81771C626009EA8A0 /* MCMSBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7FB1771C4C6009EA8A0 /* MCMSBJsonParser.m */; };
 		C158FAE91771C626009EA8A0 /* MCMSBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7FD1771C4C6009EA8A0 /* MCMSBJsonWriter.m */; };
+		C19F4C1D1771F46A00662F5A /* MalcomLib.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A11771C4C6009EA8A0 /* MalcomLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C1E1771F47A00662F5A /* MalcomLib.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A11771C4C6009EA8A0 /* MalcomLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C241771FD7700662F5A /* MCMLib.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8BB1771C4C6009EA8A0 /* MCMLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C251771FD7D00662F5A /* MCMLib.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8BB1771C4C6009EA8A0 /* MCMLib.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C2B1771FE2800662F5A /* MCMCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A41771C4C6009EA8A0 /* MCMCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C2C1771FE2C00662F5A /* MCMCore.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A41771C4C6009EA8A0 /* MCMCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C331772FC6100662F5A /* MCMCoreManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A51771C4C6009EA8A0 /* MCMCoreManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C341772FC6800662F5A /* MCMCoreManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A51771C4C6009EA8A0 /* MCMCoreManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C3C1772FE5200662F5A /* MCMModuleAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A71771C4C6009EA8A0 /* MCMModuleAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C3D1772FE5600662F5A /* MCMModuleAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8A71771C4C6009EA8A0 /* MCMModuleAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C461772FFE500662F5A /* MCMCoreUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8AE1771C4C6009EA8A0 /* MCMCoreUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C471772FFFF00662F5A /* MCMLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8B41771C4C6009EA8A0 /* MCMLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C521773021300662F5A /* MCMCampaignsManagerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F88B1771C4C6009EA8A0 /* MCMCampaignsManagerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C531773022500662F5A /* MCMLog.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8B41771C4C6009EA8A0 /* MCMLog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C541773023F00662F5A /* MCMCoreUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8AE1771C4C6009EA8A0 /* MCMCoreUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C551773025E00662F5A /* MCMCampaignsManagerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F88B1771C4C6009EA8A0 /* MCMCampaignsManagerDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C63177305EC00662F5A /* MalcomAd.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA8E1771C4F5009EA8A0 /* MalcomAd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C641773061400662F5A /* MCMAdAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA911771C4F5009EA8A0 /* MCMAdAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C651773062000662F5A /* MCMAdManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA931771C4F5009EA8A0 /* MCMAdManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C671773063100662F5A /* MCMAdManager.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA931771C4F5009EA8A0 /* MCMAdManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C681773063E00662F5A /* MCMAdAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA911771C4F5009EA8A0 /* MCMAdAdapter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C691773064A00662F5A /* MalcomAd.h in Headers */ = {isa = PBXBuildFile; fileRef = C158FA8E1771C4F5009EA8A0 /* MalcomAd.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C6C1773089A00662F5A /* MCMCampaignDTO.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8821771C4C6009EA8A0 /* MCMCampaignDTO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C6D177308A000662F5A /* MCMCampaignBannerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8841771C4C6009EA8A0 /* MCMCampaignBannerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C6E177308A500662F5A /* MCMCampaignDTO.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8821771C4C6009EA8A0 /* MCMCampaignDTO.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C19F4C6F177308A800662F5A /* MCMCampaignBannerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C158F8841771C4C6009EA8A0 /* MCMCampaignBannerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -399,26 +427,6 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C158F76C1771C243009EA8A0 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/${PRODUCT_NAME}";
-			dstSubfolderSpec = 16;
-			files = (
-				C158F7741771C243009EA8A0 /* MalcomAdsLib_iphonesimulator.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C158F77C1771C258009EA8A0 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "include/${PRODUCT_NAME}";
-			dstSubfolderSpec = 16;
-			files = (
-				C158F7841771C258009EA8A0 /* MalcomAdsLib_iphoneos.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1548,6 +1556,63 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		C19F4C1B1771F44200662F5A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C19F4C1E1771F47A00662F5A /* MalcomLib.h in Headers */,
+				C19F4C251771FD7D00662F5A /* MCMLib.h in Headers */,
+				C19F4C2B1771FE2800662F5A /* MCMCore.h in Headers */,
+				C19F4C461772FFE500662F5A /* MCMCoreUtils.h in Headers */,
+				C19F4C331772FC6100662F5A /* MCMCoreManager.h in Headers */,
+				C19F4C3D1772FE5600662F5A /* MCMModuleAdapter.h in Headers */,
+				C19F4C551773025E00662F5A /* MCMCampaignsManagerDelegate.h in Headers */,
+				C19F4C471772FFFF00662F5A /* MCMLog.h in Headers */,
+				C19F4C6E177308A500662F5A /* MCMCampaignDTO.h in Headers */,
+				C19F4C6F177308A800662F5A /* MCMCampaignBannerViewController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19F4C1C1771F46300662F5A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C19F4C1D1771F46A00662F5A /* MalcomLib.h in Headers */,
+				C19F4C241771FD7700662F5A /* MCMLib.h in Headers */,
+				C19F4C2C1771FE2C00662F5A /* MCMCore.h in Headers */,
+				C19F4C541773023F00662F5A /* MCMCoreUtils.h in Headers */,
+				C19F4C341772FC6800662F5A /* MCMCoreManager.h in Headers */,
+				C19F4C3C1772FE5200662F5A /* MCMModuleAdapter.h in Headers */,
+				C19F4C521773021300662F5A /* MCMCampaignsManagerDelegate.h in Headers */,
+				C19F4C531773022500662F5A /* MCMLog.h in Headers */,
+				C19F4C6C1773089A00662F5A /* MCMCampaignDTO.h in Headers */,
+				C19F4C6D177308A000662F5A /* MCMCampaignBannerViewController.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19F4C61177304F600662F5A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C19F4C63177305EC00662F5A /* MalcomAd.h in Headers */,
+				C19F4C641773061400662F5A /* MCMAdAdapter.h in Headers */,
+				C19F4C651773062000662F5A /* MCMAdManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19F4C661773062B00662F5A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C19F4C691773064A00662F5A /* MalcomAd.h in Headers */,
+				C19F4C681773063E00662F5A /* MCMAdAdapter.h in Headers */,
+				C19F4C671773063100662F5A /* MCMAdManager.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
 		C10857421770A5F500845353 /* MalcomLibProject */ = {
 			isa = PBXNativeTarget;
@@ -1591,6 +1656,7 @@
 				C158F7491771C1C7009EA8A0 /* Sources */,
 				C158F74A1771C1C7009EA8A0 /* Frameworks */,
 				C158F74B1771C1C7009EA8A0 /* CopyFiles */,
+				C19F4C1B1771F44200662F5A /* Headers */,
 			);
 			buildRules = (
 			);
@@ -1608,6 +1674,7 @@
 				C158F7591771C1E7009EA8A0 /* Sources */,
 				C158F75A1771C1E7009EA8A0 /* Frameworks */,
 				C158F75B1771C1E7009EA8A0 /* CopyFiles */,
+				C19F4C1C1771F46300662F5A /* Headers */,
 			);
 			buildRules = (
 			);
@@ -1624,7 +1691,7 @@
 			buildPhases = (
 				C158F76A1771C243009EA8A0 /* Sources */,
 				C158F76B1771C243009EA8A0 /* Frameworks */,
-				C158F76C1771C243009EA8A0 /* CopyFiles */,
+				C19F4C661773062B00662F5A /* Headers */,
 			);
 			buildRules = (
 			);
@@ -1641,7 +1708,7 @@
 			buildPhases = (
 				C158F77A1771C258009EA8A0 /* Sources */,
 				C158F77B1771C258009EA8A0 /* Frameworks */,
-				C158F77C1771C258009EA8A0 /* CopyFiles */,
+				C19F4C61177304F600662F5A /* Headers */,
 			);
 			buildRules = (
 			);
@@ -1764,7 +1831,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LibraryPath=\"${SRCROOT}/../Libraries/static library/lib/\"\nLibraryFilePath=$LibraryPath\"libMalcomLib-ios.a\"\n\nrm -f $LibraryFilePath\n\nif [ ! -d $LibraryPath ]; then\n    mkdir $LibraryPath\nfi\n\nlipo -create \"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphonesimulator.a\" \\\n\"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphoneos.a\" -output \\\n\"$LibraryFilePath\"";
+			shellScript = "LibraryPath=\"${SRCROOT}/../Libraries/static library/lib/\"\nLibraryFilePath=$LibraryPath\"libMalcomLib-ios.a\"\n\nrm -f $LibraryFilePath\n\nif [ ! -d $LibraryPath ]; then\n    mkdir $LibraryPath\nfi\n\nversionString=$(/usr/libexec/PlistBuddy -c \"print:CFBundleVersion\" \"$CONFIGURATION_BUILD_DIR/$INFOPLIST_PATH\")\n\nlipo -create \"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphonesimulator.a\" \\\n\"${BUILT_PRODUCTS_DIR}/libMalcomLib-iphoneos.a\" -output \\\n\"$LibraryFilePath\"";
 		};
 		C158F78E1771C2A2009EA8A0 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1803,7 +1870,59 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "LibraryPath=\"${SRCROOT}/../Libraries/static library/lib/\"\nLibraryFilePath=$LibraryPath\"libMalcomAdsLib-ios.a\"\n\nrm -f $LibraryFilePath\n\nif [ ! -d $LibraryPath ]; then\nmkdir $LibraryPath\nfi\n\nlipo -create \"${BUILT_PRODUCTS_DIR}/libMalcomAdsLib-iphonesimulator.a\" \\\n\"${BUILT_PRODUCTS_DIR}/libMalcomAdsLib-iphoneos.a\" -output \\\n\"$LibraryFilePath\"";
+			shellScript = "LibraryPath=\"${SRCROOT}/../Libraries/static library/lib/ads/\"\nLibraryFilePath=$LibraryPath\"libMalcomAdsLib-ios.a\"\n\nrm -f $LibraryFilePath\n\nif [ ! -d $LibraryPath ]; then\nmkdir $LibraryPath\nfi\n\nversionString=$(/usr/libexec/PlistBuddy -c \"print:CFBundleVersion\" \"$CONFIGURATION_BUILD_DIR/$INFOPLIST_PATH\")\n\nlipo -create \"${BUILT_PRODUCTS_DIR}/libMalcomAdsLib-iphonesimulator.a\" \\\n\"${BUILT_PRODUCTS_DIR}/libMalcomAdsLib-iphoneos.a\" -output \\\n\"$LibraryFilePath\"";
+		};
+		C19F4C201771F7A900662F5A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "HeadersPath=\"${BUILT_PRODUCTS_DIR}/usr/local/include/\"\nHeadersDestinationPath=\"${SRCROOT}/../Libraries/static library/lib/headers/\"\n\nrm -rf \"$HeadersDestinationPath\"\n\nif [ ! -d \"$HeadersDestinationPath\" ]; then\n    mkdir \"$HeadersDestinationPath\"\nfi\n\ncp -r \"$HeadersPath\" \"$HeadersDestinationPath\"";
+		};
+		C19F4C211771FD0400662F5A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "HeadersPath=\"${BUILT_PRODUCTS_DIR}/usr/local/include/\"\nHeadersDestinationPath=\"${SRCROOT}/../Libraries/static library/lib/ads/headers/\"\n\nrm -rf \"$HeadersDestinationPath\"\n\nif [ ! -d \"$HeadersDestinationPath\" ]; then\nmkdir \"$HeadersDestinationPath\"\nfi\n\ncp -r \"$HeadersPath\" \"$HeadersDestinationPath\"";
+		};
+		C19F4C6A177307EF00662F5A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "HeadersPath=\"${BUILT_PRODUCTS_DIR}/usr/local/include/\"\n\nrm -rf \"$HeadersPath\"";
+		};
+		C19F4C6B1773084000662F5A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "HeadersPath=\"${BUILT_PRODUCTS_DIR}/usr/local/include/\"\n\nrm -rf \"$HeadersPath\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2328,6 +2447,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
+				CURRENT_PROJECT_VERSION = 2.0.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -2337,6 +2457,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
+				CURRENT_PROJECT_VERSION = 2.0.2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -2522,6 +2643,7 @@
 				C158F7581771C1C7009EA8A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C158F7661771C1E7009EA8A0 /* Build configuration list for PBXNativeTarget "MalcomLib-iphoneos" */ = {
 			isa = XCConfigurationList;
@@ -2530,6 +2652,7 @@
 				C158F7681771C1E7009EA8A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C158F7771771C243009EA8A0 /* Build configuration list for PBXNativeTarget "MalcomAdsLib-iphonesimulator" */ = {
 			isa = XCConfigurationList;
@@ -2538,6 +2661,7 @@
 				C158F7791771C243009EA8A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C158F7871771C258009EA8A0 /* Build configuration list for PBXNativeTarget "MalcomAdsLib-iphoneos" */ = {
 			isa = XCConfigurationList;
@@ -2546,6 +2670,7 @@
 				C158F7891771C258009EA8A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C158F78B1771C293009EA8A0 /* Build configuration list for PBXAggregateTarget "MalcomAdsLib" */ = {
 			isa = XCConfigurationList;
@@ -2554,6 +2679,7 @@
 				C158F78D1771C293009EA8A0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

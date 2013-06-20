@@ -23,11 +23,8 @@
 //General imports
 #import "MCMCoreManager.h"
 #import "MCMModuleAdapter.h"
-#import "MCMViewController.h"
-#import "MCMApplicationDelegate.h"
 #import "MCMLog.h"
 #import "MCMCoreUtils.h"
-#import "MCMCampaignsManager.h"
 
 
 //Malcom log (Only show logs on DEBUG mode)
