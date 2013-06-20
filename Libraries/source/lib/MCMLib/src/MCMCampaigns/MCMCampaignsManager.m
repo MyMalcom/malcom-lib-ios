@@ -481,7 +481,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     //notifies it is being shown
     if(self.delegate && [self.delegate respondsToSelector:@selector(campaignPressed:)]){
         
-        [self.delegate campaignPressed:campaign.promotionIdentifier];
+        [self.delegate campaignPressed:campaign];
     }
 
 }

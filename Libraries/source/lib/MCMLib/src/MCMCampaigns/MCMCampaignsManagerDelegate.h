@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MCMCampaignDTO.h"
 
 @protocol MCMCampaignsManagerDelegate <NSObject>
 @optional
@@ -15,6 +16,6 @@
 - (void)campaignViewDidLoad;
 - (void)campaignViewDidFailRequest:(NSString *)errorMessage;
 - (void)campaignViewDidFinish;
-- (void)campaignPressed:(NSString *)promotionCode;
+- (void)campaignPressed:(MCMCampaignDTO *)promotionCampaign;
 
 @end
