@@ -16,6 +16,6 @@
 - (void)campaignViewDidLoad;
 - (void)campaignViewDidFailRequest:(NSString *)errorMessage;
 - (void)campaignViewDidFinish;
-- (void)campaignPressed:(MCMCampaignDTO *)promotionCampaign;
+- (void)campaignPressed:(MCMCampaignDTO *)campaign;
 
 @end
