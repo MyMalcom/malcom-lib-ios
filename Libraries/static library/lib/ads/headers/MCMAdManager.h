@@ -42,4 +42,6 @@
 
 - (void)removeAd:(UIViewController *)viewController;
 
+- (id)getAd;
+
 @end

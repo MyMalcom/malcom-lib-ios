@@ -113,7 +113,8 @@
 
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
  
-    UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    //UIDeviceOrientation orientation = [[UIDevice currentDevice] orientation];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     
     if (adWhirlView_){
         [adWhirlView_ rotateToOrientation:orientation];  
@@ -121,6 +122,12 @@
     
 }
 
+-(UIViewController *) getPresentedModalViewController:(UIViewController *) controller{
+    while ([controller presentedViewController]) {
+        controller = [controller presentedViewController];
+    }
+    return controller;
+}
 
 #pragma mark AdWhirl delegate
 
@@ -141,6 +148,11 @@
     
     if ([appDelegate respondsToSelector:@selector(tabBarController)])
         return [((id) appDelegate) tabBarController];
+    
+    
+    // Checking if current viewController is a modal view
+    UIViewController *aux = [self getPresentedModalViewController:[[[UIApplication sharedApplication] keyWindow] rootViewController]];
+    if (aux)    return aux;
     
     if ([[[UIApplication sharedApplication] keyWindow] respondsToSelector:@selector(rootViewController)])
         return [[[UIApplication sharedApplication] keyWindow] rootViewController];

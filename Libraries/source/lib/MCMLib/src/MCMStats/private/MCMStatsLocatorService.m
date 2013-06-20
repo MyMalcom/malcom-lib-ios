@@ -19,6 +19,14 @@
 #define HARDCODED_LNG 2.177603 
 #define MIN_MOVEMENT 100
 
+typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
+
+@interface MCMStatsLocatorService ()
+
+@property (nonatomic, copy) CompletionBlock completionBlock;
+
+@end
+
 @implementation MCMStatsLocatorService SYNTHESIZE_SINGLETON_FOR_CLASS(MCMStatsLocatorService);
 
 @synthesize currentLocation, locating, locationSuccessful, locationAllowed;
@@ -57,13 +65,17 @@
 	return	[[desiredPrecisions objectAtIndex:desiredIndex] doubleValue];
 }
 
+- (void)updateLocation:(void(^)(CLLocation* location, NSError* error))completion {
+    
+	self.completionBlock = completion;
+    
+    [self startUpdates];
+}
+
+#pragma mark - CLLocationManagerDelegate methods
 // Delegate method from the CLLocationManagerDelegate protocol. Called when the location is updated
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
- 
-//    Class klass = NSClassFromString(@"CLGeocoder");
-//    
-//    if ([klass instancesRespondToSelector:@selector(alloc)]) {
 
     Class klass = NSClassFromString(@"CLGeocoder");
     
@@ -73,11 +85,11 @@
         [geocoder reverseGeocodeLocation:newLocation 
                        completionHandler:^(NSArray *placemarks, NSError *error) {
                            
-                           [MCMLog log:@"Malcom MCMStats - MCMStatsLocatorService reverseGeocodeLocation:completionHandler: Completion Handler called!" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+                           MCMLog(@"reverseGeocodeLocation:completionHandler: Completion Handler called!");
                            
                            if (error){
                                
-                               [MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService Geocode failed with error: %@", error] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+                               MCMLog(@"Geocode failed with error: %@", error);
                                return;
                                
                            }
@@ -95,12 +107,10 @@
         
     }
     
-	[MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService latitude %+.6f, longitude %+.6f\n", newLocation.coordinate.latitude, newLocation.coordinate.longitude] 
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    MCMLog(@"latitude %+.6f, longitude %+.6f\n", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
 	
-    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService horizontalAccuracy: %+.6f, verticalAccuracy %+.6f, bestAccuracy %+.6f", newLocation.horizontalAccuracy, newLocation.verticalAccuracy, kCLLocationAccuracyBest] 
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-	
+    MCMLog(@"horizontalAccuracy: %+.6f, verticalAccuracy %+.6f, bestAccuracy %+.6f", newLocation.horizontalAccuracy, newLocation.verticalAccuracy, kCLLocationAccuracyBest);
+    
 	// If it's a relatively recent event, turn off updates to save power
 	NSDate* eventDate = newLocation.timestamp;
 	NSTimeInterval howRecent = [eventDate timeIntervalSinceNow];
@@ -111,7 +121,7 @@
 		// Negative accuracy means an invalid or unavailable measurement
 		// CoreLocation returns positive for North & East, negative for South & West
 		
-        [MCMLog log:@"Malcom MCMStats - MCMStatsLocatorService invalid or unavailable measurement" inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        MCMLog(@"invalid or unavailable measurement");
 		[self setLocationSuccessful:NO];
 		return;
 	} 
@@ -120,8 +130,8 @@
 	if (abs(howRecent) < 5.0 && newLocation.horizontalAccuracy < [self desiredPrecision]) //< 100) 
 	{
 		// if its fresh stop updating
-		[MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService stop updating location latitude %+.6f, longitude %+.6f\n, DesiredIndex:%d", newLocation.coordinate.latitude, newLocation.coordinate.longitude, desiredIndex] 
-             inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        MCMLog(@"stop updating location latitude %+.6f, longitude %+.6f\n, DesiredIndex:%d", newLocation.coordinate.latitude, newLocation.coordinate.longitude, desiredIndex);
+        
 		[manager stopUpdatingLocation];
 		[self setLocationSuccessful:YES];
 		[self setLocating: NO];
@@ -129,39 +139,62 @@
 	} else 
 	{
 		[self setLocationSuccessful:NO];
-	}	
-	
+	}
+    
 #if TARGET_IPHONE_SIMULATOR
-		[[MCMStatsManager sharedInstance] setLocation:currentLocation];
-		[self setCurrentLocation:currentLocation];
-		[MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService Hardcoded location: %f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude] 
-         inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
-#else
-		[[MCMStatsManager sharedInstance] setLocation:newLocation];	 
-		[self setCurrentLocation:newLocation];
+    //Set the location for simulator
+    newLocation = currentLocation;
+    
+    MCMLog(@"Hardcoded location: %f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
 #endif
+    
+    //Check if there is not completition block to update the location
+    if (self.completionBlock == nil) {
+        
+		[[MCMStatsManager sharedInstance] setLocation:newLocation];
+		[self setCurrentLocation:newLocation];
+        
+    } else {
+        
+        //Stop the location updates
+        [self cancelUpdates];
+        
+        //Calls the completition block with the location
+        self.completionBlock(newLocation,nil);
+    }
+	
 
 }
 
 // Called when there is an error getting the location
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-	
-    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMStats - MCMStatsLocatorService Error updating location: %@", [error description]] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+	MCMLog(@"Error updating location: %@", [error description]);
+    
 	//	[delegate localizationError: error];
 	[self setLocationAllowed: NO];
 	[self cancelUpdates];
+    
+    //Calls the completition block with the error
+    if (self.completionBlock != nil) {
+        
+        self.completionBlock(nil,error);
+        
+    }
 }
 
 
 - (void) cancelUpdates {
 	[locationManager stopUpdatingLocation];
 	[self setLocating: NO];
+    
+//    self.completionBlock = nil;
 	
 }
 
 - (BOOL) locationEnabledAndAllowed {
-	return [locationManager locationServicesEnabled] && locationAllowed;
+    
+    return [CLLocationManager locationServicesEnabled] && locationAllowed;
 }
 
 @end

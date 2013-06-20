@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'MalcomAdsLib-iphonesimulator' target in the 'MalcomAdsLib-iphonesimulator' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif

@@ -16,6 +16,8 @@ Integration
 
 * Add this frameworks to project:
 
+   * Security.framework
+   * AdSupport.framework
    * MediaPlayer.framework
    * AVFoundation.framework
    * CFNetwork.framework

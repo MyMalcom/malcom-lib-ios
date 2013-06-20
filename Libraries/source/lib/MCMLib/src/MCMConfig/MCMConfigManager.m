@@ -9,7 +9,7 @@
 
 #import "MCMASIHTTPRequest.h"
 #import "MCMASIDownloadCache.h"
-#import "MCMIntersitialBannerViewController.h"
+#import "MCMCampaignBannerViewController.h"
 
 @interface MCMConfigManager(private) <MCMASIHTTPRequestDelegate>
 
@@ -125,6 +125,9 @@
 	if (appId){
         
         NSString *path = [NSString stringWithFormat:@"v1/globalconf/%@/%@/%@.plist", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier], kMalcomSettingsRemoteName];
+        IF_IOS7_OR_GREATER(
+            path = [NSString stringWithFormat:@"v1/globalconf/%@/%@/%@.plist", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier], kMalcomSettingsRemoteName];
+        )
         
         url = [NSURL URLWithString:[[MCMCoreManager sharedInstance] malcomUrlForPath:path]];
         

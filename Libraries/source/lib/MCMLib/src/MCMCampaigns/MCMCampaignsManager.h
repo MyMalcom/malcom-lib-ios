@@ -8,14 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-@protocol MCMCampaignsManagerDelegate <NSObject>
-@optional
--(void)campaignViewWillLoad;
--(void)campaignViewDidLoad;
--(void)campaignViewDidFailRequest;
--(void)campaignViewDidFinish;
-@end
+#import "MCMCampaignsManagerDelegate.h"
+#import "MCMCampaignDTO.h"
 
 @interface MCMCampaignsManager : NSObject
 
@@ -32,9 +26,10 @@
 
 /**
  Method that starts the manager and requests a banner to server.
+ @param view View where is going to be placed the banner.
  @since 2.0.0
  */
-- (void)addBanner;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view;
 
 /**
  Method that starts the manager and requests a banner to server.
@@ -42,7 +37,7 @@
  @param appstoreView View where is going to be placed the appstoreView storekit.
  @since 2.0.0
  */
-- (void)addBanner:(UIView*)view withAppstoreView:(UIView*)appstoreView;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view withAppstoreView:(UIView*)appstoreView;
 
 
 /**
@@ -51,5 +46,12 @@
  */
 - (void)removeCurrentBanner;
 
+/**
+ Method that request the available campaigns from server, filters them and executes the completion block with the result
+ @param type the campaign type to filter the server response
+ @param ^completion block that will be executed with the filtered response
+ @param ^error block that will be executed when an error occurs
+ */
+- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
 
 @end

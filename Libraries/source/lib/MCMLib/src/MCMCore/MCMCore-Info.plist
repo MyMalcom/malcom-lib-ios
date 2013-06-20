@@ -5,13 +5,13 @@
 	<key>AdWhirlBaseUrl</key>
 	<string>http://ads.mymalcom.com/</string>
 	<key>AdWhirlId</key>
-	<string>9a6b95a81fac4384b54948cf5cea858b</string>
+	<string>d0b6a9ce968f4d78a7da720176ab3bbd</string>
 	<key>AssetsBaseURL</key>
 	<string>http://assets.tebas.mymalcom.com/</string>
 	<key>MalcomAppId</key>
-	<string>3eb5fdfd-8045-4111-8889-932877366285</string>
+	<string>e8927764-5467-45c7-a83c-dcf377094ec3</string>
 	<key>MalcomAppSecretKey</key>
-	<string>9be8ad4d5863d8222f4d16e7f788e0dc</string>
+	<string>jI3tAkcIlxJ3nqoVbUnxVA==</string>
 	<key>MalcomBaseURL</key>
 	<string>http://api.mymalcom.com/</string>
 </dict>
