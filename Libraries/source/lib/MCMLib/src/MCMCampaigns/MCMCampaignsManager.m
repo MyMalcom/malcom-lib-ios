@@ -146,16 +146,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  Method that request the banner to the server.
  @since 2.0.0
  */
-<<<<<<< HEAD
--(void)requestCampaign{
-    
-    //NSString *url = @"https://dl.dropbox.com/u/53608360/campaing.json";
-    
-    NSString *url = [NSString stringWithFormat:@"v2/campaigns/application/%@/udid/%@", [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
-    url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
-=======
 - (void)requestCampaign{
->>>>>>> development
     
     [[MCMStatsLocatorService sharedInstance] updateLocation:^(CLLocation *location, NSError *error) {
         
