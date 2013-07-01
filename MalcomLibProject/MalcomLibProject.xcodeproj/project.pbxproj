@@ -356,7 +356,7 @@
 		C1A1B0D31781EA6C00D5C121 /* MCMCampaignDTO.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AE9E1781EA6C00D5C121 /* MCMCampaignDTO.m */; };
 		C1A1B0D41781EA6C00D5C121 /* MCMCampaignDTO.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AE9E1781EA6C00D5C121 /* MCMCampaignDTO.m */; };
 		C1A1B0D51781EA6C00D5C121 /* MCMCampaignDTO.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AE9E1781EA6C00D5C121 /* MCMCampaignDTO.m */; };
-		C1A1B0D61781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1AE9F1781EA6C00D5C121 /* MCMCampaignBannerViewController.h */; };
+		C1A1B0D61781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1AE9F1781EA6C00D5C121 /* MCMCampaignBannerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C1A1B0D71781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1AE9F1781EA6C00D5C121 /* MCMCampaignBannerViewController.h */; };
 		C1A1B0D81781EA6C00D5C121 /* MCMCampaignBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AEA01781EA6C00D5C121 /* MCMCampaignBannerViewController.m */; };
 		C1A1B0D91781EA6C00D5C121 /* MCMCampaignBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AEA01781EA6C00D5C121 /* MCMCampaignBannerViewController.m */; };
@@ -2031,6 +2031,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C1A1B0D61781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */,
 				C1A1B0E71781EA6C00D5C121 /* MCMCampaignsManagerDelegate.h in Headers */,
 				C1A1B0D11781EA6C00D5C121 /* MCMCampaignDTO.h in Headers */,
 				C1A1B1291781EA6C00D5C121 /* MCMCoreUtils.h in Headers */,
@@ -2106,7 +2107,6 @@
 				C1A1B0041781EA6C00D5C121 /* MCMCJSONSerializer.h in Headers */,
 				C1A1B0061781EA6C00D5C121 /* MCMCSerializedJSONData.h in Headers */,
 				C1A1B00B1781EA6C00D5C121 /* MCMCDataScanner.h in Headers */,
-				C1A1B0D61781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */,
 				C1A1B0DB1781EA6C00D5C121 /* MCMCampaignsDefines.h in Headers */,
 				C1A1B0DD1781EA6C00D5C121 /* MCMCampaignsHelper.h in Headers */,
 				C1A1B0E21781EA6C00D5C121 /* MCMCampaignsManager.h in Headers */,
