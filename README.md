@@ -1,10 +1,25 @@
+
 Malcom Lib iOS
 ==============
 
 Integration
 ------------
 
-* Clone this repository or download the zip:
+* [CocoaPods](http://cocoapods.org) is the recommended way to add MalcomLib to your project.
+
+ Here's an example podfile that installs MalcomLib. 
+ ### Podfile
+
+ ```ruby
+platform :ios, '5.0'
+
+ pod 'Malcom', :git => 'git://github.com/MyMalcom/malcom-lib-ios.git'
+```
+ 
+ Note the specification of iOS 5.0 as the platform; leaving out the 5.0 will cause CocoaPods to fail with the following message:
+> [!] Malcom is not compatible with iOS 4.3.	
+
+* If you don't use cocoapods, you can clone this repository or download the zip:
 
         git://github.com/MyMalcom/malcom-lib-ios.git
     
