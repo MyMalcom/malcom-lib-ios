@@ -52,6 +52,21 @@
 		C10857621770A5F500845353 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C108574A1770A5F500845353 /* UIKit.framework */; };
 		C108576A1770A5F500845353 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = C10857681770A5F500845353 /* InfoPlist.strings */; };
 		C108576C1770A5F500845353 /* MalcomLibProjectTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C108576B1770A5F500845353 /* MalcomLibProjectTests.m */; };
+		C14A254E1784210F00F2804F /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A254D1784210F00F2804F /* iAd.framework */; };
+		C14A25501784211F00F2804F /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A254F1784211E00F2804F /* libz.1.2.5.dylib */; };
+		C14A25521784212800F2804F /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A25511784212800F2804F /* StoreKit.framework */; };
+		C14A25541784218F00F2804F /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A25531784218E00F2804F /* MessageUI.framework */; };
+		C14A25561784219700F2804F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A25551784219700F2804F /* AudioToolbox.framework */; };
+		C14A2558178421A200F2804F /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2557178421A200F2804F /* CoreLocation.framework */; };
+		C14A255A178421A900F2804F /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2559178421A900F2804F /* CoreTelephony.framework */; };
+		C14A255C178421AF00F2804F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A255B178421AF00F2804F /* QuartzCore.framework */; };
+		C14A255E178421B800F2804F /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A255D178421B800F2804F /* MobileCoreServices.framework */; };
+		C14A2560178421C100F2804F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A255F178421C000F2804F /* SystemConfiguration.framework */; };
+		C14A2562178421C700F2804F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2561178421C700F2804F /* CFNetwork.framework */; };
+		C14A2564178421CE00F2804F /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2563178421CE00F2804F /* AVFoundation.framework */; };
+		C14A2566178421D600F2804F /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2565178421D600F2804F /* MediaPlayer.framework */; };
+		C14A2568178421DC00F2804F /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2567178421DC00F2804F /* AdSupport.framework */; };
+		C14A256A178421E300F2804F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C14A2569178421E300F2804F /* Security.framework */; };
 		C158F74E1771C1C7009EA8A0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C10857461770A5F500845353 /* Foundation.framework */; };
 		C158F7531771C1C7009EA8A0 /* MalcomLib_iphonesimulator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C158F7521771C1C7009EA8A0 /* MalcomLib_iphonesimulator.h */; };
 		C158F7551771C1C7009EA8A0 /* MalcomLib_iphonesimulator.m in Sources */ = {isa = PBXBuildFile; fileRef = C158F7541771C1C7009EA8A0 /* MalcomLib_iphonesimulator.m */; };
@@ -518,72 +533,58 @@
 		C1A1B1751781EA6C00D5C121 /* MCMStatsSubBeacon.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1AEED1781EA6C00D5C121 /* MCMStatsSubBeacon.m */; };
 		C1A1B1CF1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17B1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.h */; };
 		C1A1B1D01781EA8300D5C121 /* AdWhirlAdapterBrightRoll.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17B1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.h */; };
-		C1A1B1D11781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17C1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m */; };
 		C1A1B1D21781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17C1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m */; };
 		C1A1B1D31781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17C1781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m */; };
 		C1A1B1D41781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17D1781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.h */; };
 		C1A1B1D51781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17D1781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.h */; };
-		C1A1B1D61781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17E1781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m */; };
 		C1A1B1D71781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17E1781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m */; };
 		C1A1B1D81781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B17E1781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m */; };
 		C1A1B1D91781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17F1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.h */; };
 		C1A1B1DA1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B17F1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.h */; };
-		C1A1B1DB1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1801781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m */; };
 		C1A1B1DC1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1801781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m */; };
 		C1A1B1DD1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1801781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m */; };
 		C1A1B1DE1781EA8300D5C121 /* AdWhirlAdapterGreystripe.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1811781EA8300D5C121 /* AdWhirlAdapterGreystripe.h */; };
 		C1A1B1DF1781EA8300D5C121 /* AdWhirlAdapterGreystripe.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1811781EA8300D5C121 /* AdWhirlAdapterGreystripe.h */; };
-		C1A1B1E01781EA8300D5C121 /* AdWhirlAdapterGreystripe.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1821781EA8300D5C121 /* AdWhirlAdapterGreystripe.m */; };
 		C1A1B1E11781EA8300D5C121 /* AdWhirlAdapterGreystripe.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1821781EA8300D5C121 /* AdWhirlAdapterGreystripe.m */; };
 		C1A1B1E21781EA8300D5C121 /* AdWhirlAdapterGreystripe.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1821781EA8300D5C121 /* AdWhirlAdapterGreystripe.m */; };
 		C1A1B1E31781EA8300D5C121 /* AdWhirlAdapterIAd.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1831781EA8300D5C121 /* AdWhirlAdapterIAd.h */; };
 		C1A1B1E41781EA8300D5C121 /* AdWhirlAdapterIAd.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1831781EA8300D5C121 /* AdWhirlAdapterIAd.h */; };
-		C1A1B1E51781EA8300D5C121 /* AdWhirlAdapterIAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1841781EA8300D5C121 /* AdWhirlAdapterIAd.m */; };
 		C1A1B1E61781EA8300D5C121 /* AdWhirlAdapterIAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1841781EA8300D5C121 /* AdWhirlAdapterIAd.m */; };
 		C1A1B1E71781EA8300D5C121 /* AdWhirlAdapterIAd.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1841781EA8300D5C121 /* AdWhirlAdapterIAd.m */; };
 		C1A1B1E81781EA8300D5C121 /* AdWhirlAdapterInMobi.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1851781EA8300D5C121 /* AdWhirlAdapterInMobi.h */; };
 		C1A1B1E91781EA8300D5C121 /* AdWhirlAdapterInMobi.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1851781EA8300D5C121 /* AdWhirlAdapterInMobi.h */; };
-		C1A1B1EA1781EA8300D5C121 /* AdWhirlAdapterInMobi.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1861781EA8300D5C121 /* AdWhirlAdapterInMobi.m */; };
 		C1A1B1EB1781EA8300D5C121 /* AdWhirlAdapterInMobi.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1861781EA8300D5C121 /* AdWhirlAdapterInMobi.m */; };
 		C1A1B1EC1781EA8300D5C121 /* AdWhirlAdapterInMobi.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1861781EA8300D5C121 /* AdWhirlAdapterInMobi.m */; };
 		C1A1B1ED1781EA8300D5C121 /* AdWhirlAdapterJumpTap.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1871781EA8300D5C121 /* AdWhirlAdapterJumpTap.h */; };
 		C1A1B1EE1781EA8300D5C121 /* AdWhirlAdapterJumpTap.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1871781EA8300D5C121 /* AdWhirlAdapterJumpTap.h */; };
-		C1A1B1EF1781EA8300D5C121 /* AdWhirlAdapterJumpTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1881781EA8300D5C121 /* AdWhirlAdapterJumpTap.m */; };
 		C1A1B1F01781EA8300D5C121 /* AdWhirlAdapterJumpTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1881781EA8300D5C121 /* AdWhirlAdapterJumpTap.m */; };
 		C1A1B1F11781EA8300D5C121 /* AdWhirlAdapterJumpTap.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1881781EA8300D5C121 /* AdWhirlAdapterJumpTap.m */; };
 		C1A1B1F21781EA8300D5C121 /* AdWhirlAdapterMdotM.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1891781EA8300D5C121 /* AdWhirlAdapterMdotM.h */; };
 		C1A1B1F31781EA8300D5C121 /* AdWhirlAdapterMdotM.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1891781EA8300D5C121 /* AdWhirlAdapterMdotM.h */; };
-		C1A1B1F41781EA8300D5C121 /* AdWhirlAdapterMdotM.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18A1781EA8300D5C121 /* AdWhirlAdapterMdotM.m */; };
 		C1A1B1F51781EA8300D5C121 /* AdWhirlAdapterMdotM.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18A1781EA8300D5C121 /* AdWhirlAdapterMdotM.m */; };
 		C1A1B1F61781EA8300D5C121 /* AdWhirlAdapterMdotM.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18A1781EA8300D5C121 /* AdWhirlAdapterMdotM.m */; };
 		C1A1B1F71781EA8300D5C121 /* AdWhirlAdapterMillennial.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18B1781EA8300D5C121 /* AdWhirlAdapterMillennial.h */; };
 		C1A1B1F81781EA8300D5C121 /* AdWhirlAdapterMillennial.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18B1781EA8300D5C121 /* AdWhirlAdapterMillennial.h */; };
-		C1A1B1F91781EA8300D5C121 /* AdWhirlAdapterMillennial.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18C1781EA8300D5C121 /* AdWhirlAdapterMillennial.m */; };
 		C1A1B1FA1781EA8300D5C121 /* AdWhirlAdapterMillennial.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18C1781EA8300D5C121 /* AdWhirlAdapterMillennial.m */; };
 		C1A1B1FB1781EA8300D5C121 /* AdWhirlAdapterMillennial.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18C1781EA8300D5C121 /* AdWhirlAdapterMillennial.m */; };
 		C1A1B1FC1781EA8300D5C121 /* AdWhirlAdapterNexage.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18D1781EA8300D5C121 /* AdWhirlAdapterNexage.h */; };
 		C1A1B1FD1781EA8300D5C121 /* AdWhirlAdapterNexage.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18D1781EA8300D5C121 /* AdWhirlAdapterNexage.h */; };
-		C1A1B1FE1781EA8300D5C121 /* AdWhirlAdapterNexage.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18E1781EA8300D5C121 /* AdWhirlAdapterNexage.m */; };
 		C1A1B1FF1781EA8300D5C121 /* AdWhirlAdapterNexage.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18E1781EA8300D5C121 /* AdWhirlAdapterNexage.m */; };
 		C1A1B2001781EA8300D5C121 /* AdWhirlAdapterNexage.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B18E1781EA8300D5C121 /* AdWhirlAdapterNexage.m */; };
 		C1A1B2011781EA8300D5C121 /* AdWhirlAdapterOneRiot.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18F1781EA8300D5C121 /* AdWhirlAdapterOneRiot.h */; };
 		C1A1B2021781EA8300D5C121 /* AdWhirlAdapterOneRiot.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B18F1781EA8300D5C121 /* AdWhirlAdapterOneRiot.h */; };
-		C1A1B2031781EA8300D5C121 /* AdWhirlAdapterOneRiot.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1901781EA8300D5C121 /* AdWhirlAdapterOneRiot.m */; };
 		C1A1B2041781EA8300D5C121 /* AdWhirlAdapterOneRiot.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1901781EA8300D5C121 /* AdWhirlAdapterOneRiot.m */; };
 		C1A1B2051781EA8300D5C121 /* AdWhirlAdapterOneRiot.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1901781EA8300D5C121 /* AdWhirlAdapterOneRiot.m */; };
 		C1A1B2061781EA8300D5C121 /* AdWhirlAdapterQuattro.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1911781EA8300D5C121 /* AdWhirlAdapterQuattro.h */; };
 		C1A1B2071781EA8300D5C121 /* AdWhirlAdapterQuattro.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1911781EA8300D5C121 /* AdWhirlAdapterQuattro.h */; };
-		C1A1B2081781EA8300D5C121 /* AdWhirlAdapterQuattro.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1921781EA8300D5C121 /* AdWhirlAdapterQuattro.m */; };
 		C1A1B2091781EA8300D5C121 /* AdWhirlAdapterQuattro.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1921781EA8300D5C121 /* AdWhirlAdapterQuattro.m */; };
 		C1A1B20A1781EA8300D5C121 /* AdWhirlAdapterQuattro.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1921781EA8300D5C121 /* AdWhirlAdapterQuattro.m */; };
 		C1A1B20B1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1931781EA8300D5C121 /* AdWhirlAdapterVideoEgg.h */; };
 		C1A1B20C1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1931781EA8300D5C121 /* AdWhirlAdapterVideoEgg.h */; };
-		C1A1B20D1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1941781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m */; };
 		C1A1B20E1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1941781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m */; };
 		C1A1B20F1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1941781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m */; };
 		C1A1B2101781EA8300D5C121 /* AdWhirlAdapterZestADZ.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1951781EA8300D5C121 /* AdWhirlAdapterZestADZ.h */; };
 		C1A1B2111781EA8300D5C121 /* AdWhirlAdapterZestADZ.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1951781EA8300D5C121 /* AdWhirlAdapterZestADZ.h */; };
-		C1A1B2121781EA8300D5C121 /* AdWhirlAdapterZestADZ.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1961781EA8300D5C121 /* AdWhirlAdapterZestADZ.m */; };
 		C1A1B2131781EA8300D5C121 /* AdWhirlAdapterZestADZ.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1961781EA8300D5C121 /* AdWhirlAdapterZestADZ.m */; };
 		C1A1B2141781EA8300D5C121 /* AdWhirlAdapterZestADZ.m in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B1961781EA8300D5C121 /* AdWhirlAdapterZestADZ.m */; };
 		C1A1B2151781EA8300D5C121 /* AdWhirlAdNetworkAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1971781EA8300D5C121 /* AdWhirlAdNetworkAdapter.h */; };
@@ -763,6 +764,21 @@
 		C10857C91770A9F300845353 /* MalcomLib-iphoneos-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MalcomLib-iphoneos-Prefix.pch"; sourceTree = "<group>"; };
 		C10857CA1770A9F300845353 /* MalcomLib_iphoneos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MalcomLib_iphoneos.h; sourceTree = "<group>"; };
 		C10857CC1770A9F300845353 /* MalcomLib_iphoneos.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MalcomLib_iphoneos.m; sourceTree = "<group>"; };
+		C14A254D1784210F00F2804F /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
+		C14A254F1784211E00F2804F /* libz.1.2.5.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.2.5.dylib; path = usr/lib/libz.1.2.5.dylib; sourceTree = SDKROOT; };
+		C14A25511784212800F2804F /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		C14A25531784218E00F2804F /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		C14A25551784219700F2804F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		C14A2557178421A200F2804F /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		C14A2559178421A900F2804F /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		C14A255B178421AF00F2804F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		C14A255D178421B800F2804F /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		C14A255F178421C000F2804F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C14A2561178421C700F2804F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		C14A2563178421CE00F2804F /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C14A2565178421D600F2804F /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		C14A2567178421DC00F2804F /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		C14A2569178421E300F2804F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		C158F74D1771C1C7009EA8A0 /* libMalcomLib-iphonesimulator.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libMalcomLib-iphonesimulator.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C158F7511771C1C7009EA8A0 /* MalcomLib-iphonesimulator-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MalcomLib-iphonesimulator-Prefix.pch"; sourceTree = "<group>"; };
 		C158F7521771C1C7009EA8A0 /* MalcomLib_iphonesimulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MalcomLib_iphonesimulator.h; sourceTree = "<group>"; };
@@ -1057,6 +1073,21 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C14A256A178421E300F2804F /* Security.framework in Frameworks */,
+				C14A2568178421DC00F2804F /* AdSupport.framework in Frameworks */,
+				C14A2566178421D600F2804F /* MediaPlayer.framework in Frameworks */,
+				C14A2564178421CE00F2804F /* AVFoundation.framework in Frameworks */,
+				C14A2562178421C700F2804F /* CFNetwork.framework in Frameworks */,
+				C14A2560178421C100F2804F /* SystemConfiguration.framework in Frameworks */,
+				C14A255E178421B800F2804F /* MobileCoreServices.framework in Frameworks */,
+				C14A255C178421AF00F2804F /* QuartzCore.framework in Frameworks */,
+				C14A255A178421A900F2804F /* CoreTelephony.framework in Frameworks */,
+				C14A2558178421A200F2804F /* CoreLocation.framework in Frameworks */,
+				C14A25561784219700F2804F /* AudioToolbox.framework in Frameworks */,
+				C14A25541784218F00F2804F /* MessageUI.framework in Frameworks */,
+				C14A25521784212800F2804F /* StoreKit.framework in Frameworks */,
+				C14A25501784211F00F2804F /* libz.1.2.5.dylib in Frameworks */,
+				C14A254E1784210F00F2804F /* iAd.framework in Frameworks */,
 				C10857491770A5F500845353 /* CoreGraphics.framework in Frameworks */,
 				C108574B1770A5F500845353 /* UIKit.framework in Frameworks */,
 				C10857471770A5F500845353 /* Foundation.framework in Frameworks */,
@@ -1111,6 +1142,21 @@
 		C108573A1770A5F500845353 = {
 			isa = PBXGroup;
 			children = (
+				C14A2569178421E300F2804F /* Security.framework */,
+				C14A2567178421DC00F2804F /* AdSupport.framework */,
+				C14A2565178421D600F2804F /* MediaPlayer.framework */,
+				C14A2563178421CE00F2804F /* AVFoundation.framework */,
+				C14A2561178421C700F2804F /* CFNetwork.framework */,
+				C14A255F178421C000F2804F /* SystemConfiguration.framework */,
+				C14A255D178421B800F2804F /* MobileCoreServices.framework */,
+				C14A255B178421AF00F2804F /* QuartzCore.framework */,
+				C14A2559178421A900F2804F /* CoreTelephony.framework */,
+				C14A2557178421A200F2804F /* CoreLocation.framework */,
+				C14A25551784219700F2804F /* AudioToolbox.framework */,
+				C14A25531784218E00F2804F /* MessageUI.framework */,
+				C14A25511784212800F2804F /* StoreKit.framework */,
+				C14A254F1784211E00F2804F /* libz.1.2.5.dylib */,
+				C14A254D1784210F00F2804F /* iAd.framework */,
 				C108574C1770A5F500845353 /* MalcomLibProject */,
 				C10857651770A5F500845353 /* MalcomLibProjectTests */,
 				C10857C71770A9F300845353 /* MalcomLib-iphoneos */,
@@ -2639,20 +2685,6 @@
 				C1A1B1671781EA6C00D5C121 /* MCMStatsManager.m in Sources */,
 				C1A1B16E1781EA6C00D5C121 /* MCMStatsLocatorService.m in Sources */,
 				C1A1B1731781EA6C00D5C121 /* MCMStatsSubBeacon.m in Sources */,
-				C1A1B1D11781EA8300D5C121 /* AdWhirlAdapterBrightRoll.m in Sources */,
-				C1A1B1D61781EA8300D5C121 /* AdWhirlAdapterGoogleAdMobAds.m in Sources */,
-				C1A1B1DB1781EA8300D5C121 /* AdWhirlAdapterGoogleAdSense.m in Sources */,
-				C1A1B1E01781EA8300D5C121 /* AdWhirlAdapterGreystripe.m in Sources */,
-				C1A1B1E51781EA8300D5C121 /* AdWhirlAdapterIAd.m in Sources */,
-				C1A1B1EA1781EA8300D5C121 /* AdWhirlAdapterInMobi.m in Sources */,
-				C1A1B1EF1781EA8300D5C121 /* AdWhirlAdapterJumpTap.m in Sources */,
-				C1A1B1F41781EA8300D5C121 /* AdWhirlAdapterMdotM.m in Sources */,
-				C1A1B1F91781EA8300D5C121 /* AdWhirlAdapterMillennial.m in Sources */,
-				C1A1B1FE1781EA8300D5C121 /* AdWhirlAdapterNexage.m in Sources */,
-				C1A1B2031781EA8300D5C121 /* AdWhirlAdapterOneRiot.m in Sources */,
-				C1A1B2081781EA8300D5C121 /* AdWhirlAdapterQuattro.m in Sources */,
-				C1A1B20D1781EA8300D5C121 /* AdWhirlAdapterVideoEgg.m in Sources */,
-				C1A1B2121781EA8300D5C121 /* AdWhirlAdapterZestADZ.m in Sources */,
 				C1A1B21D1781EA8300D5C121 /* AdWhirlAdapterCustom.m in Sources */,
 				C1A1B2221781EA8300D5C121 /* AdWhirlAdapterEvent.m in Sources */,
 				C1A1B2271781EA8300D5C121 /* AdWhirlAdapterGeneric.m in Sources */,
@@ -3054,6 +3086,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomLibProject/MalcomLibProject-Prefix.pch";
 				INFOPLIST_FILE = "MalcomLibProject/MalcomLibProject-Info.plist";
@@ -3068,6 +3101,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomLibProject/MalcomLibProject-Prefix.pch";
 				INFOPLIST_FILE = "MalcomLibProject/MalcomLibProject-Info.plist";
