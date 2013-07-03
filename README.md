@@ -25,15 +25,15 @@ Integration
    * MobileCoreServices.framework
    * QuartzCore.framework
    * CoreTelephony.framework
-   * CoreLocation.framework (Optional if app works whith versions minor than 5.0)
+   * CoreLocation.framework
    * AudioToolbox.framework
    * MessageUI.framework
    * CoreGraphics.framework
    * StoreKit.framework
    * libz.1.2.5.dylib
-   * iAd.framework (only for ad module)
+   * iAd.framework (only for ad module) (Optional if app works whith versions minor than 5.0)
 
-* In target, Link Binary With Libraries, set CoreLocation.framework like 'Optional'.
+* In target, Link Binary With Libraries, set iAd.framework like 'Optional'.
 
 * Add in "Other C Flags", in production:
         
