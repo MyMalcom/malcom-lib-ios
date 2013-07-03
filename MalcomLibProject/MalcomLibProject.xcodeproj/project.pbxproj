@@ -1142,21 +1142,6 @@
 		C108573A1770A5F500845353 = {
 			isa = PBXGroup;
 			children = (
-				C14A2569178421E300F2804F /* Security.framework */,
-				C14A2567178421DC00F2804F /* AdSupport.framework */,
-				C14A2565178421D600F2804F /* MediaPlayer.framework */,
-				C14A2563178421CE00F2804F /* AVFoundation.framework */,
-				C14A2561178421C700F2804F /* CFNetwork.framework */,
-				C14A255F178421C000F2804F /* SystemConfiguration.framework */,
-				C14A255D178421B800F2804F /* MobileCoreServices.framework */,
-				C14A255B178421AF00F2804F /* QuartzCore.framework */,
-				C14A2559178421A900F2804F /* CoreTelephony.framework */,
-				C14A2557178421A200F2804F /* CoreLocation.framework */,
-				C14A25551784219700F2804F /* AudioToolbox.framework */,
-				C14A25531784218E00F2804F /* MessageUI.framework */,
-				C14A25511784212800F2804F /* StoreKit.framework */,
-				C14A254F1784211E00F2804F /* libz.1.2.5.dylib */,
-				C14A254D1784210F00F2804F /* iAd.framework */,
 				C108574C1770A5F500845353 /* MalcomLibProject */,
 				C10857651770A5F500845353 /* MalcomLibProjectTests */,
 				C10857C71770A9F300845353 /* MalcomLib-iphoneos */,
@@ -1195,6 +1180,7 @@
 		C108574C1770A5F500845353 /* MalcomLibProject */ = {
 			isa = PBXGroup;
 			children = (
+				C14A256B17842BD900F2804F /* Frameworks */,
 				C158F7911771C471009EA8A0 /* Lib */,
 				C10857551770A5F500845353 /* MCMAppDelegate.h */,
 				C10857561770A5F500845353 /* MCMAppDelegate.m */,
@@ -1249,6 +1235,28 @@
 				C10857C91770A9F300845353 /* MalcomLib-iphoneos-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		C14A256B17842BD900F2804F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C14A2569178421E300F2804F /* Security.framework */,
+				C14A2567178421DC00F2804F /* AdSupport.framework */,
+				C14A2565178421D600F2804F /* MediaPlayer.framework */,
+				C14A2563178421CE00F2804F /* AVFoundation.framework */,
+				C14A2561178421C700F2804F /* CFNetwork.framework */,
+				C14A255F178421C000F2804F /* SystemConfiguration.framework */,
+				C14A255D178421B800F2804F /* MobileCoreServices.framework */,
+				C14A255B178421AF00F2804F /* QuartzCore.framework */,
+				C14A2559178421A900F2804F /* CoreTelephony.framework */,
+				C14A2557178421A200F2804F /* CoreLocation.framework */,
+				C14A25551784219700F2804F /* AudioToolbox.framework */,
+				C14A25531784218E00F2804F /* MessageUI.framework */,
+				C14A25511784212800F2804F /* StoreKit.framework */,
+				C14A254F1784211E00F2804F /* libz.1.2.5.dylib */,
+				C14A254D1784210F00F2804F /* iAd.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		C158F74F1771C1C7009EA8A0 /* MalcomLib-iphonesimulator */ = {
