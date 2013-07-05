@@ -56,7 +56,6 @@
     [settings setValue:uuid forKey:kMCMCoreKeyMalcomAppId];
     [settings setValue:secretKey forKey:kMCMCoreKeyAssetsAppSecretKey];
     
-    //[settings setValue:kMCMBaseUrl forKey:kMCMCoreKeyMalcomBaseUrl];
     [settings setValue:urlApi forKey:kMCMCoreKeyMalcomBaseUrl];
     [settings setValue:kMCMAdwhirlURL forKey:@"AdWhirlBaseUrl"];
     [settings setValue:adId forKey:@"AdWhirlId"];
@@ -67,6 +66,10 @@
     if (bundlePath != nil) {
         [settings writeToFile:bundlePath atomically:YES];
     }
+    
+    // Automatic initialization
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 + (void)showLog:(BOOL)logActivated {
