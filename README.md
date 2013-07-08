@@ -25,6 +25,7 @@ platform :ios, '5.0'
 * Add one of available versions of library:
     * Static library: Add the folder of static library. If you don't want to use the 'ad module', just delete the 'ads' folder.
     * Source library: Add source in project. In case that you don't want to use any module (Configuration, Ad or Notifications) you can delete the not desired folder.
+    (If your project has ARC enabled, you should add the flag "-fno-objc-arc" to Malcom's files in target, Build Phases, Compile Sources)
     
     We strongly recommend to use the static library.
 
@@ -49,13 +50,6 @@ platform :ios, '5.0'
 
 * In target, Link Binary With Libraries, set iAd.framework like 'Optional'.
 
-* Add in "Other C Flags", in production:
-        
-        -DDISTRIBUTION=1
-
-* Add in "Other linker Flags"
-       
-        -all_load -ObjC 
 
 Sample App
 ----------
