@@ -8,7 +8,7 @@
 //
 // Singletons, AppDelegates and top-level data. SYNTHESIZE_SINGLETON_FOR_CLASS macro
 // http://cocoawithlove.com/2008/11/singletons-appdelegates-and-top-level.html
-// 
+//
 
 #import "MCMStatsLocatorService.h"
 #import "MCMStatsManager.h"
@@ -16,7 +16,7 @@
 #import "MCMLog.h"
 
 #define HARDCODED_LAT 41.389939
-#define HARDCODED_LNG 2.177603 
+#define HARDCODED_LNG 2.177603
 #define MIN_MOVEMENT 100
 
 typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
@@ -36,7 +36,7 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
 	if (self != nil) {
 		locationManager = [[[CLLocationManager alloc] init] retain];
 		locationManager.delegate = self; // Tells the location manager to send updates to this object
-		self.currentLocation = [[[CLLocation alloc] initWithLatitude:HARDCODED_LAT longitude:HARDCODED_LNG] autorelease];
+		self.currentLocation = nil;
 		desiredPrecisions = [[NSArray alloc] initWithObjects:[NSNumber numberWithInt:10000], [NSNumber numberWithInt:4000], [NSNumber numberWithInt:2000],[NSNumber numberWithInt:MIN_MOVEMENT * 2], nil];
 		desiredAccuracies = [[NSArray alloc] initWithObjects:[NSNumber numberWithDouble:kCLLocationAccuracyThreeKilometers], [NSNumber numberWithDouble:kCLLocationAccuracyKilometer], [NSNumber numberWithDouble:kCLLocationAccuracyHundredMeters],[NSNumber numberWithDouble:kCLLocationAccuracyBest], nil];
 		self.locationSuccessful = NO;
@@ -77,33 +77,12 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
 - (void) locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation
 {
     
-#if TARGET_IPHONE_SIMULATOR
-    //Set the location for simulator
-    newLocation = currentLocation;
-    
-    MCMLog(@"Hardcoded location: %f,%f",currentLocation.coordinate.latitude,currentLocation.coordinate.longitude);
-#endif
-    
-    //Check if there is completition block to call with the location
-    if (self.completionBlock != nil) {
-        
-        //Stop the location updates
-        [self cancelUpdates];
-        
-        //Calls the completition block with the location
-        self.completionBlock(newLocation,nil);
-        
-    }
-    
-    [[MCMStatsManager sharedInstance] setLocation:newLocation];
-    [self setCurrentLocation:newLocation];
-
     Class klass = NSClassFromString(@"CLGeocoder");
     
     if (klass != nil) {
         
         CLGeocoder *geocoder = [[[CLGeocoder alloc] init] autorelease];
-        [geocoder reverseGeocodeLocation:newLocation 
+        [geocoder reverseGeocodeLocation:newLocation
                        completionHandler:^(NSArray *placemarks, NSError *error) {
                            
                            MCMLog(@"reverseGeocodeLocation:completionHandler: Completion Handler called!");
@@ -118,7 +97,7 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
                            if(placemarks && placemarks.count > 0)
                                
                            {
-                               //do something   
+                               //do something
                                CLPlacemark *topResult = [placemarks objectAtIndex:0];
                                
                                [[MCMStatsManager sharedInstance] setCity:[topResult locality]];
@@ -128,7 +107,9 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
         
     }
     
-    MCMLog(@"Location updated");
+    MCMLog(@"latitude %+.6f, longitude %+.6f\n", newLocation.coordinate.latitude, newLocation.coordinate.longitude);
+	
+    MCMLog(@"horizontalAccuracy: %+.6f, verticalAccuracy %+.6f, bestAccuracy %+.6f", newLocation.horizontalAccuracy, newLocation.verticalAccuracy, kCLLocationAccuracyBest);
     
 	// If it's a relatively recent event, turn off updates to save power
 	NSDate* eventDate = newLocation.timestamp;
@@ -143,10 +124,10 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
         MCMLog(@"invalid or unavailable measurement");
 		[self setLocationSuccessful:NO];
 		return;
-	} 
+	}
 	
 	
-	if (abs(howRecent) < 5.0 && newLocation.horizontalAccuracy < [self desiredPrecision]) //< 100) 
+	if (abs(howRecent) < 5.0 && newLocation.horizontalAccuracy < [self desiredPrecision]) //< 100)
 	{
 		// if its fresh stop updating
         MCMLog(@"stop updating location latitude %+.6f, longitude %+.6f\n, DesiredIndex:%d", newLocation.coordinate.latitude, newLocation.coordinate.longitude, desiredIndex);
@@ -155,11 +136,34 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
 		[self setLocationSuccessful:YES];
 		[self setLocating: NO];
 		if (desiredIndex < [desiredPrecisions count] - 1) { desiredIndex++; }
-	} else 
+	} else
 	{
 		[self setLocationSuccessful:NO];
 	}
-
+    
+#if TARGET_IPHONE_SIMULATOR
+    //Set the location for simulator
+    newLocation = [[[CLLocation alloc] initWithLatitude:HARDCODED_LAT longitude:HARDCODED_LNG] autorelease];
+    
+    MCMLog(@"Hardcoded location: %f,%f",newLocation.coordinate.latitude,newLocation.coordinate.longitude);
+#endif
+    
+    //Check if there is not completition block to update the location
+    if (self.completionBlock == nil) {
+        
+		[[MCMStatsManager sharedInstance] setLocation:newLocation];
+		[self setCurrentLocation:newLocation];
+        
+    } else {
+        
+        //Stop the location updates
+        [self cancelUpdates];
+        
+        //Calls the completition block with the location
+        self.completionBlock(newLocation,nil);
+    }
+	
+    
 }
 
 // Called when there is an error getting the location
@@ -184,7 +188,7 @@ typedef void(^CompletionBlock)(CLLocation* location, NSError* error);
 	[locationManager stopUpdatingLocation];
 	[self setLocating: NO];
     
-//    self.completionBlock = nil;
+    //    self.completionBlock = nil;
 	
 }
 

@@ -148,30 +148,32 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  */
 - (void)requestCampaign{
     
+    CLLocation *location = [[MCMStatsLocatorService sharedInstance] currentLocation];
+    
+    NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
+    IF_IOS7_OR_GREATER(
+                       url = [NSString stringWithFormat:MCMCAMPAIGN_URL_IOS7, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier]];
+                       )
+    url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
+    
+    if (location != nil) {
+        //Add the location to the request
+        url = [NSString stringWithFormat:@"%@?lat=%.6f&lng=%.6f",url,location.coordinate.latitude,location.coordinate.longitude];
+    }
+    
+    MCMLog(@"Campaign request url: %@", url);
+    
+    MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
+    [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
+    [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
+    [request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
+    [request setTimeOutSeconds:8];
+    [request setDelegate:self];
+    [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"jsonDownloaded", @"type",nil]];
+    [request startAsynchronous];
+    
+    
     [[MCMStatsLocatorService sharedInstance] updateLocation:^(CLLocation *location, NSError *error) {
-        
-        NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
-        IF_IOS7_OR_GREATER(
-                           url = [NSString stringWithFormat:MCMCAMPAIGN_URL_IOS7, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier]];
-                           )
-        url = [[MCMCoreManager sharedInstance] malcomUrlForPath:url];
-        
-        if (location != nil) {
-            //Add the location to the request
-            url = [NSString stringWithFormat:@"%@?lat=%.6f&lng=%.6f",url,location.coordinate.latitude,location.coordinate.longitude];
-        }
-        
-        MCMLog(@"url: %@", url);
-        
-        MCMASIHTTPRequest *request = [MCMASIHTTPRequest requestWithURL:[NSURL URLWithString:url]];
-        [request setDownloadCache:[MCMASIDownloadCache sharedCache]];
-        [request setCachePolicy:ASIAskServerIfModifiedCachePolicy];
-        [request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy];
-        [request setTimeOutSeconds:8];
-        [request setDelegate:self];
-        [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"jsonDownloaded", @"type",nil]];
-        [request startAsynchronous];
-        
     }];
     
 }
@@ -428,7 +430,13 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     NSError *err = [request error];
     
-    MCMLog(@"Error receiving campaing file: %@", [err description]);
+    NSString *errorMessage = [NSString stringWithFormat:@"Error receiving campaing file: %@", [err description]];
+    MCMLog(errorMessage);
+    
+    //Calls the error block
+    if (self.errorBlock != nil) {
+        self.errorBlock(errorMessage);
+    }
     
 }
 
