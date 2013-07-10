@@ -149,13 +149,49 @@
     [subbeaconsDictionary_ removeObjectForKey:beaconName];
 }
 
++ (void)setTags:(NSArray *)tags {
+	
+    [[NSUserDefaults standardUserDefaults] setObject:tags forKey:@"mcm_tags"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+}
+
++ (NSArray *)getTags {
+    
+	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
+    
+}
+
++ (void)addTag:(NSString *)tagName{
+    NSMutableArray *tags = [NSMutableArray arrayWithArray:[self getTags]];
+    
+    if (![[self getTags] containsObject:tagName]) {
+        [tags addObject:tagName];
+        
+        [self setTags:tags];
+    }
+}
+
++ (void)removeTag:(NSString *)tagName{
+    NSMutableArray *newTags = [NSMutableArray arrayWithCapacity:1];
+    
+    if ([[self getTags] containsObject:tagName]) {
+        for (NSString *tag in [self getTags]) {
+            if (![tag isEqualToString:tagName]) {
+                [newTags addObject:tag];
+            }
+        }
+        
+        //Sets the new array without the tag
+        [self setTags:newTags];
+    }
+}
 
 
 + (void) clearCache{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMCMStatsCacheName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
-
 
 - (void) setCoreLocation:(BOOL)coreLocation{
     
@@ -236,7 +272,7 @@
     //NSString *tags = [MCMNotificationUtils formatApnsTagString:[[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"]];
     NSString *timeZone = [MCMCoreUtils userTimezone];
     NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
-    NSArray *tagsArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
+    NSArray *tagsArray = [MCMStatsManager getTags];
     
 	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",

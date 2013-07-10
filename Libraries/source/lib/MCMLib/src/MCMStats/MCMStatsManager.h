@@ -132,5 +132,33 @@
  */
 - (void)endSubBeaconWithName:(NSString *) beaconName andParams: (NSDictionary *) paramsDictionary;
 
+/**
+ Get tags
+ return tags
+ @since 2.0.0
+ */
++ (NSArray *)getTags;
+
+/**
+ Add tags to beacon
+ @param tags
+ @since 2.0.0
+ */
++ (void)setTags:(NSArray *)tags;
+
+/**
+ Adds single tag to tags array
+ @param tagName
+ @since 2.0.3
+ */
++ (void)addTag:(NSString *)tagName;
+
+/**
+ Removes single tag from tags array
+ @param tagName
+ @since 2.0.3
+ */
++ (void)removeTag:(NSString *)tagName;
+
 
 @end

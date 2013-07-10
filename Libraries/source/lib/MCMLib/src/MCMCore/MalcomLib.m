@@ -267,17 +267,26 @@
 }
 
 + (void)setTags:(NSArray *)tags {
-	
-    [[NSUserDefaults standardUserDefaults] setObject:tags forKey:@"mcm_tags"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	
+    [MCMStatsManager setTags:tags];
 }
 
 + (NSArray *)getTags {
-    
-	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
-
+	return [MCMStatsManager getTags];
 }
+
++ (void)addTag:(NSString *)tagName {
+    [MCMStatsManager addTag:tagName];
+}
+
++ (void)removeTag:(NSString *)tagName {
+    [MCMStatsManager removeTag:tagName];
+}
+
++ (void)removeAllTags {
+    [MCMStatsManager setTags:@[]];
+}
+
+
 
 + (void)setUserMetadata:(NSString *)userMetadata {
 	
