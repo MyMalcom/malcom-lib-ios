@@ -205,12 +205,16 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
             //Get the campaign selected for the current CampaignType
             MCMCampaignDTO *selectedCampaign = [MCMCampaignsHelper selectCampaign:campaignsArray forType:self.type];
             
-            //notifies it will be shown
-            if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
-                [self.delegate campaignViewWillLoad];
+            if (selectedCampaign != nil) {
+                //notifies it will be shown
+                if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewWillLoad)]){
+                    [self.delegate campaignViewWillLoad];
+                }
+                //shows the campaign
+                [self displayCampaign:selectedCampaign];
+            } else {
+                [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
             }
-            //shows the campaign
-            [self displayCampaign:selectedCampaign];
             
         } else {
             

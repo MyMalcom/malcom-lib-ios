@@ -381,6 +381,21 @@
 + (void)addCampaignCrossSelling:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
 
 /**
+ Method that request the available campaign banners from server and creates an array with the banners view controller.
+ @param ^completion block that will be executed when the proccess will finnish
+ @since 2.0.1
+ */
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion;
+
+/**
+ Method that request the available campaign banners from server and creates an array with the banners view controller.
+ @param ^completion block that will be executed when the proccess will finnish
+ @param ^error block that will be executed when an error occurs
+ @since 2.0.1
+ */
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
+
+/**
  Method that enables the campaigns banners retrieved from server and places it on the view.
  @param view UIView where is going to be placed the list of banners.
  @since 2.0.1
