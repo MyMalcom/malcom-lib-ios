@@ -203,14 +203,35 @@
  @param tags
  @since 2.0.0
  */
-+ (void)setTags:(NSArray *)tags;
++ (void)setTags:(NSArray *)tags __attribute__((deprecated("use addTag(NSString *tagName) instead")));
 
 /**
  Get tags
  return tags
  @since 2.0.0
  */
-+ (NSArray *) getTags;
++ (NSArray *)getTags;
+
+/**
+ Adds single tag to tags array
+ @param tagName
+ @since 2.0.3
+ */
++ (void)addTag:(NSString *)tagName;
+
+/**
+ Removes single tag from tags array
+ @param tagName
+ @since 2.0.3
+ */
++ (void)removeTag:(NSString *)tagName;
+
+/**
+ Clears the tags array
+ @param tagName
+ @since 2.0.3
+ */
++ (void)removeAllTags;
 
 /**
  Get location
