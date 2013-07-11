@@ -493,6 +493,13 @@
     }
 }
 
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion{
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING completion:completion error:nil];
+}
+
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error{
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING completion:completion error:error];}
+
 + (void)addCampaignPromotions:(UIView*)view{
     [self addCampaignPromotions:view withDelegate:nil];
 }
