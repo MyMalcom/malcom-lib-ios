@@ -123,9 +123,14 @@
         
         MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
         
-        //adds to the weighted array as ids as weight has
-        for(int j=0; j<campaignModel.weight;j++){
-            [weightedArray addObject:[NSNumber numberWithInt:i]];
+        //Only process the campaign if it has media file related
+        if (campaignModel.media != nil && ![campaignModel.media isEqualToString:@""]){
+            
+            //adds to the weighted array as ids as weight has
+            for(int j=0; j<campaignModel.weight;j++){
+                [weightedArray addObject:[NSNumber numberWithInt:i]];
+            }
+            
         }
         
     }
