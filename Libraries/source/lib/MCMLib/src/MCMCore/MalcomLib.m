@@ -97,6 +97,7 @@
 	[((MCMConfigSplashViewController *) splashController) setDelegate:((id<MCMConfigSplashDelegate>)delegate)];
        
     //splashLoaded_=YES;
+    [splashController.view setFrame:viewController.view.frame];
     
     //Add Splash to main window
     [viewController.view addSubview:splashController.view];    
