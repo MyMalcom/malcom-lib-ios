@@ -13,7 +13,11 @@
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCampaignsDefines.h"
 
+typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
+
 @interface MCMCampaignsHelper ()
+
+@property (nonatomic, copy) CompletionBlock completionBlock;
 
 /**
  Method that gets randomly weighted a campaign to serve.
@@ -65,7 +69,7 @@
 + (MCMCampaignDTO *)selectCampaign:(NSArray *)campaigns forType:(CampaignType)type{
     //Get the sources for the current CampaignType
     MCMCampaignDTO *selectedCampaign = nil;
-    if (type == IN_APP_CROSS_SELLING || type == IN_APP_PROMOTION) {
+    if (type == IN_APP_CROSS_SELLING || type == IN_APP_PROMOTION || type == IN_APP_RATE_MY_APP) {
         //Gets the one that fits better depending on the weight of the campaign
         NSArray *filteredCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:type];
         //Should have at least one campaign
@@ -111,8 +115,18 @@
     
 }
 
-+ (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRatem, bool userDisableRate))completion{
+- (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRate, bool userDisableRate))completion{
     
+    self.completionBlock = completion;
+    
+    //TODO: Pedro: Localizar los mensajes (con los de malcom por defecto)
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Prueba de alert para ratear"
+                                                        message:@"Si te mola esta app, ratéala"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Nunca!"
+                                              otherButtonTitles:@"Ratea ahora", @"Recuérdamelo más tarde", nil];
+	
+    [alertView show];
 }
 
 #pragma mark - Private methods
@@ -139,15 +153,46 @@
         
     }
     
-    //generates random number
-    int selection = arc4random()%[weightedArray count];
+    MCMCampaignDTO *selectedCampaignModel = nil;
     
-    //gets the random position and gets the id written on it. It will be one of the campaigns
-    MCMCampaignDTO *selectedCampaignModel = [campaigns objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
+    //If the campaigns have weights, evaluate them
+    if ([weightedArray count] > 0) {
+        int selection = arc4random()%[weightedArray count];
+        
+        //gets the random position and gets the id written on it. It will be one of the campaigns
+        selectedCampaignModel = [campaigns objectAtIndex:[[weightedArray objectAtIndex:selection] intValue]];
+        
+    } else {
+        //By default select the first campaign
+        selectedCampaignModel = [campaigns objectAtIndex:0];
+        
+    }
+        
     [weightedArray release];
     
     return selectedCampaignModel;
     
+}
+
+#pragma mark - UIAlertViewDelegate methods
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0:{
+            //Disable button Pressed
+            self.completionBlock(NO,YES);
+        }
+        case 1:{
+            //Rate button pressed
+            self.completionBlock(YES,NO);
+            
+        }
+        case 2:{
+            //RemindMeLater button pressed
+            self.completionBlock(NO,NO);
+            
+        }
+    }
 }
 
 

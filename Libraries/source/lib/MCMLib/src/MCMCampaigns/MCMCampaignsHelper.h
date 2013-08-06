@@ -15,7 +15,7 @@
 #define kCampaignRemindHit @"REMIND_LATER"
 #define kCampaignNeverRateHit @"NEVER_RATE"
 
-@interface MCMCampaignsHelper : NSObject
+@interface MCMCampaignsHelper : NSObject <UIAlertViewDelegate>
 
 + (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignDTO *)campaign;
 
@@ -31,6 +31,6 @@
  */
 + (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
 
-+ (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRatem, bool userDisableRate))completion;
+- (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRate, bool userDisableRate))completion;
 
 @end
