@@ -8,9 +8,11 @@
 
 #import "MCMCampaignsLogic.h"
 
-#define kAttrTimesBeforeRediming @"kAttrTimesBeforeRediming"
-#define kAttrDaysUntilPromt @"kAttrDaysUntilPromt"
+#define kAttrTimesBeforeRediming @"TIMES_BEFORE_REMINDING"
+#define kAttrDaysUntilPromt @"DAYS_UNTIL_PROMT"
 
+
+#define kRateMyAppParameters @"kRateMyAppParameters"
 #define kCampaignId @"kCampaignId"
 #define kNotShowAgain @"kNotShowAgain"
 #define kSessionsSinceLastAlert @"kSessionsSinceLastAlert"
@@ -22,6 +24,10 @@
 
 + (void)clearRateMyAppControlParameters;
 
++ (NSMutableDictionary *)getRateMyAppParameters;
+
++ (void)setRateMyAppParameters:(NSDictionary *)parameters;
+
 + (int)getDaysFromDateInMilliseconds:(long) millisecondsDate;
 
 @end
@@ -32,19 +38,19 @@
     //By default should show the dialog
     BOOL shouldShowAlert = YES;
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *parameters = [self getRateMyAppParameters];
     
-    if ([[defaults stringForKey:kCampaignId] isEqualToString:campaign.campaignId]) {
+    if ([[parameters objectForKey:kCampaignId] isEqualToString:campaign.campaignId]) {
         
         //Promotion limits
         int sessionLimit = [[campaign.clientLimitFeature objectForKey:kAttrTimesBeforeRediming] intValue];
         int daysLimit = [[campaign.clientLimitFeature objectForKey:kAttrDaysUntilPromt] intValue];
         
         //Check the client limits and "notShowAgain"
-        int sessionsSinceLastAlert = [defaults integerForKey:kSessionsSinceLastAlert];
-        int daysSinceLastAlert = [self getDaysFromDateInMilliseconds:[[defaults objectForKey:kDateLastDialog] longValue]];
+        int sessionsSinceLastAlert = [[parameters objectForKey:kSessionsSinceLastAlert] integerValue];
+        int daysSinceLastAlert = [self getDaysFromDateInMilliseconds:[[parameters objectForKey:kDateLastDialog] longValue]];
         
-        BOOL notShowAgain = [defaults boolForKey:kNotShowAgain];
+        BOOL notShowAgain = [[parameters objectForKey:kNotShowAgain] boolValue];
         BOOL notShouldShowAlert = (sessionsSinceLastAlert < sessionLimit) && (daysSinceLastAlert < daysLimit);
         
         if (notShowAgain || notShouldShowAlert) {
@@ -60,21 +66,22 @@
 
 + (void)updateRateAlertSession:(MCMCampaignDTO *)campaign {
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *parameters = [self getRateMyAppParameters];
     
     //Update the campaignId on userDefaults
-    if (![[defaults stringForKey:kCampaignId] isEqualToString:campaign.campaignId]) {
-        [defaults setValue:campaign.campaignId forKey:kCampaignId];
+    if (![[parameters objectForKey:kCampaignId] isEqualToString:campaign.campaignId]) {
+        [parameters setValue:campaign.campaignId forKey:kCampaignId];
     }
     
     //Update the session number
-    if ([defaults objectForKey:kSessionsSinceLastAlert]) {
-        [defaults setInteger:([defaults integerForKey:kSessionsSinceLastAlert] + 1) forKey:kSessionsSinceLastAlert];
+    if ([parameters objectForKey:kSessionsSinceLastAlert]) {
+        NSNumber *sessions = [NSNumber numberWithInt:([[parameters objectForKey:kSessionsSinceLastAlert] integerValue] + 1)];
+        [parameters setObject:sessions forKey:kSessionsSinceLastAlert];
     } else {
-        [defaults setInteger:0 forKey:kSessionsSinceLastAlert];
+        [parameters setObject:[NSNumber numberWithInt:1] forKey:kSessionsSinceLastAlert];
     }
     
-    [defaults synchronize];
+    [self setRateMyAppParameters:parameters];
     
 }
 
@@ -90,37 +97,59 @@
 
 + (void)updateRateAlertShowingAgain:(BOOL)showAgain {
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSMutableDictionary *parameters = [self getRateMyAppParameters];
     
     //If it is necesarry show the dialog again, update the control parameters
     if (showAgain) {
-        [defaults setObject:[NSNumber numberWithLong:CFAbsoluteTimeGetCurrent()] forKey:kDateLastDialog];
+        [parameters setObject:[NSNumber numberWithLong:[[NSDate date] timeIntervalSince1970]] forKey:kDateLastDialog];
         //Reset the session number
-        [defaults setInteger:0 forKey:kSessionsSinceLastAlert];
+        [parameters setObject:[NSNumber numberWithInt:1] forKey:kSessionsSinceLastAlert];
         
     } else {
-        [defaults setBool:YES forKey:kNotShowAgain];
+        [parameters setObject:[NSNumber numberWithBool:YES] forKey:kNotShowAgain];
     }
     
-    [defaults synchronize];
+    [self setRateMyAppParameters:parameters];
 }
 
 + (void)clearRateMyAppControlParameters {
     
+//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+//    
+//    [defaults removeObjectForKey:kCampaignId];
+//    [defaults removeObjectForKey:kNotShowAgain];
+//    [defaults removeObjectForKey:kSessionsSinceLastAlert];
+//    [defaults removeObjectForKey:kDateLastDialog];
+//    
+//    [defaults synchronize];
+    
+    [self setRateMyAppParameters:nil];
+    
+}
+
++ (NSMutableDictionary *)getRateMyAppParameters {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    [defaults removeObjectForKey:kCampaignId];
-    [defaults removeObjectForKey:kNotShowAgain];
-    [defaults removeObjectForKey:kSessionsSinceLastAlert];
-    [defaults removeObjectForKey:kDateLastDialog];
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:[defaults objectForKey:kRateMyAppParameters]];
+    
+//    if (!parameters) {
+//        parameters = [[NSMutableDictionary alloc] init];
+//    }
+    
+    return parameters;
+}
+
++ (void)setRateMyAppParameters:(NSDictionary *)parameters {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults setObject:parameters forKey:kRateMyAppParameters];
     
     [defaults synchronize];
-    
 }
 
 + (int)getDaysFromDateInMilliseconds:(long)millisecondsDate {
     
-    long currentDate = CFAbsoluteTimeGetCurrent();
+    long currentDate = [[NSDate date] timeIntervalSince1970];
     
     int days = (int) (currentDate - millisecondsDate) / (24 * 60 * 60 * 1000);
     

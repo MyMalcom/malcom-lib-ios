@@ -273,7 +273,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
             
             //Shows the alert if it's necessary
             if ([MCMCampaignsLogic shouldShowAlert:campaign]) {
-                
+                [self createRateAlert:campaign];
             }
             //Update the session number
             [MCMCampaignsLogic updateRateAlertSession:campaign];
@@ -315,7 +315,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     [self notifyCampaignDidLoad];
     
-    [MCMCampaignsHelper showRateMyAppAlert:campaign onCompletion:^(bool userRate, bool userDisableRate) {
+    MCMCampaignsHelper *helper = [[MCMCampaignsHelper alloc] init];
+    
+    [helper showRateMyAppAlert:campaign onCompletion:^(bool userRate, bool userDisableRate) {
         if (userRate) {
             //Open the Appstore
             //TODO: Pedro: Abrir el appstore (sobre la vista correspondiente)
