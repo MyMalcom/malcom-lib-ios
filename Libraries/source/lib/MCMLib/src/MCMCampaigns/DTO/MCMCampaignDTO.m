@@ -138,24 +138,19 @@
 
 - (void)hydratePromotionFeature:(NSDictionary *)data{
 	
-    if ([data objectForKey:@"clientLimitType"])
-		self.clientLimitType = [data objectForKey:@"iclientLimitTyped"];
-    if ([data objectForKey:@"limitValue"]){
-		self.limitValue = [[data objectForKey:@"limitValue"] intValue];
-    }else{
-        self.limitValue = -1;
-    }
+    if ([data objectForKey:@"promotionType"])
+		self.promotionType = [data objectForKey:@"promotionType"];
+    if ([data objectForKey:@"promotionIdentifier"])
+		self.promotionIdentifier = [data objectForKey:@"promotionIdentifier"];
     
 }
 
-- (void)hydrateClientLimitFeature:(NSDictionary *)data{
-	
-    if ([data objectForKey:@"clientLimitType"])
-		self.clientLimitType = [data objectForKey:@"iclientLimitTyped"];
-    if ([data objectForKey:@"limitValue"]){
-		self.limitValue = [[data objectForKey:@"limitValue"] intValue];
-    }else{
-        self.limitValue = -1;
+- (void)hydrateClientLimitFeature:(NSArray *)data{
+    
+    self.clientLimitFeature = [[NSMutableDictionary alloc] init];
+    
+    for (NSDictionary *dict in data) {
+        [self.clientLimitFeature setValue:[dict objectForKey:@"limitValue"] forKey:@"clientLimitType"];
     }
     
 }
