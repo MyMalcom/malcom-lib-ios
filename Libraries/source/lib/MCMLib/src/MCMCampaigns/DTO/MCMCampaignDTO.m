@@ -40,7 +40,7 @@
 - (void)hydrate:(NSDictionary *)data{
 	
     if ([data objectForKey:@"id"])
-		self.campaignId = [data objectForKey:@"id"];
+		self.campaignId = [[data objectForKey:@"id"] stringValue];
     if ([data objectForKey:@"name"])
 		self.name = [data objectForKey:@"name"];
     if ([data objectForKey:@"start"])
@@ -71,8 +71,8 @@
 		[self hydratePromotionFeature:[data objectForKey:@"promotionType"]];
 
     //Client limit feature
-    if ([data objectForKey:@"clientLimitFeature"]){
-        [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeature"]];
+    if ([data objectForKey:@"clientLimitFeatures"]){
+        [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeatures"]];
     }
     //Custom params
     if ([data objectForKey:@"customParamsFeature"] && [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"]){
@@ -150,7 +150,9 @@
     self.clientLimitFeature = [[NSMutableDictionary alloc] init];
     
     for (NSDictionary *dict in data) {
-        [self.clientLimitFeature setValue:[dict objectForKey:@"limitValue"] forKey:@"clientLimitType"];
+        NSString *clientLimit = [dict objectForKey:@"limitValue"];
+        NSString *limitType = [dict objectForKey:@"clientLimitType"];
+        [self.clientLimitFeature setValue:clientLimit forKey:limitType];
     }
     
 }
