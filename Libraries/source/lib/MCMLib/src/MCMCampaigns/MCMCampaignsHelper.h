@@ -9,6 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "MCMCampaignDTO.h"
 
+#define kCampaignImressionHit @"IMPRESSION"
+#define kCampaignClickHit @"CLICK"
+#define KCampaignRateHit @"RATE"
+#define kCampaignRemindHit @"REMIND_LATER"
+#define kCampaignNeverRateHit @"NEVER_RATE"
+
 @interface MCMCampaignsHelper : NSObject
 
 + (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignDTO *)campaign;
@@ -24,5 +30,7 @@
  @since 2.0.1
  */
 + (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
+
++ (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRatem, bool userDisableRate))completion;
 
 @end

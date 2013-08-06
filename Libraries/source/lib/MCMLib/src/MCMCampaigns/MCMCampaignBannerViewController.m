@@ -222,7 +222,7 @@
         MCMLog(@"IN_APP_PROMOTION banner pressed");
     }
     
-    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignDTO];
+    [MCMCampaignsHelper notifyServer:kCampaignClickHit andCampaign:self.currentCampaignDTO];
     
 }
 
@@ -461,7 +461,7 @@
         }
         
         //Notify the impression to Malcom server
-        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
+        [MCMCampaignsHelper notifyServer:kCampaignImressionHit andCampaign:self.currentCampaignDTO];
     }
 
 }

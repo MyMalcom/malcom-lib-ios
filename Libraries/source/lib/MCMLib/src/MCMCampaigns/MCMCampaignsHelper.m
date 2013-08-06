@@ -111,6 +111,10 @@
     
 }
 
++ (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRatem, bool userDisableRate))completion{
+    
+}
+
 #pragma mark - Private methods
 
 + (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns{
