@@ -17,3 +17,16 @@
 
 #define CURRENT_CAMPAIGN_VIEW_TAG 100
 #define DEFAULT_DURATION 15
+
+// RateMyApp Alert
+#define RATE_TITLE_LOC @"_Malcom_rate_title"
+#define RATE_MESSAGE_LOC @"_Malcom_rate_message"
+#define RATE_BUTTON_LOC @"_Malcom_rate_button"
+#define RATE_REMIND_LOC @"_Malcom_remind_button"
+#define RATE_DISABLE_LOC @"_Malcom_disable_button"
+
+#define RATE_TITLE_DEFAULT @"Rate My App"
+#define RATE_MESSAGE_DEFAULT @"If you enjoy using this app, please take a moment to rate it. Thanks for your support!"
+#define RATE_RATE_BUTTON_DEFAULT @"Rate!"
+#define RATE_REMIND_BUTTON_DEFAULT @"Remind me later"
+#define RATE_DISABLE_BUTTON_DEFAULT @"No, thanks"

@@ -119,12 +119,34 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
     
     self.completionBlock = completion;
     
-    //TODO: Pedro: Localizar los mensajes (con los de malcom por defecto)
-	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Prueba de alert para ratear"
-                                                        message:@"Si te mola esta app, ratéala"
+    NSString *title = NSLocalizedString(RATE_TITLE_LOC, @"");
+    NSString *message = NSLocalizedString(RATE_MESSAGE_LOC, @"");
+    NSString *rateButton = NSLocalizedString(RATE_BUTTON_LOC, @"");
+    NSString *remindButton = NSLocalizedString(RATE_REMIND_LOC,@"");
+    NSString *disableButton = NSLocalizedString(RATE_DISABLE_LOC,@"");
+    
+    //If there is no localized string, replace by the default one
+    if ([title isEqualToString:RATE_TITLE_LOC]) {
+        title = RATE_TITLE_DEFAULT;
+    }
+    if ([message isEqualToString:RATE_MESSAGE_LOC]) {
+        message = RATE_MESSAGE_DEFAULT;
+    }
+    if ([rateButton isEqualToString:RATE_BUTTON_LOC]) {
+        rateButton = RATE_RATE_BUTTON_DEFAULT;
+    }
+    if ([remindButton isEqualToString:RATE_REMIND_LOC]) {
+        remindButton = RATE_REMIND_BUTTON_DEFAULT;
+    }
+    if ([disableButton isEqualToString:RATE_DISABLE_LOC]) {
+        disableButton = RATE_DISABLE_BUTTON_DEFAULT;
+    }
+    
+	UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:title
+                                                        message:message
                                                        delegate:self
-                                              cancelButtonTitle:@"Nunca!"
-                                              otherButtonTitles:@"Ratea ahora", @"Recuérdamelo más tarde", nil];
+                                              cancelButtonTitle:disableButton
+                                              otherButtonTitles:rateButton, remindButton, nil];
 	
     [alertView show];
 }
