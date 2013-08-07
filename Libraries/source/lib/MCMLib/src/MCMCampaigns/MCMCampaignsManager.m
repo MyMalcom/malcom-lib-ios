@@ -406,7 +406,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 - (void)notifyErrorLoadingCampaign:(NSString *)errorMessage{
     
     //Reports the error
-    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest:)]){
         [self.delegate campaignViewDidFailRequest:errorMessage];
     }
 }
@@ -430,8 +430,6 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         containerView = _campaignContainerView;
         
     }
-    
-    MCMLog(@"Screen size %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
     
     return containerView;
 }
