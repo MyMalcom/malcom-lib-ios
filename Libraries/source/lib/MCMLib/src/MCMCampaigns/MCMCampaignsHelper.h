@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 #import "MCMCampaignDTO.h"
 
 #define kCampaignImressionHit @"IMPRESSION"
@@ -32,5 +33,7 @@
 + (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
 
 - (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRate, bool userDisableRate))completion;
+
++ (void)openAppStoreWithAppId:(NSString *)appId withDelegate:(id<SKStoreProductViewControllerDelegate>)delegate andAppStoreContainerView:(UIView *)appStoreContainerView;
 
 @end

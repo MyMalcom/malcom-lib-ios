@@ -151,6 +151,51 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
     [alertView show];
 }
 
++ (void)openAppStoreWithAppId:(NSString *)appId withDelegate:(id<SKStoreProductViewControllerDelegate>)delegate andAppStoreContainerView:(UIView *)appStoreContainerView {
+    
+    if (appId.length > 0) {
+        
+        if(NSClassFromString(@"SKStoreProductViewController")) { // Checks for iOS 6 feature.
+            
+            SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
+            storeController.delegate = delegate; // productViewControllerDidFinish
+            
+            NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+            [f setNumberStyle:NSNumberFormatterDecimalStyle];
+            NSNumber * idApple = [f numberFromString:appId];
+            [f release];
+            NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : idApple };
+            
+            
+            [storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
+                if (result) {
+                    //if it doesnt have where to place the appstoreView it will place it on the VC handler of the banner container view
+                    if(!appStoreContainerView){
+                        id rootVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
+                        [rootVC presentViewController:storeController animated:YES completion:nil];
+                    }else{ //if it is specified, it will be placed on the appstoreContainerView
+                        [(UIViewController *)[appStoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
+                        
+                    }
+                    
+                } else {
+                    [[[UIAlertView alloc] initWithTitle:@"Uh oh!" message:@"There was a problem displaying the app" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
+                }
+            }];
+            
+            
+        } else { // Before iOS 6, we can only open the URL
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, appId]]];
+            
+        }
+    } else {
+        MCMLog(@"The campaign has no app identifier to show on appstore")
+        
+        [delegate productViewControllerDidFinish:nil];
+    }
+}
+
 #pragma mark - Private methods
 
 + (MCMCampaignDTO *)getCampaignPerWeight:(NSArray *)campaigns{
@@ -199,23 +244,27 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSLog(@"Dismissing With Button %d",buttonIndex);
     switch (buttonIndex) {
         case 0:{
             //Disable button Pressed
+            NSLog(@"Button index 0");
             self.completionBlock(NO,YES);
+            break;
         }
         case 1:{
             //Rate button pressed
+            NSLog(@"Button index 1");
             self.completionBlock(YES,NO);
-            
+            break;
         }
         case 2:{
+            NSLog(@"Button index 2");
             //RemindMeLater button pressed
             self.completionBlock(NO,NO);
-            
+            break;
         }
     }
 }
-
 
 @end

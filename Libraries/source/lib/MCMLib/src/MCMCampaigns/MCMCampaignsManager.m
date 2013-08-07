@@ -320,15 +320,16 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     [helper showRateMyAppAlert:campaign onCompletion:^(bool userRate, bool userDisableRate) {
         if (userRate) {
             //Open the Appstore
-            //TODO: Pedro: Abrir el appstore (sobre la vista correspondiente)
+            //TODO: Pedro: Quitar!!! Id de infovuelos para testing solo!!
+//            [campaign setPromotionIdentifier:@"298995425"];
+            
+            [MCMCampaignsHelper openAppStoreWithAppId:campaign.promotionIdentifier withDelegate:self andAppStoreContainerView:self.appstoreContainerView];
             
             //Update the control parameters
             [MCMCampaignsLogic updateRateAlertDontShowAgain];
             
             //Notify server
             [MCMCampaignsHelper notifyServer:KCampaignRateHit andCampaign:campaign];
-            
-            [self notifyCampaignDidFinish];
             
         } else if (userDisableRate) {
             //Update the control parameters
@@ -556,6 +557,19 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         [self.delegate campaignPressed:campaign];
     }
 
+}
+
+#pragma mark - SKStoreProductViewControllerDelegate Methods
+
+// Sent if the user requests that the page be dismissed
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    
+    if (viewController) {
+        [viewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    // Notify to delegate
+    [self notifyCampaignDidFinish];
 }
 
 @end

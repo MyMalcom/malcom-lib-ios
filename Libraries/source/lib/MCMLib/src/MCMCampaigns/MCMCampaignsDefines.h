@@ -18,6 +18,9 @@
 #define CURRENT_CAMPAIGN_VIEW_TAG 100
 #define DEFAULT_DURATION 15
 
+// AppStoreURL
+#define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
+
 // RateMyApp Alert
 #define RATE_TITLE_LOC @"_Malcom_rate_title"
 #define RATE_MESSAGE_LOC @"_Malcom_rate_message"
