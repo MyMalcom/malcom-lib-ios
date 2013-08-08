@@ -438,4 +438,19 @@
  */
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
 
+/**
+ Method that shows an alert for rate the app based on configured parameters on malcom server.
+ @param delegate Delegate with methods to be called for campaign control.
+ @since 2.0.3
+ */
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
+
+/**
+ Method that shows an alert for rate the app based on configured parameters on malcom server.
+ @param delegate Delegate with methods to be called for campaign control.
+ @param appStoreContainerView View where the appstore will be shown.
+ @since 2.0.3
+ */
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate andAppstoreContainerView:(UIView *)appStoreContainerView;
+
 @end
