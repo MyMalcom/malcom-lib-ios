@@ -97,6 +97,7 @@
 	[((MCMConfigSplashViewController *) splashController) setDelegate:((id<MCMConfigSplashDelegate>)delegate)];
        
     //splashLoaded_=YES;
+    [splashController.view setFrame:viewController.view.frame];
     
     //Add Splash to main window
     [viewController.view addSubview:splashController.view];    
@@ -443,24 +444,24 @@
 
 //  Campaings
 
-+ (void)addCampaignBanner:(UIView*)view{
++ (void)addCampaignBanner:(UIView*)view DEPRECATED_ATTRIBUTE{
 
     [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:nil];
 }
 
-+ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate{
++ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate DEPRECATED_ATTRIBUTE{
     
     [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:delegate];
 }
 
-+(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView{
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView DEPRECATED_ATTRIBUTE{
     
     [self addCampaignBanner:view withAppstoreContainerView:appStoreContainerView withDelegate:nil];
 }
 
-+(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate DEPRECATED_ATTRIBUTE{
     
-    [[MCMCampaignsManager sharedInstance] addBanner:view withAppstoreView:appStoreContainerView];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view withAppstoreView:appStoreContainerView];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
