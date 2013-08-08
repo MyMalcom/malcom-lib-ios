@@ -152,9 +152,11 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
  */
 - (void)requestCampaign{
     
+    //Get the last known location to make the geolocalized request
     CLLocation *location = [[MCMStatsLocatorService sharedInstance] currentLocation];
     
     NSString *url = [NSString stringWithFormat:MCMCAMPAIGN_URL, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils uniqueIdentifier]];
+    //In IOS 7 we use the advertisingId
     IF_IOS7_OR_GREATER(
                        url = [NSString stringWithFormat:MCMCAMPAIGN_URL_IOS7, [[MCMCoreManager sharedInstance] valueForKey:kMCMCoreKeyMalcomAppId], [MCMCoreUtils deviceIdentifier]];
                        )

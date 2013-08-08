@@ -53,7 +53,7 @@
 	//If no imageView set, we create one
 	if (self.imageView==nil){
         
-        UIImageView *splashImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, -10, self.view.frame.size.width, self.view.frame.size.height)];
+        UIImageView *splashImage = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         [splashImage setAutoresizingMask:UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth];
         [splashImage setContentMode:UIViewContentModeScaleAspectFill];
 		[self.view addSubview:splashImage];
