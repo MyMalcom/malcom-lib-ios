@@ -15,7 +15,7 @@
 
 + (MCMCampaignDTO *)selectCampaign:(NSArray *)campaigns forType:(CampaignType)type;
 
-+ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView;
++ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView withPlaceHolder:(UIImage *)placeHolderImage;
 
 /**
  Method that gets the campaigns with the selected type from multitype campaigns array.

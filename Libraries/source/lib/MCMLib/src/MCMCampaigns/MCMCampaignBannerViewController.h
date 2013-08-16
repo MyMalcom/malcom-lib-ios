@@ -47,7 +47,7 @@
  Method that initialize the campaign's banner in a view
  @since 2.0
  */
-- (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign;
+- (id)initInView:(UIView *)view withPlaceholder:(UIImage *)placeHolder andCampaign:(MCMCampaignDTO*)campaign;
 
 /**
  Method that shows the cross campaign banner with animation

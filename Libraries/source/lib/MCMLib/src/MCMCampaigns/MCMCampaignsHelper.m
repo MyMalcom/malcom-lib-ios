@@ -77,13 +77,14 @@
     return [selectedCampaign autorelease];
 }
 
-+ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView{
++ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView withPlaceHolder:(UIImage *)placeHolderImage{
     //Get the sources for the current CampaignType
     NSMutableArray *bannersArray = [[NSMutableArray alloc] initWithCapacity:1];
     
     for (int i=0;i<[campaigns count];i++) {
         //creates a banner with the specifications
-        MCMCampaignBannerViewController *bannerViewController = [[MCMCampaignBannerViewController alloc] initInView:containerView andCampaign:[campaigns objectAtIndex:i]];
+        MCMCampaignBannerViewController *bannerViewController = [[MCMCampaignBannerViewController alloc] initInView:containerView
+                                                                                                    withPlaceholder:placeHolderImage andCampaign:[campaigns objectAtIndex:i]];
         [bannerViewController.view setTag:i];
         
         [bannersArray addObject:bannerViewController];
