@@ -9,7 +9,7 @@
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCore.h"
 #import "MCMCampaignsHelper.h"
-
+#import "UIImageView+MCMWebCache.h"
 
 #define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
 
@@ -52,7 +52,7 @@
  Method that once it has the image in the memory it will be displayed on screen.
  @since 2.0.0
  */
-- (void)showImage;
+- (void)showBannerWithPlaceholder:(UIImage *)placeholder;
 
 @end
 
@@ -114,7 +114,7 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     
     [self configureView];
 }
@@ -283,14 +283,31 @@
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
+    //Sets the placeholder in the button
+//    [self.bannerButton setImage:nil forState:UIControlStateNormal];
+    
+    UIImage *placeholder = [UIImage imageNamed:@""];
+    
+    [self showBannerWithPlaceholder:placeholder];
+    
     NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
-    //launches the new connection asynchronously
-    NSURLRequest* request = [NSURLRequest requestWithURL:url
-                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                         timeoutInterval:20.0];
+    UIImageView *imageBannerView = [[UIImageView alloc] init];
+    [imageBannerView setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+
+        //When complete set the loaded image on the button
+        [self.bannerButton setImage:image forState:UIControlStateNormal];
+        
+    }];
     
-    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:[self retain]];
+    
+    //TODO: Pedro : Código antiguo: quitar    
+    //launches the new connection asynchronously
+//    NSURLRequest* request = [NSURLRequest requestWithURL:url
+//                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
+//                                         timeoutInterval:20.0];
+//    
+//    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:[self retain]];
 
 }
 
@@ -298,7 +315,7 @@
  Method that once it has the image in the memory it will be displayed on screen.
  @since 2.0.0
  */
-- (void)showImage{
+- (void)showBannerWithPlaceholder:(UIImage *)placeholder{
     
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
@@ -369,13 +386,18 @@
 
     
     //sets the image with the data media retrieved
-    UIImage *image = [UIImage imageWithData:self.dataMedia];
-    [self.bannerButton setImage:image forState:UIControlStateNormal];
+    if (self.dataMedia) {
+        UIImage *image = [UIImage imageWithData:self.dataMedia];
+        [self.bannerButton setImage:image forState:UIControlStateNormal];
+        
+    } else {
+        [self.bannerButton setImage:placeholder forState:UIControlStateNormal];
+    }
     [self.bannerButton addTarget:self action:@selector(bannerPressed) forControlEvents:UIControlEventTouchUpInside];
-    //[self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
-    //[self.bannerButton setBackgroundColor:[UIColor blackColor]];
-    [self.bannerButton setBackgroundColor:[UIColor clearColor]];
+//    [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
+    [self.bannerButton.imageView setContentMode:UIViewContentModeScaleToFill];
+    [self.bannerButton setBackgroundColor:[UIColor greenColor]];
+//    [self.bannerButton setBackgroundColor:[UIColor clearColor]];
 
     [self.view addSubview:self.bannerButton];
     
@@ -453,7 +475,7 @@
 
     //when connection is finished and self.dataMedia is not nill
     if(self.dataMedia != nil){
-        [self showImage];	 //shows the image
+        [self showBannerWithPlaceholder:nil];	 //shows the image
         
         //calls the delegate to advise that the image is loaded.
         if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){

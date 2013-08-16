@@ -242,7 +242,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 }
 
 /**
- Method that shows the selected campaign in the screen.
+ Method that shows the selected campaign on the screen.
  @since 2.0.0
  */
 - (void)displayCampaign:(MCMCampaignDTO *)campaign{
