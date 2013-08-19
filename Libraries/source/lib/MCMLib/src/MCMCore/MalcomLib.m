@@ -552,11 +552,11 @@
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
-    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:nil];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:nil];
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
-    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:error];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:error];
 }
 
 + (void)requestCampaignPromotionsWithPlaceHolder:(UIImage *)placeHolder
