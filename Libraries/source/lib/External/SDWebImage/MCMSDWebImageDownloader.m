@@ -10,8 +10,8 @@
 #import "MCMSDWebImageDownloaderOperation.h"
 #import <ImageIO/ImageIO.h>
 
-NSString *const SDWebImageDownloadStartNotification = @"SDWebImageDownloadStartNotification";
-NSString *const SDWebImageDownloadStopNotification = @"SDWebImageDownloadStopNotification";
+NSString *const MCMSDWebImageDownloadStartNotification = @"SDWebImageDownloadStartNotification";
+NSString *const MCMSDWebImageDownloadStopNotification = @"SDWebImageDownloadStopNotification";
 
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
@@ -42,15 +42,15 @@ static NSString *const kCompletedCallbackKey = @"completed";
 #pragma clang diagnostic pop
 
         // Remove observer in case it was previously added.
-        [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:SDWebImageDownloadStartNotification object:nil];
-        [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:SDWebImageDownloadStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:MCMSDWebImageDownloadStartNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:activityIndicator name:MCMSDWebImageDownloadStopNotification object:nil];
 
         [[NSNotificationCenter defaultCenter] addObserver:activityIndicator
                                                  selector:NSSelectorFromString(@"startActivity")
-                                                     name:SDWebImageDownloadStartNotification object:nil];
+                                                     name:MCMSDWebImageDownloadStartNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:activityIndicator
                                                  selector:NSSelectorFromString(@"stopActivity")
-                                                     name:SDWebImageDownloadStopNotification object:nil];
+                                                     name:MCMSDWebImageDownloadStopNotification object:nil];
     }
 }
 
