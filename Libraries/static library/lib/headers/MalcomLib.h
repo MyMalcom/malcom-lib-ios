@@ -378,14 +378,34 @@
  @param appStoreContainerView View where user wants to present the Appstore.
  @since 2.0.1
  */
+
 + (void)addCampaignCrossSelling:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
++ (void)addCampaignCrossSelling:(UIView*)view withAppstoreContainerView:(UIView*)appStoreContainerView withDelegate:(id<MCMCampaignsManagerDelegate>)delegate andPlaceHolder:(UIImage *)placeHolder;
+
+/**
+ Method that request the available campaign banners from server and creates an array with the banners view controller.
+ @param ^completion block that will be executed when the proccess will finnish
+ @since 2.0.1
+ */
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion;
+
+/**
+ Method that request the available campaign banners from server and creates an array with the banners view controller.
+ @param ^completion block that will be executed when the proccess will finnish
+ @param ^error block that will be executed when an error occurs
+ @since 2.0.1
+ */
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
++ (void)requestCampaignCrossSellingWithPlaceHolder:(UIImage *)placeHolder
+                                      onCompletion:(void (^)(NSArray * campaignBannersVC))completion
+                                             error:(void (^)(NSString *errorMessage))error;
 
 /**
  Method that enables the campaigns banners retrieved from server and places it on the view.
  @param view UIView where is going to be placed the list of banners.
  @since 2.0.1
  */
-+ (void)addCampaignPromotions:(UIView*)view;
++ (void)addCampaignPromotions:(UIView *)view;
 
 /**
  Method that enables the campaigns banners retrieved from server and places it on the view.
@@ -393,7 +413,8 @@
  @param id delegate for controlling the banner finishing, loading, failing and press
  @since 2.0.1
  */
-+ (void)addCampaignPromotions:(UIView*)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
++ (void)addCampaignPromotions:(UIView *)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate;
++ (void)addCampaignPromotions:(UIView *)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate andPlaceHolder:(UIImage *)placeHolder;
 
 /**
  Method that disables the campaigns banner retrieved from server and removes the current one.
@@ -414,6 +435,8 @@
  @since 2.0.1
  */
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion;
++ (void)requestCampaignPromotionsWithPlaceHolder:(UIImage *)placeHolder
+                                    onCompletion:(void (^)(NSArray * campaignBannersVC))completion;
 
 /**
  Method that request the available campaign banners from server and creates an array with the banners view controller.
@@ -422,5 +445,8 @@
  @since 2.0.1
  */
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
++ (void)requestCampaignPromotionsWithPlaceHolder:(UIImage *)placeHolder
+                                    onCompletion:(void (^)(NSArray * campaignBannersVC))completion
+                                           error:(void (^)(NSString *errorMessage))error;
 
 @end

@@ -287,7 +287,7 @@
     NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
     UIImageView *imageBannerView = [[UIImageView alloc] init];
-    [imageBannerView setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType) {
+    [imageBannerView setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, MCMSDImageCacheType cacheType) {
         
         if (!error) {
             
