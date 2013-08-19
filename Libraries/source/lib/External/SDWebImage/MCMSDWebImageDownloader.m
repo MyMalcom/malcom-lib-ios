@@ -16,7 +16,7 @@ NSString *const SDWebImageDownloadStopNotification = @"SDWebImageDownloadStopNot
 static NSString *const kProgressCallbackKey = @"progress";
 static NSString *const kCompletedCallbackKey = @"completed";
 
-@interface SDWebImageDownloader ()
+@interface MCMSDWebImageDownloader ()
 
 @property (strong, nonatomic) NSOperationQueue *downloadQueue;
 @property (weak, nonatomic) NSOperation *lastAddedOperation;
@@ -27,7 +27,7 @@ static NSString *const kCompletedCallbackKey = @"completed";
 
 @end
 
-@implementation SDWebImageDownloader
+@implementation MCMSDWebImageDownloader
 
 + (void)initialize
 {
@@ -54,7 +54,7 @@ static NSString *const kCompletedCallbackKey = @"completed";
     }
 }
 
-+ (SDWebImageDownloader *)sharedDownloader
++ (MCMSDWebImageDownloader *)sharedDownloader
 {
     static dispatch_once_t once;
     static id instance;
@@ -109,10 +109,10 @@ static NSString *const kCompletedCallbackKey = @"completed";
     return _downloadQueue.maxConcurrentOperationCount;
 }
 
-- (id<SDWebImageOperation>)downloadImageWithURL:(NSURL *)url options:(SDWebImageDownloaderOptions)options progress:(void (^)(NSUInteger, long long))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock
+- (id<MCMSDWebImageOperation>)downloadImageWithURL:(NSURL *)url options:(MCMSDWebImageDownloaderOptions)options progress:(void (^)(NSUInteger, long long))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock
 {
-    __block SDWebImageDownloaderOperation *operation;
-    __weak SDWebImageDownloader *wself = self;
+    __block MCMSDWebImageDownloaderOperation *operation;
+    __weak MCMSDWebImageDownloader *wself = self;
 
     [self addProgressCallback:progressBlock andCompletedBlock:completedBlock forURL:url createCallback:^
     {
@@ -121,10 +121,10 @@ static NSString *const kCompletedCallbackKey = @"completed";
         request.HTTPShouldHandleCookies = NO;
         request.HTTPShouldUsePipelining = YES;
         request.allHTTPHeaderFields = wself.HTTPHeaders;
-        operation = [SDWebImageDownloaderOperation.alloc initWithRequest:request options:options progress:^(NSUInteger receivedSize, long long expectedSize)
+        operation = [MCMSDWebImageDownloaderOperation.alloc initWithRequest:request options:options progress:^(NSUInteger receivedSize, long long expectedSize)
         {
             if (!wself) return;
-            SDWebImageDownloader *sself = wself;
+            MCMSDWebImageDownloader *sself = wself;
             NSArray *callbacksForURL = [sself callbacksForURL:url];
             for (NSDictionary *callbacks in callbacksForURL)
             {
@@ -135,7 +135,7 @@ static NSString *const kCompletedCallbackKey = @"completed";
         completed:^(UIImage *image, NSData *data, NSError *error, BOOL finished)
         {
             if (!wself) return;
-            SDWebImageDownloader *sself = wself;
+            MCMSDWebImageDownloader *sself = wself;
             NSArray *callbacksForURL = [sself callbacksForURL:url];
             if (finished)
             {
@@ -150,7 +150,7 @@ static NSString *const kCompletedCallbackKey = @"completed";
         cancelled:^
         {
             if (!wself) return;
-            SDWebImageDownloader *sself = wself;
+            MCMSDWebImageDownloader *sself = wself;
             [sself removeCallbacksForURL:url];
         }];
         [wself.downloadQueue addOperation:operation];

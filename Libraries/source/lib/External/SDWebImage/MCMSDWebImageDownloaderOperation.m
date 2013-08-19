@@ -11,7 +11,7 @@
 #import "UIImage+MCMMultiFormat.h"
 #import <ImageIO/ImageIO.h>
 
-@interface SDWebImageDownloaderOperation ()
+@interface MCMSDWebImageDownloaderOperation ()
 
 @property (copy, nonatomic) SDWebImageDownloaderProgressBlock progressBlock;
 @property (copy, nonatomic) SDWebImageDownloaderCompletedBlock completedBlock;
@@ -25,13 +25,13 @@
 
 @end
 
-@implementation SDWebImageDownloaderOperation
+@implementation MCMSDWebImageDownloaderOperation
 {
     size_t width, height;
     BOOL responseFromCached;
 }
 
-- (id)initWithRequest:(NSURLRequest *)request options:(SDWebImageDownloaderOptions)options progress:(void (^)(NSUInteger, long long))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock cancelled:(void (^)())cancelBlock
+- (id)initWithRequest:(NSURLRequest *)request options:(MCMSDWebImageDownloaderOptions)options progress:(void (^)(NSUInteger, long long))progressBlock completed:(void (^)(UIImage *, NSData *, NSError *, BOOL))completedBlock cancelled:(void (^)())cancelBlock
 {
     if ((self = [super init]))
     {
@@ -68,7 +68,7 @@
         {
             self.progressBlock(0, -1);
         }
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStartNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MCMSDWebImageDownloadStartNotification object:self];
 
         // Make sure to run the runloop in our background thread so it can process downloaded data
         // Note: we use a timeout to work around an issue with NSURLConnection cancel under iOS 5
@@ -93,7 +93,7 @@
     if (self.connection)
     {
         [self.connection cancel];
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MCMSDWebImageDownloadStopNotification object:self];
 
         // As we cancelled the connection, its callback won't be called and thus won't
         // maintain the isFinished and isExecuting flags.
@@ -158,7 +158,7 @@
     {
         [self.connection cancel];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:MCMSDWebImageDownloadStopNotification object:nil];
 
         if (self.completedBlock)
         {
@@ -253,7 +253,7 @@
 
 - (UIImage *)scaledImageForKey:(NSString *)key image:(UIImage *)image
 {
-    return SDScaledImageForKey(key, image);
+    return MCMSDScaledImageForKey(key, image);
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)aConnection
@@ -261,7 +261,7 @@
     CFRunLoopStop(CFRunLoopGetCurrent());
     self.connection = nil;
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MCMSDWebImageDownloadStopNotification object:nil];
 
     SDWebImageDownloaderCompletedBlock completionBlock = self.completedBlock;
 
@@ -306,7 +306,7 @@
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
 {
     CFRunLoopStop(CFRunLoopGetCurrent());
-    [[NSNotificationCenter defaultCenter] postNotificationName:SDWebImageDownloadStopNotification object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:MCMSDWebImageDownloadStopNotification object:nil];
 
     if (self.completedBlock)
     {

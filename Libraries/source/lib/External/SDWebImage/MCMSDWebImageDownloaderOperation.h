@@ -10,13 +10,13 @@
 #import "MCMSDWebImageDownloader.h"
 #import "MCMSDWebImageOperation.h"
 
-@interface SDWebImageDownloaderOperation : NSOperation <SDWebImageOperation>
+@interface MCMSDWebImageDownloaderOperation : NSOperation <MCMSDWebImageOperation>
 
 @property (strong, nonatomic, readonly) NSURLRequest *request;
-@property (assign, nonatomic, readonly) SDWebImageDownloaderOptions options;
+@property (assign, nonatomic, readonly) MCMSDWebImageDownloaderOptions options;
 
 - (id)initWithRequest:(NSURLRequest *)request
-              options:(SDWebImageDownloaderOptions)options
+              options:(MCMSDWebImageDownloaderOptions)options
              progress:(SDWebImageDownloaderProgressBlock)progressBlock
             completed:(SDWebImageDownloaderCompletedBlock)completedBlock
             cancelled:(void (^)())cancelBlock;

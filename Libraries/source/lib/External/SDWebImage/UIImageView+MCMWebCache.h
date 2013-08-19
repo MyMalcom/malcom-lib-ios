@@ -74,7 +74,7 @@
  * @param placeholder The image to be set initially, until the image request finishes.
  * @param options The options to use when downloading the image. @see SDWebImageOptions for the possible values.
  */
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options;
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options;
 
 /**
  * Set the imageView `image` with an `url`.
@@ -116,7 +116,7 @@
  *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
  *                       indicating if the image was retrived from the local cache of from the network.
  */
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options completed:(SDWebImageCompletedBlock)completedBlock;
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options completed:(SDWebImageCompletedBlock)completedBlock;
 
 /**
  * Set the imageView `image` with an `url`, placeholder and custom options.
@@ -132,7 +132,7 @@
  *                       is nil and the second parameter may contain an NSError. The third parameter is a Boolean
  *                       indicating if the image was retrived from the local cache of from the network.
  */
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock;
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock;
 
 /**
  * Download an array of images and starts them in an animation loop

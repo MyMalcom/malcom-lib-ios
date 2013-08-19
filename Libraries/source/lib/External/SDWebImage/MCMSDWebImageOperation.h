@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@protocol SDWebImageOperation <NSObject>
+@protocol MCMSDWebImageOperation <NSObject>
 
 - (void)cancel;
 

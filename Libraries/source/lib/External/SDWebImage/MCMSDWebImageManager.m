@@ -10,7 +10,7 @@
 #import "UIImage+MCMGIF.h"
 #import <objc/message.h>
 
-@interface SDWebImageCombinedOperation : NSObject <SDWebImageOperation>
+@interface MCMSDWebImageCombinedOperation : NSObject <MCMSDWebImageOperation>
 
 @property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
 @property (copy, nonatomic) void (^cancelBlock)();
@@ -18,16 +18,16 @@
 
 @end
 
-@interface SDWebImageManager ()
+@interface MCMSDWebImageManager ()
 
-@property (strong, nonatomic, readwrite) SDImageCache *imageCache;
-@property (strong, nonatomic, readwrite) SDWebImageDownloader *imageDownloader;
+@property (strong, nonatomic, readwrite) MCMSDImageCache *imageCache;
+@property (strong, nonatomic, readwrite) MCMSDWebImageDownloader *imageDownloader;
 @property (strong, nonatomic) NSMutableArray *failedURLs;
 @property (strong, nonatomic) NSMutableArray *runningOperations;
 
 @end
 
-@implementation SDWebImageManager
+@implementation MCMSDWebImageManager
 
 + (id)sharedManager
 {
@@ -42,16 +42,16 @@
     if ((self = [super init]))
     {
         _imageCache = [self createCache];
-        _imageDownloader = SDWebImageDownloader.new;
+        _imageDownloader = MCMSDWebImageDownloader.new;
         _failedURLs = NSMutableArray.new;
         _runningOperations = NSMutableArray.new;
     }
     return self;
 }
 
-- (SDImageCache *)createCache
+- (MCMSDImageCache *)createCache
 {
-    return [SDImageCache sharedImageCache];
+    return [MCMSDImageCache sharedImageCache];
 }
 
 - (NSString *)cacheKeyForURL:(NSURL *)url
@@ -66,7 +66,7 @@
     }
 }
 
-- (id<SDWebImageOperation>)downloadWithURL:(NSURL *)url options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedWithFinishedBlock)completedBlock
+- (id<MCMSDWebImageOperation>)downloadWithURL:(NSURL *)url options:(MCMSDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedWithFinishedBlock)completedBlock
 {    
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
@@ -81,8 +81,8 @@
         url = nil;
     }
 
-    __block SDWebImageCombinedOperation *operation = SDWebImageCombinedOperation.new;
-    __weak SDWebImageCombinedOperation *weakOperation = operation;
+    __block MCMSDWebImageCombinedOperation *operation = MCMSDWebImageCombinedOperation.new;
+    __weak MCMSDWebImageCombinedOperation *weakOperation = operation;
     
     BOOL isFailedUrl = NO;
     @synchronized(self.failedURLs)
@@ -109,7 +109,7 @@
     }
     NSString *key = [self cacheKeyForURL:url];
 
-    operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, SDImageCacheType cacheType)
+    operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, MCMSDImageCacheType cacheType)
     {
         if (operation.isCancelled)
         {
@@ -134,7 +134,7 @@
             }
 
             // download if no image or requested to refresh anyway, and download allowed by delegate
-            SDWebImageDownloaderOptions downloaderOptions = 0;
+            MCMSDWebImageDownloaderOptions downloaderOptions = 0;
             if (options & SDWebImageLowPriority) downloaderOptions |= SDWebImageDownloaderLowPriority;
             if (options & SDWebImageProgressiveDownload) downloaderOptions |= SDWebImageDownloaderProgressiveDownload;
             if (options & SDWebImageRefreshCached) downloaderOptions |= SDWebImageDownloaderUseNSURLCache;
@@ -145,7 +145,7 @@
                 // ignore image read from NSURLCache if image if cached but force refreshing
                 downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
             }
-            id<SDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished)
+            id<MCMSDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished)
             {                
                 if (weakOperation.isCancelled)
                 {
@@ -264,7 +264,7 @@
 
 @end
 
-@implementation SDWebImageCombinedOperation
+@implementation MCMSDWebImageCombinedOperation
 
 - (void)setCancelBlock:(void (^)())cancelBlock
 {

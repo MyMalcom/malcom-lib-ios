@@ -12,7 +12,7 @@
 /**
  * Prefetch some URLs in the cache for future use. Images are downloaded in low priority.
  */
-@interface SDWebImagePrefetcher : NSObject
+@interface MCMSDWebImagePrefetcher : NSObject
 
 /**
  * Maximum number of URLs to prefetch at the same time. Defaults to 3.
@@ -28,7 +28,7 @@
 /**
  * Return the global image prefetcher instance.
  */
-+ (SDWebImagePrefetcher *)sharedImagePrefetcher;
++ (MCMSDWebImagePrefetcher *)sharedImagePrefetcher;
 
 /**
  * Assign list of URLs to let SDWebImagePrefetcher to queue the prefetching,

@@ -15,7 +15,7 @@
 
 static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week
 
-@interface SDImageCache ()
+@interface MCMSDImageCache ()
 
 @property (strong, nonatomic) NSCache *memCache;
 @property (strong, nonatomic) NSString *diskCachePath;
@@ -25,9 +25,9 @@ static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week
 @end
 
 
-@implementation SDImageCache
+@implementation MCMSDImageCache
 
-+ (SDImageCache *)sharedImageCache
++ (MCMSDImageCache *)sharedImageCache
 {
     static dispatch_once_t once;
     static id instance;
@@ -248,10 +248,10 @@ static const NSInteger kDefaultCacheMaxCacheAge = 60 * 60 * 24 * 7; // 1 week
 
 - (UIImage *)scaledImageForKey:(NSString *)key image:(UIImage *)image
 {
-    return SDScaledImageForKey(key, image);
+    return MCMSDScaledImageForKey(key, image);
 }
 
-- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, SDImageCacheType cacheType))doneBlock
+- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, MCMSDImageCacheType cacheType))doneBlock
 {
     NSOperation *operation = NSOperation.new;
     

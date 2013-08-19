@@ -24,7 +24,7 @@ typedef enum
      * (to be combined with `SDWebImageDownloaderUseNSURLCache`).
      */
     SDWebImageDownloaderIgnoreCachedResponse = 1 << 3
-} SDWebImageDownloaderOptions;
+} MCMSDWebImageDownloaderOptions;
 
 typedef enum
 {
@@ -36,10 +36,10 @@ typedef enum
     /**
      * All download operations will execute in stack style (last-in-first-out).
      */
-} SDWebImageDownloaderExecutionOrder;
+} MCMSDWebImageDownloaderExecutionOrder;
 
-extern NSString *const SDWebImageDownloadStartNotification;
-extern NSString *const SDWebImageDownloadStopNotification;
+extern NSString *const MCMSDWebImageDownloadStartNotification;
+extern NSString *const MCMSDWebImageDownloadStopNotification;
 
 typedef void(^SDWebImageDownloaderProgressBlock)(NSUInteger receivedSize, long long expectedSize);
 typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, NSError *error, BOOL finished);
@@ -47,16 +47,16 @@ typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, 
 /**
  * Asynchronous downloader dedicated and optimized for image loading.
  */
-@interface SDWebImageDownloader : NSObject
+@interface MCMSDWebImageDownloader : NSObject
 
 @property (assign, nonatomic) NSInteger maxConcurrentDownloads;
 
 /**
  * Changes download operations execution order. Default value is `SDWebImageDownloaderFIFOExecutionOrder`.
  */
-@property (assign, nonatomic) SDWebImageDownloaderExecutionOrder executionOrder;
+@property (assign, nonatomic) MCMSDWebImageDownloaderExecutionOrder executionOrder;
 
-+ (SDWebImageDownloader *)sharedDownloader;
++ (MCMSDWebImageDownloader *)sharedDownloader;
 
 /**
  * Set a value for a HTTP header to be appended to each download HTTP request.
@@ -94,8 +94,8 @@ typedef void(^SDWebImageDownloaderCompletedBlock)(UIImage *image, NSData *data, 
  *
  * @return A cancellable SDWebImageOperation
  */
-- (id<SDWebImageOperation>)downloadImageWithURL:(NSURL *)url
-                                        options:(SDWebImageDownloaderOptions)options
+- (id<MCMSDWebImageOperation>)downloadImageWithURL:(NSURL *)url
+                                        options:(MCMSDWebImageDownloaderOptions)options
                                        progress:(SDWebImageDownloaderProgressBlock)progressBlock
                                       completed:(SDWebImageDownloaderCompletedBlock)completedBlock;
 

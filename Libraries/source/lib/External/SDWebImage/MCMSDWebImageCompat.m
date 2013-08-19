@@ -12,7 +12,7 @@
 #error SDWebImage is ARC only. Either turn on ARC for the project or use -fobjc-arc flag
 #endif
 
-inline UIImage *SDScaledImageForKey(NSString *key, UIImage *image)
+inline UIImage *MCMSDScaledImageForKey(NSString *key, UIImage *image)
 {
     if ([image.images count] > 0)
     {
@@ -20,7 +20,7 @@ inline UIImage *SDScaledImageForKey(NSString *key, UIImage *image)
         
         for (UIImage *tempImage in image.images)
         {
-            [scaledImages addObject:SDScaledImageForKey(key, tempImage)];
+            [scaledImages addObject:MCMSDScaledImageForKey(key, tempImage)];
         }
         
         return [UIImage animatedImageWithImages:scaledImages duration:image.duration];

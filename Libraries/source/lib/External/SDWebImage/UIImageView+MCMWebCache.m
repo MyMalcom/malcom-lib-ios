@@ -24,7 +24,7 @@ static char operationArrayKey;
     [self setImageWithURL:url placeholderImage:placeholder options:0 progress:nil completed:nil];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options
 {
     [self setImageWithURL:url placeholderImage:placeholder options:options progress:nil completed:nil];
 }
@@ -39,12 +39,12 @@ static char operationArrayKey;
     [self setImageWithURL:url placeholderImage:placeholder options:0 progress:nil completed:completedBlock];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options completed:(SDWebImageCompletedBlock)completedBlock
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options completed:(SDWebImageCompletedBlock)completedBlock
 {
     [self setImageWithURL:url placeholderImage:placeholder options:options progress:nil completed:completedBlock];
 }
 
-- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(SDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock
+- (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder options:(MCMSDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedBlock)completedBlock
 {
     [self cancelCurrentImageLoad];
 
@@ -53,7 +53,7 @@ static char operationArrayKey;
     if (url)
     {
         __weak UIImageView *wself = self;
-        id<SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+        id<MCMSDWebImageOperation> operation = [MCMSDWebImageManager.sharedManager downloadWithURL:url options:options progress:progressBlock completed:^(UIImage *image, NSError *error, MCMSDImageCacheType cacheType, BOOL finished)
         {
             if (!wself) return;
             dispatch_main_sync_safe(^
@@ -84,7 +84,7 @@ static char operationArrayKey;
 
     for (NSURL *logoImageURL in arrayOfURLs)
     {
-        id<SDWebImageOperation> operation = [SDWebImageManager.sharedManager downloadWithURL:logoImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished)
+        id<MCMSDWebImageOperation> operation = [MCMSDWebImageManager.sharedManager downloadWithURL:logoImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, MCMSDImageCacheType cacheType, BOOL finished)
         {
             if (!wself) return;
             dispatch_main_sync_safe(^
@@ -115,7 +115,7 @@ static char operationArrayKey;
 - (void)cancelCurrentImageLoad
 {
     // Cancel in progress downloader from queue
-    id<SDWebImageOperation> operation = objc_getAssociatedObject(self, &operationKey);
+    id<MCMSDWebImageOperation> operation = objc_getAssociatedObject(self, &operationKey);
     if (operation)
     {
         [operation cancel];
@@ -127,7 +127,7 @@ static char operationArrayKey;
 {
     // Cancel in progress downloader from queue
     NSArray *operations = objc_getAssociatedObject(self, &operationArrayKey);
-    for (id<SDWebImageOperation> operation in operations)
+    for (id<MCMSDWebImageOperation> operation in operations)
     {
         if (operation)
         {
