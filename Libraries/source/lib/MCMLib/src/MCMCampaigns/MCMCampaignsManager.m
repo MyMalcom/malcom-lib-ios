@@ -22,6 +22,7 @@
 #import "MCMCoreUtils.h"
 #import "MCMCampaignsHelper.h"
 #import "MCMCampaignsDefines.h"
+#import "MCMCampaignsLogic.h"
 
 typedef void(^CompletionBlock)(NSArray* campaignBannersVC);
 typedef void(^ErrorBlock)(NSString* errorMessage);
@@ -32,9 +33,12 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 - (void)processCampaignResponse:(NSArray *)items;
 - (void)displayCampaign:(MCMCampaignDTO *)campaign;
 - (void)showBanner:(MCMCampaignBannerViewController *)bannerViewController;
+- (void)createRateAlert:(MCMCampaignDTO *)campaign;
 - (void)appDidBecomeActiveNotification:(NSNotification *)notification;
 - (void)hideCampaignView;
 - (void)finishCampaignView;
+- (void)notifyCampaignDidLoad;
+- (void)notifyCampaignDidFinish;
 - (void)notifyErrorLoadingCampaign:(NSString *)errorMessage;
 - (UIView *)getContainerViewForCurrentBanner;
 
@@ -172,11 +176,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     [request setTimeOutSeconds:8];
     [request setDelegate:self];
     [request setUserInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"jsonDownloaded", @"type",nil]];
-    [request startAsynchronous];
-    
-    
-    [[MCMStatsLocatorService sharedInstance] updateLocation:^(CLLocation *location, NSError *error) {
-    }];
+    [request startAsynchronous];    
     
 }
 
@@ -249,29 +249,37 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     if (campaign) {
         
-        //if previously there is some banner it will be removed in order to be replaced.
-        if(self.currentBanner){
-            [self hideCampaignView];
+        if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION) {
+            
+            //if previously there is some banner it will be removed in order to be replaced.
+            if(self.currentBanner){
+                [self hideCampaignView];
+            }
+            
+            //Create the banner
+            self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView andCampaign:campaign];
+            
+            //Configure banner
+            [self.currentBanner setDelegate:self];
+            if (self.type == IN_APP_CROSS_SELLING){
+                //Specifies the appstore container view (only for in_app_cross_selling)
+                [self.currentBanner setAppstoreContainerView:_appstoreContainerView];
+            }
+            
+            //Show banner
+            UIView *containerView = [self getContainerViewForCurrentBanner];
+            
+            [containerView addSubview:self.currentBanner.view];
+            
+        } else if (self.type == IN_APP_RATE_MY_APP) {
+            
+            //Shows the alert if it's necessary
+            if ([MCMCampaignsLogic shouldShowAlert:campaign]) {
+                [self createRateAlert:campaign];
+            }
+            //Update the session number
+            [MCMCampaignsLogic updateRateAlertSession:campaign];
         }
-        
-        //Create the banner
-        self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView andCampaign:campaign];
-        
-        //Configure banner
-        [self.currentBanner setDelegate:self];
-        if (self.type == IN_APP_CROSS_SELLING){
-            //Specifies the appstore container view (only for in_app_cross_selling)
-            [self.currentBanner setAppstoreContainerView:_appstoreContainerView];
-        }
-        
-        //Show banner
-        UIView *containerView = [self getContainerViewForCurrentBanner];
-        MCMLog(@"ContainerView frame: %@",NSStringFromCGRect(containerView.frame));
-        MCMLog(@"currentBannerView frame: %@",NSStringFromCGRect(self.currentBanner.view.frame));
-        
-        [containerView addSubview:self.currentBanner.view];
-        
-        MCMLog(@"Start display %@",campaign);
         
     } else {
         [self notifyErrorLoadingCampaign:@"There is no campaign to show"];
@@ -299,6 +307,48 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
                                                             userInfo:nil
                                                              repeats:NO];
     }
+    
+}
+
+- (void)createRateAlert:(MCMCampaignDTO *)campaign {
+    
+    //Notify when the dialog will be shown
+    [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:campaign];
+    
+    [self notifyCampaignDidLoad];
+    
+    MCMCampaignsHelper *helper = [[MCMCampaignsHelper alloc] init];
+    
+    [helper showRateMyAppAlert:campaign onCompletion:^(bool userRate, bool userDisableRate) {
+        if (userRate) {
+            //Open the Appstore
+            [MCMCampaignsHelper openAppStoreWithAppId:campaign.promotionIdentifier withDelegate:self andAppStoreContainerView:self.appstoreContainerView];
+            
+            //Update the control parameters
+            [MCMCampaignsLogic updateRateAlertDontShowAgain];
+            
+            //Notify server
+            [MCMCampaignsHelper notifyServer:KCampaignRateHit andCampaign:campaign];
+            
+        } else if (userDisableRate) {
+            //Update the control parameters
+            [MCMCampaignsLogic updateRateAlertDontShowAgain];
+            
+            //Notify server
+            [MCMCampaignsHelper notifyServer:kCampaignNeverRateHit andCampaign:campaign];
+            
+            [self notifyCampaignDidFinish];
+            
+        } else {    //Remind later
+            //Update the control parameters
+            [MCMCampaignsLogic updateRateAlertDate];
+            
+            //Notify server
+            [MCMCampaignsHelper notifyServer:kCampaignRemindHit andCampaign:campaign];
+            
+            [self notifyCampaignDidFinish];
+        }
+    }];
     
 }
 
@@ -332,18 +382,31 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     if (self.currentBanner && self.currentBanner.view.window) {
         [self hideCampaignView];
         
-        //notifies by the delegate that the campaign has been finished
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFinish)]){
-            [self.delegate campaignViewDidFinish];
-        }
+        [self notifyCampaignDidFinish];
     }
     
+}
+
+- (void)notifyCampaignDidLoad {
+
+    //notifies it is being shown
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidLoad)]){
+        [self.delegate campaignViewDidLoad];
+    }
+}
+
+- (void)notifyCampaignDidFinish {
+    
+    //notifies by the delegate that the campaign has been finished
+    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFinish)]){
+        [self.delegate campaignViewDidFinish];
+    }
 }
 
 - (void)notifyErrorLoadingCampaign:(NSString *)errorMessage{
     
     //Reports the error
-    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+    if (self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest:)]){
         [self.delegate campaignViewDidFailRequest:errorMessage];
     }
 }
@@ -367,8 +430,6 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         containerView = _campaignContainerView;
         
     }
-    
-    MCMLog(@"Screen size %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
     
     return containerView;
 }
@@ -457,11 +518,8 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         [self showBanner:self.currentBanner];
         
     }
-
-    //notifies it is being shown
-    if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidLoad)]){
-        [self.delegate campaignViewDidLoad];
-    }
+    
+    [self notifyCampaignDidLoad];
     
     MCMLog(@"Displaying a campaign...");
     
@@ -498,6 +556,19 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         [self.delegate campaignPressed:campaign];
     }
 
+}
+
+#pragma mark - SKStoreProductViewControllerDelegate Methods
+
+// Sent if the user requests that the page be dismissed
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
+    
+    if (viewController) {
+        [viewController dismissViewControllerAnimated:YES completion:nil];
+    }
+    
+    // Notify to delegate
+    [self notifyCampaignDidFinish];
 }
 
 @end

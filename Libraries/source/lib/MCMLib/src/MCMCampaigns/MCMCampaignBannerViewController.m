@@ -11,8 +11,6 @@
 #import "MCMCampaignsHelper.h"
 
 
-#define ITUNES_URL @"https://itunes.apple.com/es/app/id%@"
-
 #define bannerHeight 55.0
 #define offset 20.0
 #define statusBarOffset 20.0
@@ -222,7 +220,7 @@
         MCMLog(@"IN_APP_PROMOTION banner pressed");
     }
     
-    [MCMCampaignsHelper notifyServer:@"CLICK" andCampaign:self.currentCampaignDTO];
+    [MCMCampaignsHelper notifyServer:kCampaignClickHit andCampaign:self.currentCampaignDTO];
     
 }
 
@@ -233,41 +231,7 @@
  */
 - (void)openURLAppstore{
     
-    if(NSClassFromString(@"SKStoreProductViewController")) { // Checks for iOS 6 feature.
-        
-        SKStoreProductViewController *storeController = [[SKStoreProductViewController alloc] init];
-        storeController.delegate = self; // productViewControllerDidFinish
-        
-        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
-        [f setNumberStyle:NSNumberFormatterDecimalStyle];
-        NSNumber * idApple = [f numberFromString:self.currentCampaignDTO.promotionIdentifier];
-        [f release];
-        NSDictionary *productParameters = @{ SKStoreProductParameterITunesItemIdentifier : idApple };
-        
-        
-        [storeController loadProductWithParameters:productParameters completionBlock:^(BOOL result, NSError *error) {
-            if (result) {
-			//if it doesnt have where to place the appstoreView it will place it on the VC handler of the banner container view
-                if(!self.appstoreContainerView){
-                    id rootVC = [self.containerView nextResponder];
-//                    id rootVC = [[[[UIApplication sharedApplication] delegate] window] rootViewController];
-                    [rootVC presentViewController:storeController animated:YES completion:nil];
-                }else{ //if it is specified, it will be placed on the appstoreContainerView 
-                    [(UIViewController *)[self.appstoreContainerView nextResponder] presentViewController:storeController animated:YES completion:nil];
-
-                }
-                
-            } else {
-                [[[UIAlertView alloc] initWithTitle:@"Uh oh!" message:@"There was a problem displaying the app" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles: nil] show];
-            }
-        }];
-        
-        
-    } else { // Before iOS 6, we can only open the URL
-              
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:ITUNES_URL, self.currentCampaignDTO.promotionIdentifier]]];
-        
-    }
+    [MCMCampaignsHelper openAppStoreWithAppId:self.currentCampaignDTO.promotionIdentifier andAppStoreContainerView:self.appstoreContainerView];
     
     if ([self.currentCampaignDTO showOnWindow]) {
         [self close];
@@ -426,19 +390,6 @@
 
 }
 
-
-
-
-#pragma mark - SKStoreProductViewControllerDelegate methods
-
-// Sent if the user requests that the page be dismissed
-- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
-    
-    [viewController dismissModalViewControllerAnimated:YES];
-    
-    //[self configureView];
-}
-
 #pragma mark - Connections delegate methods
 
 -(void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
@@ -461,7 +412,7 @@
         }
         
         //Notify the impression to Malcom server
-        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
+        [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:self.currentCampaignDTO];
     }
 
 }
