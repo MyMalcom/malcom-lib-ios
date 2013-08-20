@@ -114,15 +114,6 @@
 
 + (void)clearRateMyAppControlParameters {
     
-//    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-//    
-//    [defaults removeObjectForKey:kCampaignId];
-//    [defaults removeObjectForKey:kNotShowAgain];
-//    [defaults removeObjectForKey:kSessionsSinceLastAlert];
-//    [defaults removeObjectForKey:kDateLastDialog];
-//    
-//    [defaults synchronize];
-    
     [self setRateMyAppParameters:nil];
     
 }
@@ -131,10 +122,6 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:[defaults objectForKey:kRateMyAppParameters]];
-    
-//    if (!parameters) {
-//        parameters = [[NSMutableDictionary alloc] init];
-//    }
     
     return parameters;
 }
