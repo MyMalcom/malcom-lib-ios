@@ -10,7 +10,7 @@
 #import <StoreKit/StoreKit.h>
 #import "MCMCampaignDTO.h"
 
-#define kCampaignImressionHit @"IMPRESSION"
+#define kCampaignImpressionHit @"IMPRESSION"
 #define kCampaignClickHit @"CLICK"
 #define KCampaignRateHit @"RATE"
 #define kCampaignRemindHit @"REMIND_LATER"

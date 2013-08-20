@@ -313,7 +313,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 - (void)createRateAlert:(MCMCampaignDTO *)campaign {
     
     //Notify when the dialog will be shown
-    [MCMCampaignsHelper notifyServer:kCampaignImressionHit andCampaign:campaign];
+    [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:campaign];
     
     [self notifyCampaignDidLoad];
     

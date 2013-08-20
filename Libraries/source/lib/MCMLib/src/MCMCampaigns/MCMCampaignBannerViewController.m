@@ -412,7 +412,7 @@
         }
         
         //Notify the impression to Malcom server
-        [MCMCampaignsHelper notifyServer:kCampaignImressionHit andCampaign:self.currentCampaignDTO];
+        [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:self.currentCampaignDTO];
     }
 
 }
