@@ -322,9 +322,6 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     [helper showRateMyAppAlert:campaign onCompletion:^(bool userRate, bool userDisableRate) {
         if (userRate) {
             //Open the Appstore
-            //TODO: Pedro: Quitar!!! Id de infovuelos para testing solo!!
-//            [campaign setPromotionIdentifier:@"298995425"];
-            
             [MCMCampaignsHelper openAppStoreWithAppId:campaign.promotionIdentifier withDelegate:self andAppStoreContainerView:self.appstoreContainerView];
             
             //Update the control parameters
