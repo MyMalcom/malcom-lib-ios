@@ -17,9 +17,13 @@
 #import "MCMCampaignsManager.h"
 #import "MCMStatsDefines.h"
 
+@interface MalcomLib ()
+
++ (void)privateEndBeacon;
+
+@end
 
 @implementation MalcomLib
-
 
 #pragma mark - Core methods
 
@@ -182,10 +186,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(privateEndBeacon)
                                                  name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(privateEndBeacon)
                                                  name:UIApplicationWillTerminateNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
@@ -204,9 +208,11 @@
 }
 
 + (void)endBeacon {
-    
+    NSLog(@"[MalcomLib endBeacon] - This method is no more needed");
+}
+
++ (void)privateEndBeacon {
     [[MCMStatsManager sharedInstance] endBeacon];
-    
 }
 
 + (void)startBeaconWithName:(NSString *)name {
@@ -530,6 +536,19 @@
 
 + (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
     [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
+}
+
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate{
+    [self addCampaignRateMyAppWithDelegate:delegate andAppstoreContainerView:nil];
+}
+
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate andAppstoreContainerView:(UIView *)appStoreContainerView {
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_RATE_MY_APP inView:nil withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+    
 }
 
 

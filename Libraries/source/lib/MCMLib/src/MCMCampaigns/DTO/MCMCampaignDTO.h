@@ -33,10 +33,9 @@ typedef enum _CampaignPosition {
 @property (nonatomic,assign) CampaignType type;             //type of campaign: cross-selling, etc
 @property (nonatomic,retain) NSString *media;               //image of the banner or campaign to show
 @property (nonatomic,assign) CampaignPosition position;     //position in screen
-@property (nonatomic,retain) NSString *promotionType;       //campaign id
+@property (nonatomic,retain) NSString *promotionType;       //the type of the object promotion
 @property (nonatomic,retain) NSString *promotionIdentifier; //app store identifier
-@property (nonatomic,retain) NSString *clientLimitType;       //the client limit indicator
-@property (nonatomic,assign) int limitValue;                  //this value is used to random weighted selection once the total weight is known
+@property (nonatomic,retain) NSDictionary *clientLimitFeature;//the client limit parameters
 @property (nonatomic,copy) NSDictionary *customParams;    //Custom parameters defined in malcom
 @property (nonatomic,assign) int weight;                  //this value is used to random weighted selection once the total weight is known
 
