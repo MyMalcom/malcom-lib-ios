@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 #import "MCMCampaignsManagerDelegate.h"
 #import "MCMCampaignDTO.h"
 
-@interface MCMCampaignsManager : NSObject
+@interface MCMCampaignsManager : NSObject <SKStoreProductViewControllerDelegate>
 
 @property (nonatomic, assign) int duration;                                 //campaign duration
 @property (nonatomic, assign) id<MCMCampaignsManagerDelegate> delegate;     //campaigns delegate
