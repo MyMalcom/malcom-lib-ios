@@ -51,6 +51,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 @property (nonatomic, retain) NSTimer *durationTimer;                       //campaign duration
 @property (nonatomic, retain) MCMCampaignDTO *currentCampaignModel;       //current campaign selected
 @property (nonatomic, assign) CampaignType type;            //type of campaign: cross-selling, etc
+@property (nonatomic, retain) UIImage *placeHolderImage;
 
 @property (nonatomic, assign) BOOL deletedView;
 
@@ -70,10 +71,10 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 #pragma mark - public methods
 
 - (void)addBannerType:(CampaignType)type inView:(UIView*)view {
-    [self addBannerType:type inView:view withAppstoreView:nil];
+    [self addBannerType:type inView:view withAppstoreView:nil andPlaceHolder:nil];
 }
 
-- (void)addBannerType:(CampaignType)type inView:(UIView *)view withAppstoreView:(UIView *)appstoreView{
+- (void)addBannerType:(CampaignType)type inView:(UIView *)view withAppstoreView:(UIView *)appstoreView andPlaceHolder:(UIImage *)placeHolder{
     
     [self hideCampaignView];
     
@@ -92,6 +93,8 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     //specifies the container view for the appstore
     _appstoreContainerView = appstoreView;
+    
+    self.placeHolderImage = placeHolder;
     
     //There is no completionBlock
     self.completionBlock = nil;
@@ -115,10 +118,11 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 }
 
-- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
+- (void)requestBannersType:(CampaignType)type  withPlaceHolder:(UIImage *)placeHolder completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *))error{
     
     self.type = type;
     _campaignContainerView = nil;
+    self.placeHolderImage = placeHolder;
     self.completionBlock = completion;
     self.errorBlock = error;
     
@@ -224,7 +228,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
             NSArray *selectionCampaignsArray = [MCMCampaignsHelper getCampaignsArray:campaignsArray forType:self.type];
             
             // execute the completion block
-            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray inView:nil];
+            NSArray *bannersArray = [MCMCampaignsHelper createBannersForCampaigns:selectionCampaignsArray
+                                                                           inView:nil
+                                                                  withPlaceHolder:self.placeHolderImage];
             self.completionBlock(bannersArray);
             
         }
@@ -242,7 +248,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 }
 
 /**
- Method that shows the selected campaign in the screen.
+ Method that shows the selected campaign on the screen.
  @since 2.0.0
  */
 - (void)displayCampaign:(MCMCampaignDTO *)campaign{

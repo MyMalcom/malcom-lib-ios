@@ -493,27 +493,48 @@
 
 +(void)addCampaignCrossSelling:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
     
-    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view withAppstoreView:appStoreContainerView];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view
+                                       withAppstoreView:appStoreContainerView
+                                         andPlaceHolder:nil];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
     }
 }
 
++ (void)addCampaignCrossSelling:(UIView*)view
+      withAppstoreContainerView:(UIView*)appStoreContainerView
+                   withDelegate:(id<MCMCampaignsManagerDelegate>)delegate
+                 andPlaceHolder:(UIImage *)placeHolder {
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING
+                                                 inView:view withAppstoreView:appStoreContainerView
+                                         andPlaceHolder:placeHolder];
+}
+
 + (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING completion:completion error:nil];
+    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:nil];
 }
 
 + (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING completion:completion error:error];}
+    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:error];
+}
+
++ (void)requestCampaignCrossSellingWithPlaceHolder:(UIImage *)placeHolder
+                                      onCompletion:(void (^)(NSArray *))completion
+                                             error:(void (^)(NSString *))error {
+    
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING
+                                             withPlaceHolder:placeHolder
+                                                  completion:completion error:nil];
+}
 
 + (void)addCampaignPromotions:(UIView*)view{
     [self addCampaignPromotions:view withDelegate:nil];
 }
 
-+ (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate{
++ (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate andPlaceHolder:(UIImage *)placeHolder{
     
-    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_PROMOTION inView:view withAppstoreView:nil];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_PROMOTION inView:view withAppstoreView:nil andPlaceHolder:placeHolder];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
@@ -531,11 +552,17 @@
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:nil];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:nil];
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:error];
+}
+
++ (void)requestCampaignPromotionsWithPlaceHolder:(UIImage *)placeHolder
+                                      onCompletion:(void (^)(NSArray *))completion
+                                             error:(void (^)(NSString *))error {
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION withPlaceHolder:placeHolder completion:completion error:error];
 }
 
 + (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate{
