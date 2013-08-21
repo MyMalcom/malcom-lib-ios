@@ -19,6 +19,7 @@
 
 #define kMalcomIdentifier @"Malcom"
 #define kMalcomAccessGroup @"MALCOM.com.malcom.lib"
+#define kMalcomCrashControl @"Malcom_crash_control_init"
 
 @interface MCMStatsManager ()
 
@@ -414,11 +415,11 @@
     
     self.appCrashed = NO;
     
-    if ([defaults boolForKey:@"Malcom_crash_control_init"]) {
+    if ([defaults boolForKey:kMalcomCrashControl]) {
         self.appCrashed = YES;
     }
     
-    [defaults setBool:YES forKey:@"Malcom_crash_control_init"];
+    [defaults setBool:YES forKey:kMalcomCrashControl];
     
     [defaults synchronize];
 }
@@ -426,7 +427,7 @@
 - (void)endAppCrashControl {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    [defaults setBool:NO forKey:@"Malcom_crash_control_init"];
+    [defaults setBool:NO forKey:kMalcomCrashControl];
     
     [defaults synchronize];
 }
