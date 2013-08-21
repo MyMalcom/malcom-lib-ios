@@ -538,6 +538,19 @@
     [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
 }
 
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate{
+    [self addCampaignRateMyAppWithDelegate:delegate andAppstoreContainerView:nil];
+}
+
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate andAppstoreContainerView:(UIView *)appStoreContainerView {
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_RATE_MY_APP inView:nil withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+    
+}
+
 
 #pragma mark UIAlertViewDelegate method
 

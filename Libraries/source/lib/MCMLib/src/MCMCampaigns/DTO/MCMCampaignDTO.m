@@ -40,7 +40,7 @@
 - (void)hydrate:(NSDictionary *)data{
 	
     if ([data objectForKey:@"id"])
-		self.campaignId = [data objectForKey:@"id"];
+		self.campaignId = [[data objectForKey:@"id"] stringValue];
     if ([data objectForKey:@"name"])
 		self.name = [data objectForKey:@"name"];
     if ([data objectForKey:@"start"])
@@ -71,8 +71,8 @@
 		[self hydratePromotionFeature:[data objectForKey:@"promotionType"]];
 
     //Client limit feature
-    if ([data objectForKey:@"clientLimitFeature"]){
-        [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeature"]];
+    if ([data objectForKey:@"clientLimitFeatures"]){
+        [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeatures"]];
     }
     //Custom params
     if ([data objectForKey:@"customParamsFeature"] && [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"]){
@@ -138,24 +138,21 @@
 
 - (void)hydratePromotionFeature:(NSDictionary *)data{
 	
-    if ([data objectForKey:@"clientLimitType"])
-		self.clientLimitType = [data objectForKey:@"iclientLimitTyped"];
-    if ([data objectForKey:@"limitValue"]){
-		self.limitValue = [[data objectForKey:@"limitValue"] intValue];
-    }else{
-        self.limitValue = -1;
-    }
+    if ([data objectForKey:@"promotionType"])
+		self.promotionType = [data objectForKey:@"promotionType"];
+    if ([data objectForKey:@"promotionIdentifier"])
+		self.promotionIdentifier = [data objectForKey:@"promotionIdentifier"];
     
 }
 
-- (void)hydrateClientLimitFeature:(NSDictionary *)data{
-	
-    if ([data objectForKey:@"clientLimitType"])
-		self.clientLimitType = [data objectForKey:@"iclientLimitTyped"];
-    if ([data objectForKey:@"limitValue"]){
-		self.limitValue = [[data objectForKey:@"limitValue"] intValue];
-    }else{
-        self.limitValue = -1;
+- (void)hydrateClientLimitFeature:(NSArray *)data{
+    
+    self.clientLimitFeature = [[NSMutableDictionary alloc] init];
+    
+    for (NSDictionary *dict in data) {
+        NSString *clientLimit = [dict objectForKey:@"limitValue"];
+        NSString *limitType = [dict objectForKey:@"clientLimitType"];
+        [self.clientLimitFeature setValue:clientLimit forKey:limitType];
     }
     
 }
