@@ -9,7 +9,7 @@
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCore.h"
 #import "MCMCampaignsHelper.h"
-
+#import "UIImageView+MCMWebCache.h"
 
 #define bannerHeight 55.0
 #define offset 20.0
@@ -27,9 +27,7 @@
 @property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
 @property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
 @property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
-
-@property (nonatomic, retain) NSMutableData *dataMedia;
-@property (nonatomic, retain) NSURLConnection *connection;
+@property (nonatomic, retain) UIImage *placeHolderImage;        //Image to show while the banner is loading
 
 - (void)close;
 - (void)configureView;
@@ -50,7 +48,7 @@
  Method that once it has the image in the memory it will be displayed on screen.
  @since 2.0.0
  */
-- (void)showImage;
+- (void)showBannerWithPlaceholder:(UIImage *)placeholder;
 
 @end
 
@@ -62,15 +60,15 @@
 @synthesize backgroundFadedView;
 @synthesize closeButton;
 @synthesize bannerButton;
-@synthesize dataMedia;
-@synthesize connection;
+@synthesize placeHolderImage;
 
-- (id)initInView:(UIView *)view andCampaign:(MCMCampaignDTO*)campaign
+- (id)initInView:(UIView *)view withPlaceholder:(UIImage *)placeHolder andCampaign:(MCMCampaignDTO*)campaign
 {
     self = [super init];
     if (self) {
         // Custom initialization
         self.containerView = view;
+        self.placeHolderImage = placeHolder;
         self.currentCampaignDTO = campaign;
     }
     return self;
@@ -112,7 +110,7 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated {
     
     [self configureView];
 }
@@ -247,14 +245,39 @@
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
+    //Show the banner with the placeholder
+    [self showBannerWithPlaceholder:self.placeHolderImage];
+    
     NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
-    //launches the new connection asynchronously
-    NSURLRequest* request = [NSURLRequest requestWithURL:url
-                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                         timeoutInterval:20.0];
-    
-    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:[self retain]];
+    UIImageView *imageBannerView = [[UIImageView alloc] init];
+    [imageBannerView setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, MCMSDImageCacheType cacheType) {
+        
+        if (!error) {
+            
+            //When complete set the loaded image on the button
+            [self.bannerButton setImage:image forState:UIControlStateNormal];//shows the image
+            
+            //calls the delegate to advise that the image is loaded.
+            if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
+                [self.delegate mediaFinishLoading:self.currentCampaignDTO];
+            }
+            
+            //Notify the impression to Malcom server
+            [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
+            
+        } else {
+            
+            //There was an error
+            MCMLog(@"Failed campaign loagin... %@",[error description]);
+            
+            //calls the delegate telling that the loading failed
+            if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
+                [self.delegate mediaFailedLoading:self.currentCampaignDTO];
+            }
+        }
+        
+    }];
 
 }
 
@@ -262,7 +285,7 @@
  Method that once it has the image in the memory it will be displayed on screen.
  @since 2.0.0
  */
-- (void)showImage{
+- (void)showBannerWithPlaceholder:(UIImage *)placeholder{
     
     CGRect frameScreen = [MCMCoreUtils rectForViewScreen];
     CGRect frame = [MCMCoreUtils rectForViewScreen];
@@ -330,15 +353,11 @@
         [auxView.layer setBorderWidth:3.0f];
 
     }
-
     
     //sets the image with the data media retrieved
-    UIImage *image = [UIImage imageWithData:self.dataMedia];
-    [self.bannerButton setImage:image forState:UIControlStateNormal];
+    [self.bannerButton setImage:placeholder forState:UIControlStateNormal];
     [self.bannerButton addTarget:self action:@selector(bannerPressed) forControlEvents:UIControlEventTouchUpInside];
-    //[self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
-    //[self.bannerButton setBackgroundColor:[UIColor blackColor]];
     [self.bannerButton setBackgroundColor:[UIColor clearColor]];
 
     [self.view addSubview:self.bannerButton];
@@ -390,44 +409,13 @@
 
 }
 
-#pragma mark - Connections delegate methods
+#pragma mark - SKStoreProductViewControllerDelegate methods
 
--(void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
+// Sent if the user requests that the page be dismissed
+- (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
     
-    if (self.dataMedia==nil) {
-		self.dataMedia = [[NSMutableData alloc] initWithCapacity:2048];
-    }
-    [self.dataMedia appendData:incrementalData];
-}
+    [viewController dismissViewControllerAnimated:YES completion:nil];
 
-- (void)connectionDidFinishLoading:(NSURLConnection*)theConnection {
-
-    //when connection is finished and self.dataMedia is not nill
-    if(self.dataMedia != nil){
-        [self showImage];	 //shows the image
-        
-        //calls the delegate to advise that the image is loaded.
-        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
-            [self.delegate mediaFinishLoading:self.currentCampaignDTO];
-        }
-        
-        //Notify the impression to Malcom server
-        [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:self.currentCampaignDTO];
-    }
-
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    
-    MCMLog(@"Failed campaign loagin... %@",[error description]);
-    
-	self.dataMedia = nil;
-    
-    //calls the delegate telling that the loading failed
-    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
-        [self.delegate mediaFailedLoading:self.currentCampaignDTO];
-    }
-	
 }
 
 
