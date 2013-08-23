@@ -17,11 +17,19 @@
 #import "MCMCampaignsManager.h"
 #import "MCMStatsDefines.h"
 
+@interface MalcomLib ()
+
++ (void)privateEndBeacon;
+
+@end
 
 @implementation MalcomLib
 
-
 #pragma mark - Core methods
+
++ (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey {
+    [self initWithUUID:uuid andSecretKey:secretKey withAdId:nil urlApi:kMCMBaseUrl andLogActivated:NO];
+}
 
 + (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey withAdId:(NSString *)adId {
     
@@ -56,10 +64,11 @@
     [settings setValue:uuid forKey:kMCMCoreKeyMalcomAppId];
     [settings setValue:secretKey forKey:kMCMCoreKeyAssetsAppSecretKey];
     
-    //[settings setValue:kMCMBaseUrl forKey:kMCMCoreKeyMalcomBaseUrl];
     [settings setValue:urlApi forKey:kMCMCoreKeyMalcomBaseUrl];
     [settings setValue:kMCMAdwhirlURL forKey:@"AdWhirlBaseUrl"];
-    [settings setValue:adId forKey:@"AdWhirlId"];
+    if (adId) {
+        [settings setValue:adId forKey:@"AdWhirlId"];
+    }
     
     [[NSUserDefaults standardUserDefaults] setObject:settings forKey:kMCMCoreInfoPlistName];
     [[NSUserDefaults standardUserDefaults] synchronize];
@@ -67,6 +76,10 @@
     if (bundlePath != nil) {
         [settings writeToFile:bundlePath atomically:YES];
     }
+    
+    // Automatic initialization
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
+                                                 name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 + (void)showLog:(BOOL)logActivated {
@@ -94,6 +107,7 @@
 	[((MCMConfigSplashViewController *) splashController) setDelegate:((id<MCMConfigSplashDelegate>)delegate)];
        
     //splashLoaded_=YES;
+    [splashController.view setFrame:viewController.view.frame];
     
     //Add Splash to main window
     [viewController.view addSubview:splashController.view];    
@@ -178,10 +192,10 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillResignActiveNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(privateEndBeacon)
                                                  name:UIApplicationDidEnterBackgroundNotification object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(endBeacon)
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(privateEndBeacon)
                                                  name:UIApplicationWillTerminateNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
@@ -200,9 +214,11 @@
 }
 
 + (void)endBeacon {
-    
+    NSLog(@"[MalcomLib endBeacon] - This method is no more needed");
+}
+
++ (void)privateEndBeacon {
     [[MCMStatsManager sharedInstance] endBeacon];
-    
 }
 
 + (void)startBeaconWithName:(NSString *)name {
@@ -264,17 +280,26 @@
 }
 
 + (void)setTags:(NSArray *)tags {
-	
-    [[NSUserDefaults standardUserDefaults] setObject:tags forKey:@"mcm_tags"];
-	[[NSUserDefaults standardUserDefaults] synchronize];
-	
+    [MCMStatsManager setTags:tags];
 }
 
 + (NSArray *)getTags {
-    
-	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
-
+	return [MCMStatsManager getTags];
 }
+
++ (void)addTag:(NSString *)tagName {
+    [MCMStatsManager addTag:tagName];
+}
+
++ (void)removeTag:(NSString *)tagName {
+    [MCMStatsManager removeTag:tagName];
+}
+
++ (void)removeAllTags {
+    [MCMStatsManager setTags:@[]];
+}
+
+
 
 + (void)setUserMetadata:(NSString *)userMetadata {
 	
@@ -431,24 +456,24 @@
 
 //  Campaings
 
-+ (void)addCampaignBanner:(UIView*)view{
++ (void)addCampaignBanner:(UIView*)view DEPRECATED_ATTRIBUTE{
 
     [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:nil];
 }
 
-+ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate{
++ (void)addCampaignBanner:(UIView*)view withDelegate:(id)delegate DEPRECATED_ATTRIBUTE{
     
     [self addCampaignBanner:view withAppstoreContainerView:nil withDelegate:delegate];
 }
 
-+(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView{
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView DEPRECATED_ATTRIBUTE{
     
     [self addCampaignBanner:view withAppstoreContainerView:appStoreContainerView withDelegate:nil];
 }
 
-+(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
++(void)addCampaignBanner:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate DEPRECATED_ATTRIBUTE{
     
-    [[MCMCampaignsManager sharedInstance] addBanner:view withAppstoreView:appStoreContainerView];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view withAppstoreView:appStoreContainerView];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
@@ -474,20 +499,48 @@
 
 +(void)addCampaignCrossSelling:(UIView *)view withAppstoreContainerView:(UIView *)appStoreContainerView withDelegate:(id)delegate{
     
-    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view withAppstoreView:appStoreContainerView];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING inView:view
+                                       withAppstoreView:appStoreContainerView
+                                         andPlaceHolder:nil];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
     }
 }
 
++ (void)addCampaignCrossSelling:(UIView*)view
+      withAppstoreContainerView:(UIView*)appStoreContainerView
+                   withDelegate:(id<MCMCampaignsManagerDelegate>)delegate
+                 andPlaceHolder:(UIImage *)placeHolder {
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_CROSS_SELLING
+                                                 inView:view withAppstoreView:appStoreContainerView
+                                         andPlaceHolder:placeHolder];
+}
+
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion{
+    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:nil];
+}
+
++ (void)requestCampaignCrossSelling:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error{
+    [self requestCampaignCrossSellingWithPlaceHolder:nil onCompletion:completion error:error];
+}
+
++ (void)requestCampaignCrossSellingWithPlaceHolder:(UIImage *)placeHolder
+                                      onCompletion:(void (^)(NSArray *))completion
+                                             error:(void (^)(NSString *))error {
+    
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_CROSS_SELLING
+                                             withPlaceHolder:placeHolder
+                                                  completion:completion error:nil];
+}
+
 + (void)addCampaignPromotions:(UIView*)view{
     [self addCampaignPromotions:view withDelegate:nil];
 }
 
-+ (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate{
++ (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate andPlaceHolder:(UIImage *)placeHolder{
     
-    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_PROMOTION inView:view withAppstoreView:nil];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_PROMOTION inView:view withAppstoreView:nil andPlaceHolder:placeHolder];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
@@ -505,11 +558,30 @@
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray * campaignBannersVC))completion{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:nil];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:nil];
 }
 
 + (void)requestCampaignPromotions:(void (^)(NSArray *))completion error:(void (^)(NSString *))error{
-    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION completion:completion error:error];
+    [self requestCampaignPromotionsWithPlaceHolder:nil onCompletion:completion error:error];
+}
+
++ (void)requestCampaignPromotionsWithPlaceHolder:(UIImage *)placeHolder
+                                      onCompletion:(void (^)(NSArray *))completion
+                                             error:(void (^)(NSString *))error {
+    [[MCMCampaignsManager sharedInstance] requestBannersType:IN_APP_PROMOTION withPlaceHolder:placeHolder completion:completion error:error];
+}
+
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate{
+    [self addCampaignRateMyAppWithDelegate:delegate andAppstoreContainerView:nil];
+}
+
++ (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate andAppstoreContainerView:(UIView *)appStoreContainerView {
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_RATE_MY_APP inView:nil withAppstoreView:appStoreContainerView];
+    
+    if(delegate != nil){
+        [[MCMCampaignsManager sharedInstance] setDelegate:delegate];
+    }
+    
 }
 
 

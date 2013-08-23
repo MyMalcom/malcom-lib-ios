@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 #import "MCMCampaignsManagerDelegate.h"
 #import "MCMCampaignDTO.h"
 
-@interface MCMCampaignsManager : NSObject
+@interface MCMCampaignsManager : NSObject <SKStoreProductViewControllerDelegate>
 
 @property (nonatomic, assign) int duration;                                 //campaign duration
 @property (nonatomic, assign) id<MCMCampaignsManagerDelegate> delegate;     //campaigns delegate
@@ -29,7 +30,7 @@
  @param view View where is going to be placed the banner.
  @since 2.0.0
  */
-- (void)addBannerType:(CampaignType)type inView:(UIView*)view;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view andPlaceHolder:(UIImage *)placeHolder;
 
 /**
  Method that starts the manager and requests a banner to server.
@@ -37,7 +38,7 @@
  @param appstoreView View where is going to be placed the appstoreView storekit.
  @since 2.0.0
  */
-- (void)addBannerType:(CampaignType)type inView:(UIView*)view withAppstoreView:(UIView*)appstoreView;
+- (void)addBannerType:(CampaignType)type inView:(UIView*)view withAppstoreView:(UIView*)appstoreView andPlaceHolder:(UIImage *)placeHolder;
 
 
 /**
@@ -52,6 +53,8 @@
  @param ^completion block that will be executed with the filtered response
  @param ^error block that will be executed when an error occurs
  */
-- (void)requestBannersType:(CampaignType)type completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
+- (void)requestBannersType:(CampaignType)type
+           withPlaceHolder:(UIImage *)placeHolder
+                completion:(void (^)(NSArray * campaignBannersVC))completion error:(void (^)(NSString *errorMessage))error;
 
 @end

@@ -19,8 +19,11 @@
 
 #define kMalcomIdentifier @"Malcom"
 #define kMalcomAccessGroup @"MALCOM.com.malcom.lib"
+#define kMalcomCrashControl @"Malcom_crash_control_init"
 
 @interface MCMStatsManager ()
+
+@property (atomic, assign) bool appCrashed;
 
 - (void) sendToAwsSqs;
 - (NSString *) getJSON;
@@ -38,6 +41,10 @@
  Gets the internal id from the keychain
  */
 + (NSString *)getMalcomInternalIdentifier;
+
++ (void)initAppCrashControl;
+
++ (void)endAppCrashControl;
 
 @end
 
@@ -58,6 +65,12 @@
     [[MCMStatsManager sharedInstance] setCoreLocation:coreLocation];
     [[MCMStatsManager sharedInstance] setUseOnlyWifi:wifiState];
 	[[MCMStatsManager sharedInstance] startBeacon];
+    
+    // Crash control
+    [[MCMStatsManager sharedInstance] initAppCrashControl];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:[MCMStatsManager sharedInstance] selector:@selector(endAppCrashControl)
+                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
 	
 	return [MCMStatsManager sharedInstance];
 }
@@ -149,13 +162,49 @@
     [subbeaconsDictionary_ removeObjectForKey:beaconName];
 }
 
++ (void)setTags:(NSArray *)tags {
+	
+    [[NSUserDefaults standardUserDefaults] setObject:tags forKey:@"mcm_tags"];
+	[[NSUserDefaults standardUserDefaults] synchronize];
+	
+}
+
++ (NSArray *)getTags {
+    
+	return [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
+    
+}
+
++ (void)addTag:(NSString *)tagName{
+    NSMutableArray *tags = [NSMutableArray arrayWithArray:[self getTags]];
+    
+    if (![[self getTags] containsObject:tagName]) {
+        [tags addObject:tagName];
+        
+        [self setTags:tags];
+    }
+}
+
++ (void)removeTag:(NSString *)tagName{
+    NSMutableArray *newTags = [NSMutableArray arrayWithCapacity:1];
+    
+    if ([[self getTags] containsObject:tagName]) {
+        for (NSString *tag in [self getTags]) {
+            if (![tag isEqualToString:tagName]) {
+                [newTags addObject:tag];
+            }
+        }
+        
+        //Sets the new array without the tag
+        [self setTags:newTags];
+    }
+}
 
 
 + (void) clearCache{
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kMCMStatsCacheName];
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
-
 
 - (void) setCoreLocation:(BOOL)coreLocation{
     
@@ -236,7 +285,7 @@
     //NSString *tags = [MCMNotificationUtils formatApnsTagString:[[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"]];
     NSString *timeZone = [MCMCoreUtils userTimezone];
     NSString *userMetadata = [[NSUserDefaults standardUserDefaults] stringForKey:@"mcm_user_metadata"];
-    NSArray *tagsArray = [[NSUserDefaults standardUserDefaults] arrayForKey:@"mcm_tags"];
+    NSArray *tagsArray = [MCMStatsManager getTags];
     
 	NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
 								[MCMCoreUtils applicationVersion], @"app_version",
@@ -262,6 +311,11 @@
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];
+    
+    //If there was a crash, send it to malcom server
+    if(self.appCrashed){
+        [dictionary setValue:@"true" forKey:@"crash"];
+    }
 
     //Adds the advertising identifier for IOS7 migration
     IF_IOS6_OR_GREATER (
@@ -353,6 +407,29 @@
     }
     
     return identifier;
+}
+
+
+- (void)initAppCrashControl {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    self.appCrashed = NO;
+    
+    if ([defaults boolForKey:kMalcomCrashControl]) {
+        self.appCrashed = YES;
+    }
+    
+    [defaults setBool:YES forKey:kMalcomCrashControl];
+    
+    [defaults synchronize];
+}
+
+- (void)endAppCrashControl {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults setBool:NO forKey:kMalcomCrashControl];
+    
+    [defaults synchronize];
 }
 
 @end

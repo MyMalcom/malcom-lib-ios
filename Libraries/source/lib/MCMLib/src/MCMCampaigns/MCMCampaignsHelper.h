@@ -7,15 +7,22 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <StoreKit/StoreKit.h>
 #import "MCMCampaignDTO.h"
 
-@interface MCMCampaignsHelper : NSObject
+#define kCampaignImpressionHit @"IMPRESSION"
+#define kCampaignClickHit @"CLICK"
+#define KCampaignRateHit @"RATE"
+#define kCampaignRemindHit @"REMIND_LATER"
+#define kCampaignNeverRateHit @"NEVER_RATE"
+
+@interface MCMCampaignsHelper : NSObject <UIAlertViewDelegate>
 
 + (void)notifyServer:(NSString *)action andCampaign:(MCMCampaignDTO *)campaign;
 
 + (MCMCampaignDTO *)selectCampaign:(NSArray *)campaigns forType:(CampaignType)type;
 
-+ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView;
++ (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView withPlaceHolder:(UIImage *)placeHolderImage;
 
 /**
  Method that gets the campaigns with the selected type from multitype campaigns array.
@@ -24,5 +31,9 @@
  @since 2.0.1
  */
 + (NSMutableArray *)getCampaignsArray:(NSArray *)campaigns forType:(CampaignType)type;
+
+- (void)showRateMyAppAlert:(MCMCampaignDTO *)campaign onCompletion:(void (^)(bool userRate, bool userDisableRate))completion;
+
++ (void)openAppStoreWithAppId:(NSString *)appId withDelegate:(id<SKStoreProductViewControllerDelegate>)delegate andAppStoreContainerView:(UIView *)appStoreContainerView;
 
 @end
