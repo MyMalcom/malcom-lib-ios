@@ -19,8 +19,11 @@
 
 #define kMalcomIdentifier @"Malcom"
 #define kMalcomAccessGroup @"MALCOM.com.malcom.lib"
+#define kMalcomCrashControl @"Malcom_crash_control_init"
 
 @interface MCMStatsManager ()
+
+@property (atomic, assign) bool appCrashed;
 
 - (void) sendToAwsSqs;
 - (NSString *) getJSON;
@@ -38,6 +41,10 @@
  Gets the internal id from the keychain
  */
 + (NSString *)getMalcomInternalIdentifier;
+
++ (void)initAppCrashControl;
+
++ (void)endAppCrashControl;
 
 @end
 
@@ -58,6 +65,12 @@
     [[MCMStatsManager sharedInstance] setCoreLocation:coreLocation];
     [[MCMStatsManager sharedInstance] setUseOnlyWifi:wifiState];
 	[[MCMStatsManager sharedInstance] startBeacon];
+    
+    // Crash control
+    [[MCMStatsManager sharedInstance] initAppCrashControl];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:[MCMStatsManager sharedInstance] selector:@selector(endAppCrashControl)
+                                                 name:UIApplicationDidEnterBackgroundNotification object:nil];
 	
 	return [MCMStatsManager sharedInstance];
 }
@@ -298,6 +311,11 @@
                                 timeZone, @"time_zone",
 								[self subbeaconsJsonObject], @"subbeacons",
 								nil];
+    
+    //If there was a crash, send it to malcom server
+    if(self.appCrashed){
+        [dictionary setValue:@"true" forKey:@"crash"];
+    }
 
     //Adds the advertising identifier for IOS7 migration
     IF_IOS6_OR_GREATER (
@@ -389,6 +407,29 @@
     }
     
     return identifier;
+}
+
+
+- (void)initAppCrashControl {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    self.appCrashed = NO;
+    
+    if ([defaults boolForKey:kMalcomCrashControl]) {
+        self.appCrashed = YES;
+    }
+    
+    [defaults setBool:YES forKey:kMalcomCrashControl];
+    
+    [defaults synchronize];
+}
+
+- (void)endAppCrashControl {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    [defaults setBool:NO forKey:kMalcomCrashControl];
+    
+    [defaults synchronize];
 }
 
 @end
