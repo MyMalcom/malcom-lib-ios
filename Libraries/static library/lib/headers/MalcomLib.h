@@ -26,6 +26,14 @@
  Init Malcom with app values
  @param uuid uuid malcom app
  @param secretKey secret key malcom app
+ @since 2.0.3
+ */
++ (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey;
+
+/**
+ Init Malcom with app values
+ @param uuid uuid malcom app
+ @param secretKey secret key malcom app
  @param adId ads id Malcom
  @since 2.0.0
  */
