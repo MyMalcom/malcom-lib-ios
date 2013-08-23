@@ -27,6 +27,10 @@
 
 #pragma mark - Core methods
 
++ (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey {
+    [self initWithUUID:uuid andSecretKey:secretKey withAdId:nil urlApi:kMCMBaseUrl andLogActivated:NO];
+}
+
 + (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey withAdId:(NSString *)adId {
     
     [self initWithUUID:uuid andSecretKey:secretKey withAdId:adId urlApi:kMCMBaseUrl andLogActivated:NO];
@@ -62,7 +66,9 @@
     
     [settings setValue:urlApi forKey:kMCMCoreKeyMalcomBaseUrl];
     [settings setValue:kMCMAdwhirlURL forKey:@"AdWhirlBaseUrl"];
-    [settings setValue:adId forKey:@"AdWhirlId"];
+    if (adId) {
+        [settings setValue:adId forKey:@"AdWhirlId"];
+    }
     
     [[NSUserDefaults standardUserDefaults] setObject:settings forKey:kMCMCoreInfoPlistName];
     [[NSUserDefaults standardUserDefaults] synchronize];
