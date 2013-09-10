@@ -251,34 +251,26 @@
     NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
     UIImageView *imageBannerView = [[UIImageView alloc] init];
-    [imageBannerView setImageWithURL:url placeholderImage:nil completed:^(UIImage *image, NSError *error, MCMSDImageCacheType cacheType) {
+    [imageBannerView setImageWithURL:url placeholderImage:nil success:^(UIImage *image, BOOL cached) {
+        //When complete set the loaded image on the button
+        [self.bannerButton setImage:image forState:UIControlStateNormal];//shows the image
         
-        if (!error) {
-            
-            //When complete set the loaded image on the button
-            [self.bannerButton setImage:image forState:UIControlStateNormal];//shows the image
-            
-            //calls the delegate to advise that the image is loaded.
-            if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
-                [self.delegate mediaFinishLoading:self.currentCampaignDTO];
-            }
-            
-            //Notify the impression to Malcom server
-            [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
-            
-        } else {
-            
-            //There was an error
-            MCMLog(@"Failed campaign loagin... %@",[error description]);
-            
-            //calls the delegate telling that the loading failed
-            if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
-                [self.delegate mediaFailedLoading:self.currentCampaignDTO];
-            }
+        //calls the delegate to advise that the image is loaded.
+        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
+            [self.delegate mediaFinishLoading:self.currentCampaignDTO];
         }
         
+        //Notify the impression to Malcom server
+        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
+    } failure:^(NSError *error) {
+        //There was an error
+        MCMLog(@"Failed campaign loagin... %@",[error description]);
+        
+        //calls the delegate telling that the loading failed
+        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
+            [self.delegate mediaFailedLoading:self.currentCampaignDTO];
+        }
     }];
-
 }
 
 /**

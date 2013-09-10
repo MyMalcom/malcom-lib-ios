@@ -9,14 +9,6 @@
 
 #import <TargetConditionals.h>
 
-#ifdef __OBJC_GC__
-#error SDWebImage does not support Objective-C Garbage Collection
-#endif
-
-#if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_5_0
-#error SDWebImage doesn't support Deployement Target version < 5.0
-#endif
-
 #if !TARGET_OS_IPHONE
 #import <AppKit/AppKit.h>
 #ifndef UIImage
@@ -29,26 +21,72 @@
 #import <UIKit/UIKit.h>
 #endif
 
-#if OS_OBJECT_USE_OBJC
-    #undef SDDispatchQueueRelease
-    #undef SDDispatchQueueSetterSementics
-    #define SDDispatchQueueRelease(q)
-    #define SDDispatchQueueSetterSementics strong
+#if ! __has_feature(objc_arc)
+#define MCMSDWIAutorelease(__v) ([__v autorelease]);
+#define MCMSDWIReturnAutoreleased MCMSDWIAutorelease
+
+#define MCMSDWIRetain(__v) ([__v retain]);
+#define MCMSDWIReturnRetained MCMSDWIRetain
+
+#define MCMSDWIRelease(__v) ([__v release]);
+#define MCMSDWISafeRelease(__v) ([__v release], __v = nil);
+#define MCMSDWISuperDealoc [super dealloc];
+
+#define MCMSDWIWeak
 #else
-    #undef SDDispatchQueueRelease
-    #undef SDDispatchQueueSetterSementics
-    #define SDDispatchQueueRelease(q) (dispatch_release(q))
-    #define SDDispatchQueueSetterSementics assign
+// -fobjc-arc
+#define MCMSDWIAutorelease(__v)
+#define MCMSDWIReturnAutoreleased(__v) (__v)
+
+#define MCMSDWIRetain(__v)
+#define MCMSDWIReturnRetained(__v) (__v)
+
+#define MCMSDWIRelease(__v)
+#define MCMSDWISafeRelease(__v) (__v = nil);
+#define MCMSDWISuperDealoc
+
+#define MCMSDWIWeak __unsafe_unretained
 #endif
 
-extern inline UIImage *MCMSDScaledImageForKey(NSString *key, UIImage *image);
 
-#define dispatch_main_sync_safe(block)\
-    if ([NSThread isMainThread])\
-    {\
-        block();\
-    }\
-    else\
-    {\
-        dispatch_sync(dispatch_get_main_queue(), block);\
+NS_INLINE UIImage *MCMSDScaledImageForPath(NSString *path, NSObject *imageOrData)
+{
+    if (!imageOrData)
+    {
+        return nil;
     }
+
+    UIImage *image = nil;
+    if ([imageOrData isKindOfClass:[NSData class]])
+    {
+        image = [[UIImage alloc] initWithData:(NSData *)imageOrData];
+    }
+    else if ([imageOrData isKindOfClass:[UIImage class]])
+    {
+        image = MCMSDWIReturnRetained((UIImage *)imageOrData);
+    }
+    else
+    {
+        return nil;
+    }
+
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)])
+    {
+        CGFloat scale = 1.0;
+        if (path.length >= 8)
+        {
+            // Search @2x. at the end of the string, before a 3 to 4 extension length (only if key len is 8 or more @2x. + 4 len ext)
+            NSRange range = [path rangeOfString:@"@2x." options:0 range:NSMakeRange(path.length - 8, 5)];
+            if (range.location != NSNotFound)
+            {
+                scale = 2.0;
+            }
+        }
+
+        UIImage *scaledImage = [[UIImage alloc] initWithCGImage:image.CGImage scale:scale orientation:image.imageOrientation];
+        MCMSDWISafeRelease(image)
+        image = scaledImage;
+    }
+
+    return MCMSDWIReturnAutoreleased(image);
+}
