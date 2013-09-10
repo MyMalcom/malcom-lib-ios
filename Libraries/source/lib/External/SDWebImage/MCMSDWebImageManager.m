@@ -7,55 +7,59 @@
  */
 
 #import "MCMSDWebImageManager.h"
-#import "UIImage+MCMGIF.h"
+#import "MCMSDImageCache.h"
+#import "MCMSDWebImageDownloader.h"
 #import <objc/message.h>
 
-@interface MCMSDWebImageCombinedOperation : NSObject <MCMSDWebImageOperation>
-
-@property (assign, nonatomic, getter = isCancelled) BOOL cancelled;
-@property (copy, nonatomic) void (^cancelBlock)();
-@property (strong, nonatomic) NSOperation *cacheOperation;
-
-@end
-
-@interface MCMSDWebImageManager ()
-
-@property (strong, nonatomic, readwrite) MCMSDImageCache *imageCache;
-@property (strong, nonatomic, readwrite) MCMSDWebImageDownloader *imageDownloader;
-@property (strong, nonatomic) NSMutableArray *failedURLs;
-@property (strong, nonatomic) NSMutableArray *runningOperations;
-
-@end
+static MCMSDWebImageManager *instance;
 
 @implementation MCMSDWebImageManager
 
-+ (id)sharedManager
-{
-    static dispatch_once_t once;
-    static id instance;
-    dispatch_once(&once, ^{instance = self.new;});
-    return instance;
-}
+#if NS_BLOCKS_AVAILABLE
+@synthesize cacheKeyFilter;
+#endif
 
 - (id)init
 {
     if ((self = [super init]))
     {
-        _imageCache = [self createCache];
-        _imageDownloader = MCMSDWebImageDownloader.new;
-        _failedURLs = NSMutableArray.new;
-        _runningOperations = NSMutableArray.new;
+        downloadInfo = [[NSMutableArray alloc] init];
+        downloadDelegates = [[NSMutableArray alloc] init];
+        downloaders = [[NSMutableArray alloc] init];
+        cacheDelegates = [[NSMutableArray alloc] init];
+        cacheURLs = [[NSMutableArray alloc] init];
+        downloaderForURL = [[NSMutableDictionary alloc] init];
+        failedURLs = [[NSMutableArray alloc] init];
     }
     return self;
 }
 
-- (MCMSDImageCache *)createCache
+- (void)dealloc
 {
-    return [MCMSDImageCache sharedImageCache];
+    MCMSDWISafeRelease(downloadInfo);
+    MCMSDWISafeRelease(downloadDelegates);
+    MCMSDWISafeRelease(downloaders);
+    MCMSDWISafeRelease(cacheDelegates);
+    MCMSDWISafeRelease(cacheURLs);
+    MCMSDWISafeRelease(downloaderForURL);
+    MCMSDWISafeRelease(failedURLs);
+    MCMSDWISuperDealoc;
+}
+
+
++ (id)sharedManager
+{
+    if (instance == nil)
+    {
+        instance = [[MCMSDWebImageManager alloc] init];
+    }
+    
+    return instance;
 }
 
 - (NSString *)cacheKeyForURL:(NSURL *)url
 {
+#if NS_BLOCKS_AVAILABLE
     if (self.cacheKeyFilter)
     {
         return self.cacheKeyFilter(url);
@@ -64,233 +68,502 @@
     {
         return [url absoluteString];
     }
+#else
+    return [url absoluteString];
+#endif
 }
 
-- (id<MCMSDWebImageOperation>)downloadWithURL:(NSURL *)url options:(MCMSDWebImageOptions)options progress:(SDWebImageDownloaderProgressBlock)progressBlock completed:(SDWebImageCompletedWithFinishedBlock)completedBlock
-{    
+/*
+ * @deprecated
+ */
+- (UIImage *)imageWithURL:(NSURL *)url
+{
+    return [[MCMSDImageCache sharedImageCache] imageFromKey:[self cacheKeyForURL:url]];
+}
+
+/*
+ * @deprecated
+ */
+- (void)downloadWithURL:(NSURL *)url delegate:(id<MCMSDWebImageManagerDelegate>)delegate retryFailed:(BOOL)retryFailed
+{
+    [self downloadWithURL:url delegate:delegate options:(retryFailed ? MCMSDWebImageRetryFailed : 0)];
+}
+
+/*
+ * @deprecated
+ */
+- (void)downloadWithURL:(NSURL *)url delegate:(id<MCMSDWebImageManagerDelegate>)delegate retryFailed:(BOOL)retryFailed lowPriority:(BOOL)lowPriority
+{
+    MCMSDWebImageOptions options = 0;
+    if (retryFailed) options |= MCMSDWebImageRetryFailed;
+    if (lowPriority) options |= MCMSDWebImageLowPriority;
+    [self downloadWithURL:url delegate:delegate options:options];
+}
+
+- (void)downloadWithURL:(NSURL *)url delegate:(id<MCMSDWebImageManagerDelegate>)delegate
+{
+    [self downloadWithURL:url delegate:delegate options:0];
+}
+
+- (void)downloadWithURL:(NSURL *)url delegate:(id<MCMSDWebImageManagerDelegate>)delegate options:(MCMSDWebImageOptions)options
+{
+    [self downloadWithURL:url delegate:delegate options:options userInfo:nil];
+}
+
+- (void)downloadWithURL:(NSURL *)url delegate:(id<MCMSDWebImageManagerDelegate>)delegate options:(MCMSDWebImageOptions)options userInfo:(NSDictionary *)userInfo
+{
     // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
     // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
     if ([url isKindOfClass:NSString.class])
     {
         url = [NSURL URLWithString:(NSString *)url];
     }
-
-    // Prevents app crashing on argument type error like sending NSNull instead of NSURL
-    if (![url isKindOfClass:NSURL.class])
+    else if (![url isKindOfClass:NSURL.class])
     {
-        url = nil;
+        url = nil; // Prevent some common crashes due to common wrong values passed like NSNull.null for instance
     }
-
-    __block MCMSDWebImageCombinedOperation *operation = MCMSDWebImageCombinedOperation.new;
-    __weak MCMSDWebImageCombinedOperation *weakOperation = operation;
     
-    BOOL isFailedUrl = NO;
-    @synchronized(self.failedURLs)
+    if (!url || !delegate || (!(options & MCMSDWebImageRetryFailed) && [failedURLs containsObject:url]))
     {
-        isFailedUrl = [self.failedURLs containsObject:url];
+        return;
     }
+    
+    // Check the on-disk cache async so we don't block the main thread
+    [cacheDelegates addObject:delegate];
+    [cacheURLs addObject:url];
+    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+                          delegate, @"delegate",
+                          url, @"url",
+                          [NSNumber numberWithInt:options], @"options",
+                          userInfo ? userInfo : [NSNull null], @"userInfo",
+                          nil];
+    [[MCMSDImageCache sharedImageCache] queryDiskCacheForKey:[self cacheKeyForURL:url] delegate:self userInfo:info];
+}
 
-    if (!url || !completedBlock || (!(options & SDWebImageRetryFailed) && isFailedUrl))
+#if NS_BLOCKS_AVAILABLE
+- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(MCMSDWebImageOptions)options success:(MCMSDWebImageSuccessBlock)success failure:(MCMSDWebImageFailureBlock)failure
+{
+    [self downloadWithURL:url delegate:delegate options:options userInfo:nil success:success failure:failure];
+}
+
+- (void)downloadWithURL:(NSURL *)url delegate:(id)delegate options:(MCMSDWebImageOptions)options userInfo:(NSDictionary *)userInfo success:(MCMSDWebImageSuccessBlock)success failure:(MCMSDWebImageFailureBlock)failure
+{
+    // repeated logic from above due to requirement for backwards compatability for iOS versions without blocks
+    
+    // Very common mistake is to send the URL using NSString object instead of NSURL. For some strange reason, XCode won't
+    // throw any warning for this type mismatch. Here we failsafe this error by allowing URLs to be passed as NSString.
+    if ([url isKindOfClass:NSString.class])
     {
-        if (completedBlock)
-        {
-            dispatch_main_sync_safe(^
-            {
-                NSError *error = [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorFileDoesNotExist userInfo:nil];
-                completedBlock(nil, error, SDImageCacheTypeNone, YES);
-            });
-        }
-        return operation;
+        url = [NSURL URLWithString:(NSString *)url];
     }
-
-    @synchronized(self.runningOperations)
+    
+    if (!url || !delegate || (!(options & MCMSDWebImageRetryFailed) && [failedURLs containsObject:url]))
     {
-        [self.runningOperations addObject:operation];
+        return;
     }
-    NSString *key = [self cacheKeyForURL:url];
+    
+    // Check the on-disk cache async so we don't block the main thread
+    [cacheDelegates addObject:delegate];
+    [cacheURLs addObject:url];
+    MCMSDWebImageSuccessBlock successCopy = [success copy];
+    MCMSDWebImageFailureBlock failureCopy = [failure copy];
+    NSDictionary *info = [NSDictionary dictionaryWithObjectsAndKeys:
+                          delegate, @"delegate",
+                          url, @"url",
+                          [NSNumber numberWithInt:options], @"options",
+                          userInfo ? userInfo : [NSNull null], @"userInfo",
+                          successCopy, @"success",
+                          failureCopy, @"failure",
+                          nil];
+    MCMSDWIRelease(successCopy);
+    MCMSDWIRelease(failureCopy);
+    [[MCMSDImageCache sharedImageCache] queryDiskCacheForKey:[self cacheKeyForURL:url] delegate:self userInfo:info];
+}
+#endif
 
-    operation.cacheOperation = [self.imageCache queryDiskCacheForKey:key done:^(UIImage *image, MCMSDImageCacheType cacheType)
+- (void)removeObjectsForDelegate:(id<MCMSDWebImageManagerDelegate>)delegate
+{
+    // Delegates notified, remove downloader and delegate
+    // The delegate callbacks above may have modified the arrays, hence we search for the correct index
+    int idx = [downloadDelegates indexOfObjectIdenticalTo:delegate];
+    if (idx != NSNotFound)
     {
-        if (operation.isCancelled)
+        [downloaders removeObjectAtIndex:idx];
+        [downloadInfo removeObjectAtIndex:idx];
+        [downloadDelegates removeObjectAtIndex:idx];
+    }
+}
+
+- (void)cancelForDelegate:(id<MCMSDWebImageManagerDelegate>)delegate
+{
+    NSUInteger idx;
+    while ((idx = [cacheDelegates indexOfObjectIdenticalTo:delegate]) != NSNotFound)
+    {
+        [cacheDelegates removeObjectAtIndex:idx];
+        [cacheURLs removeObjectAtIndex:idx];
+    }
+    
+    while ((idx = [downloadDelegates indexOfObjectIdenticalTo:delegate]) != NSNotFound)
+    {
+        MCMSDWebImageDownloader *downloader = MCMSDWIReturnRetained([downloaders objectAtIndex:idx]);
+        
+        [downloadInfo removeObjectAtIndex:idx];
+        [downloadDelegates removeObjectAtIndex:idx];
+        [downloaders removeObjectAtIndex:idx];
+        
+        if (![downloaders containsObject:downloader])
         {
-            @synchronized(self.runningOperations)
-            {
-                [self.runningOperations removeObject:operation];
-            }
-
-            return;
+            // No more delegate are waiting for this download, cancel it
+            [downloader cancel];
+            [downloaderForURL removeObjectForKey:downloader.url];
         }
-
-        if ((!image || options & SDWebImageRefreshCached) && (![self.delegate respondsToSelector:@selector(imageManager:shouldDownloadImageForURL:)] || [self.delegate imageManager:self shouldDownloadImageForURL:url]))
-        {
-            if (image && options & SDWebImageRefreshCached)
-            {
-                dispatch_main_sync_safe(^
-                {
-                    // If image was found in the cache bug SDWebImageRefreshCached is provided, notify about the cached image
-                    // AND try to re-download it in order to let a chance to NSURLCache to refresh it from server.
-                    completedBlock(image, nil, cacheType, YES);
-                });
-            }
-
-            // download if no image or requested to refresh anyway, and download allowed by delegate
-            MCMSDWebImageDownloaderOptions downloaderOptions = 0;
-            if (options & SDWebImageLowPriority) downloaderOptions |= SDWebImageDownloaderLowPriority;
-            if (options & SDWebImageProgressiveDownload) downloaderOptions |= SDWebImageDownloaderProgressiveDownload;
-            if (options & SDWebImageRefreshCached) downloaderOptions |= SDWebImageDownloaderUseNSURLCache;
-            if (image && options & SDWebImageRefreshCached)
-            {
-                // force progressive off if image already cached but forced refreshing
-                downloaderOptions &= ~SDWebImageDownloaderProgressiveDownload;
-                // ignore image read from NSURLCache if image if cached but force refreshing
-                downloaderOptions |= SDWebImageDownloaderIgnoreCachedResponse;
-            }
-            id<MCMSDWebImageOperation> subOperation = [self.imageDownloader downloadImageWithURL:url options:downloaderOptions progress:progressBlock completed:^(UIImage *downloadedImage, NSData *data, NSError *error, BOOL finished)
-            {                
-                if (weakOperation.isCancelled)
-                {
-                    dispatch_main_sync_safe(^
-                    {
-                        completedBlock(nil, nil, SDImageCacheTypeNone, finished);
-                    });
-                }
-                else if (error)
-                {
-                    dispatch_main_sync_safe(^
-                    {
-                        completedBlock(nil, error, SDImageCacheTypeNone, finished);
-                    });
-
-                    if (error.code != NSURLErrorNotConnectedToInternet)
-                    {
-                        @synchronized(self.failedURLs)
-                        {
-                            [self.failedURLs addObject:url];
-                        }
-                    }
-                }
-                else
-                {
-                    BOOL cacheOnDisk = !(options & SDWebImageCacheMemoryOnly);
-
-                    if (options & SDWebImageRefreshCached && image && !downloadedImage)
-                    {
-                        // Image refresh hit the NSURLCache cache, do not call the completion block
-                    }
-                    // NOTE: We don't call transformDownloadedImage delegate method on animated images as most transformation code would mangle it
-                    else if (downloadedImage && !downloadedImage.images && [self.delegate respondsToSelector:@selector(imageManager:transformDownloadedImage:withURL:)])
-                    {
-                        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^
-                        {
-                            UIImage *transformedImage = [self.delegate imageManager:self transformDownloadedImage:downloadedImage withURL:url];
-
-                            dispatch_main_sync_safe(^
-                            {
-                                completedBlock(transformedImage, nil, SDImageCacheTypeNone, finished);
-                            });
-
-                            if (transformedImage && finished)
-                            {
-                                NSData *dataToStore = [transformedImage isEqual:downloadedImage] ? data : nil;
-                                [self.imageCache storeImage:transformedImage imageData:dataToStore forKey:key toDisk:cacheOnDisk];
-                            }
-                        });
-                    }
-                    else
-                    {
-                        dispatch_main_sync_safe(^
-                        {
-                            completedBlock(downloadedImage, nil, SDImageCacheTypeNone, finished);
-                        });
-
-                        if (downloadedImage && finished)
-                        {
-                            [self.imageCache storeImage:downloadedImage imageData:data forKey:key toDisk:cacheOnDisk];
-                        }
-                    }
-                }
-
-                if (finished)
-                {
-                    @synchronized(self.runningOperations)
-                    {
-                        [self.runningOperations removeObject:operation];
-                    }
-                }
-            }];
-            operation.cancelBlock = ^{[subOperation cancel];};
-        }
-        else if (image)
-        {
-            dispatch_main_sync_safe(^
-            {
-                completedBlock(image, nil, cacheType, YES);
-            });
-            @synchronized(self.runningOperations)
-            {
-                [self.runningOperations removeObject:operation];
-            }
-        }
-        else
-        {
-            // Image not in cache and download disallowed by delegate
-            dispatch_main_sync_safe(^
-            {
-                completedBlock(nil, nil, SDImageCacheTypeNone, YES);
-            });
-            @synchronized(self.runningOperations)
-            {
-                [self.runningOperations removeObject:operation];
-            }
-        }
-    }];
-
-    return operation;
+        
+        MCMSDWIRelease(downloader);
+    }
 }
 
 - (void)cancelAll
 {
-    @synchronized(self.runningOperations)
+    for (MCMSDWebImageDownloader *downloader in downloaders)
     {
-        [self.runningOperations makeObjectsPerformSelector:@selector(cancel)];
-        [self.runningOperations removeAllObjects];
+        [downloader cancel];
+    }
+    [cacheDelegates removeAllObjects];
+    [cacheURLs removeAllObjects];
+    
+    [downloadInfo removeAllObjects];
+    [downloadDelegates removeAllObjects];
+    [downloaders removeAllObjects];
+    [downloaderForURL removeAllObjects];
+}
+
+#pragma mark MCMSDImageCacheDelegate
+
+- (NSUInteger)indexOfDelegate:(id<MCMSDWebImageManagerDelegate>)delegate waitingForURL:(NSURL *)url
+{
+    // Do a linear search, simple (even if inefficient)
+    NSUInteger idx;
+    for (idx = 0; idx < [cacheDelegates count]; idx++)
+    {
+        if ([cacheDelegates objectAtIndex:idx] == delegate && [[cacheURLs objectAtIndex:idx] isEqual:url])
+        {
+            return idx;
+        }
+    }
+    return NSNotFound;
+}
+
+- (void)imageCache:(MCMSDImageCache *)imageCache didFindImage:(UIImage *)image forKey:(NSString *)key userInfo:(NSDictionary *)info
+{
+    NSURL *url = [info objectForKey:@"url"];
+    id<MCMSDWebImageManagerDelegate> delegate = [info objectForKey:@"delegate"];
+    
+    NSUInteger idx = [self indexOfDelegate:delegate waitingForURL:url];
+    if (idx == NSNotFound)
+    {
+        // Request has since been canceled
+        return;
+    }
+    
+    if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:)])
+    {
+        [delegate performSelector:@selector(webImageManager:didFinishWithImage:) withObject:self withObject:image];
+    }
+    if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:forURL:)])
+    {
+        objc_msgSend(delegate, @selector(webImageManager:didFinishWithImage:forURL:), self, image, url);
+    }
+    if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:forURL:userInfo:)])
+    {
+        NSDictionary *userInfo = [info objectForKey:@"userInfo"];
+        if ([userInfo isKindOfClass:NSNull.class])
+        {
+            userInfo = nil;
+        }
+        objc_msgSend(delegate, @selector(webImageManager:didFinishWithImage:forURL:userInfo:), self, image, url, userInfo);
+    }
+#if NS_BLOCKS_AVAILABLE
+    if ([info objectForKey:@"success"])
+    {
+        MCMSDWebImageSuccessBlock success = [info objectForKey:@"success"];
+        success(image, YES);
+    }
+#endif
+    
+    // Delegates notified, remove url and delegate
+    // The delegate callbacks above may have modified the arrays, hence we search for the correct index
+    int removeIdx = [self indexOfDelegate:delegate waitingForURL:url];
+    if (removeIdx != NSNotFound)
+    {
+        [cacheDelegates removeObjectAtIndex:removeIdx];
+        [cacheURLs removeObjectAtIndex:removeIdx];
     }
 }
 
-- (BOOL)isRunning
+- (void)imageCache:(MCMSDImageCache *)imageCache didNotFindImageForKey:(NSString *)key userInfo:(NSDictionary *)info
 {
-    return self.runningOperations.count > 0;
-}
-
-@end
-
-@implementation MCMSDWebImageCombinedOperation
-
-- (void)setCancelBlock:(void (^)())cancelBlock
-{
-    if (self.isCancelled)
+    NSURL *url = [info objectForKey:@"url"];
+    id<MCMSDWebImageManagerDelegate> delegate = [info objectForKey:@"delegate"];
+    MCMSDWebImageOptions options = [[info objectForKey:@"options"] intValue];
+    
+    NSUInteger idx = [self indexOfDelegate:delegate waitingForURL:url];
+    if (idx == NSNotFound)
     {
-        if (cancelBlock) cancelBlock();
+        // Request has since been canceled
+        return;
+    }
+    
+    [cacheDelegates removeObjectAtIndex:idx];
+    [cacheURLs removeObjectAtIndex:idx];
+    
+    // Share the same downloader for identical URLs so we don't download the same URL several times
+    MCMSDWebImageDownloader *downloader = [downloaderForURL objectForKey:url];
+    
+    if (!downloader)
+    {
+        downloader = [MCMSDWebImageDownloader downloaderWithURL:url delegate:self userInfo:info lowPriority:(options & MCMSDWebImageLowPriority)];
+        [downloaderForURL setObject:downloader forKey:url];
     }
     else
     {
-        _cancelBlock = [cancelBlock copy];
+        // Reuse shared downloader
+        downloader.lowPriority = (options & MCMSDWebImageLowPriority);
+    }
+    
+    if ((options & MCMSDWebImageProgressiveDownload) && !downloader.progressive)
+    {
+        // Turn progressive download support on demand
+        downloader.progressive = YES;
+    }
+    
+    [downloadInfo addObject:info];
+    [downloadDelegates addObject:delegate];
+    [downloaders addObject:downloader];
+}
+
+#pragma mark MCMSDWebImageDownloaderDelegate
+
+- (void)imageDownloader:(MCMSDWebImageDownloader *)downloader didUpdatePartialImage:(UIImage *)image
+{
+    NSMutableArray *notifiedDelegates = [NSMutableArray arrayWithCapacity:downloaders.count];
+    
+    BOOL found = YES;
+    while (found)
+    {
+        found = NO;
+        assert(downloaders.count == downloadDelegates.count);
+        assert(downloaders.count == downloadInfo.count);
+        NSInteger count = downloaders.count;
+        for (NSInteger i=count-1; i>=0; --i)
+        {
+            MCMSDWebImageDownloader *aDownloader = [downloaders objectAtIndex:i];
+            if (aDownloader != downloader)
+            {
+                continue;
+            }
+            
+            id<MCMSDWebImageManagerDelegate> delegate = [downloadDelegates objectAtIndex:i];
+            MCMSDWIRetain(delegate);
+            MCMSDWIAutorelease(delegate);
+            
+            if ([notifiedDelegates containsObject:delegate])
+            {
+                continue;
+            }
+            // Keep track of delegates notified
+            [notifiedDelegates addObject:delegate];
+            
+            NSDictionary *info = [downloadInfo objectAtIndex:i];
+            MCMSDWIRetain(info);
+            MCMSDWIAutorelease(info);
+            
+            if ([delegate respondsToSelector:@selector(webImageManager:didProgressWithPartialImage:forURL:)])
+            {
+                objc_msgSend(delegate, @selector(webImageManager:didProgressWithPartialImage:forURL:), self, image, downloader.url);
+            }
+            if ([delegate respondsToSelector:@selector(webImageManager:didProgressWithPartialImage:forURL:userInfo:)])
+            {
+                NSDictionary *userInfo = [info objectForKey:@"userInfo"];
+                if ([userInfo isKindOfClass:NSNull.class])
+                {
+                    userInfo = nil;
+                }
+                objc_msgSend(delegate, @selector(webImageManager:didProgressWithPartialImage:forURL:userInfo:), self, image, downloader.url, userInfo);
+            }
+            // Delegate notified. Break out and restart loop
+            found = YES;
+            break;
+        }
     }
 }
 
-- (void)cancel
+- (void)imageDownloader:(MCMSDWebImageDownloader *)downloader didFinishWithImage:(UIImage *)image
 {
-    self.cancelled = YES;
-    if (self.cacheOperation)
+    MCMSDWIRetain(downloader);
+    MCMSDWebImageOptions options = [[downloader.userInfo objectForKey:@"options"] intValue];
+    BOOL found = YES;
+    while (found)
     {
-        [self.cacheOperation cancel];
-        self.cacheOperation = nil;
+        found = NO;
+        assert(downloaders.count == downloadDelegates.count);
+        assert(downloaders.count == downloadInfo.count);
+        NSInteger count = downloaders.count;
+        for (NSInteger i=count-1; i>=0; --i)
+        {
+            MCMSDWebImageDownloader *aDownloader = [downloaders objectAtIndex:i];
+            if (aDownloader != downloader)
+            {
+                continue;
+            }
+            id<MCMSDWebImageManagerDelegate> delegate = [downloadDelegates objectAtIndex:i];
+            MCMSDWIRetain(delegate);
+            MCMSDWIAutorelease(delegate);
+            NSDictionary *info = [downloadInfo objectAtIndex:i];
+            MCMSDWIRetain(info);
+            MCMSDWIAutorelease(info);
+            
+            if (image)
+            {
+                if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:)])
+                {
+                    [delegate performSelector:@selector(webImageManager:didFinishWithImage:) withObject:self withObject:image];
+                }
+                if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:forURL:)])
+                {
+                    objc_msgSend(delegate, @selector(webImageManager:didFinishWithImage:forURL:), self, image, downloader.url);
+                }
+                if ([delegate respondsToSelector:@selector(webImageManager:didFinishWithImage:forURL:userInfo:)])
+                {
+                    NSDictionary *userInfo = [info objectForKey:@"userInfo"];
+                    if ([userInfo isKindOfClass:NSNull.class])
+                    {
+                        userInfo = nil;
+                    }
+                    objc_msgSend(delegate, @selector(webImageManager:didFinishWithImage:forURL:userInfo:), self, image, downloader.url, userInfo);
+                }
+#if NS_BLOCKS_AVAILABLE
+                if ([info objectForKey:@"success"])
+                {
+                    MCMSDWebImageSuccessBlock success = [info objectForKey:@"success"];
+                    success(image, NO);
+                }
+#endif
+            }
+            else
+            {
+                if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:)])
+                {
+                    [delegate performSelector:@selector(webImageManager:didFailWithError:) withObject:self withObject:nil];
+                }
+                if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:forURL:)])
+                {
+                    objc_msgSend(delegate, @selector(webImageManager:didFailWithError:forURL:), self, nil, downloader.url);
+                }
+                if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:forURL:userInfo:)])
+                {
+                    NSDictionary *userInfo = [info objectForKey:@"userInfo"];
+                    if ([userInfo isKindOfClass:NSNull.class])
+                    {
+                        userInfo = nil;
+                    }
+                    objc_msgSend(delegate, @selector(webImageManager:didFailWithError:forURL:userInfo:), self, nil, downloader.url, userInfo);
+                }
+#if NS_BLOCKS_AVAILABLE
+                if ([info objectForKey:@"failure"])
+                {
+                    MCMSDWebImageFailureBlock failure = [info objectForKey:@"failure"];
+                    failure(nil);
+                }
+#endif
+            }
+            // Downloader found. Break out and restart for loop
+            [self removeObjectsForDelegate:delegate];
+            found = YES;
+            break;
+        }
     }
-    if (self.cancelBlock)
+    
+    if (image)
     {
-        self.cancelBlock();
-        self.cancelBlock = nil;
+        // Store the image in the cache
+        [[MCMSDImageCache sharedImageCache] storeImage:image
+                                          imageData:downloader.imageData
+                                             forKey:[self cacheKeyForURL:downloader.url]
+                                             toDisk:!(options & MCMSDWebImageCacheMemoryOnly)];
     }
+    else if (!(options & MCMSDWebImageRetryFailed))
+    {
+        // The image can't be downloaded from this URL, mark the URL as failed so we won't try and fail again and again
+        // (do this only if MCMSDWebImageRetryFailed isn't activated)
+        [failedURLs addObject:downloader.url];
+    }
+    
+    
+    // Release the downloader
+    [downloaderForURL removeObjectForKey:downloader.url];
+    MCMSDWIRelease(downloader);
+}
+
+- (void)imageDownloader:(MCMSDWebImageDownloader *)downloader didFailWithError:(NSError *)error;
+{
+    MCMSDWIRetain(downloader);
+    
+    // Notify all the downloadDelegates with this downloader
+    BOOL found = YES;
+    while (found)
+    {
+        found = NO;
+        assert(downloaders.count == downloadDelegates.count);
+        assert(downloaders.count == downloadInfo.count);
+        NSInteger count = downloaders.count;
+        for (NSInteger i=count-1 ; i>=0; --i)
+        {
+            MCMSDWebImageDownloader *aDownloader = [downloaders objectAtIndex:i];
+            if (aDownloader != downloader)
+            {
+                continue;
+            }
+            id<MCMSDWebImageManagerDelegate> delegate = [downloadDelegates objectAtIndex:i];
+            MCMSDWIRetain(delegate);
+            MCMSDWIAutorelease(delegate);
+            NSDictionary *info = [downloadInfo objectAtIndex:i];
+            MCMSDWIRetain(info);
+            MCMSDWIAutorelease(info);
+            
+            if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:)])
+            {
+                [delegate performSelector:@selector(webImageManager:didFailWithError:) withObject:self withObject:error];
+            }
+            if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:forURL:)])
+            {
+                objc_msgSend(delegate, @selector(webImageManager:didFailWithError:forURL:), self, error, downloader.url);
+            }
+            if ([delegate respondsToSelector:@selector(webImageManager:didFailWithError:forURL:userInfo:)])
+            {
+                NSDictionary *userInfo = [info objectForKey:@"userInfo"];
+                if ([userInfo isKindOfClass:NSNull.class])
+                {
+                    userInfo = nil;
+                }
+                objc_msgSend(delegate, @selector(webImageManager:didFailWithError:forURL:userInfo:), self, error, downloader.url, userInfo);
+            }
+#if NS_BLOCKS_AVAILABLE
+            if ([info objectForKey:@"failure"])
+            {
+                MCMSDWebImageFailureBlock failure = [info objectForKey:@"failure"];
+                failure(error);
+            }
+#endif
+            // Downloader found. Break out and restart for loop
+            [self removeObjectsForDelegate:delegate];
+            found = YES;
+            break;
+        }
+    }
+    
+    // Release the downloader
+    [downloaderForURL removeObjectForKey:downloader.url];
+    MCMSDWIRelease(downloader);
 }
 
 @end

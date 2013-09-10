@@ -7,62 +7,32 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "MCMSDWebImageCompat.h"
-
-enum MCMSDImageCacheType
-{
-    /**
-     * The image wasn't available the SDWebImage caches, but was downloaded from the web.
-     */
-    SDImageCacheTypeNone = 0,
-    /**
-     * The image was obtained from the disk cache.
-     */
-    SDImageCacheTypeDisk,
-    /**
-     * The image was obtained from the memory cache.
-     */
-    SDImageCacheTypeMemory
-};
-typedef enum MCMSDImageCacheType MCMSDImageCacheType;
+#import "MCMSDImageCacheDelegate.h"
 
 /**
- * SDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
+ * MCMSDImageCache maintains a memory cache and an optional disk cache. Disk cache write operations are performed
  * asynchronous so it doesn’t add unnecessary latency to the UI.
  */
 @interface MCMSDImageCache : NSObject
-
-/**
- * The maximum length of time to keep an image in the cache, in seconds
- */
-@property (assign, nonatomic) NSInteger maxCacheAge;
-
-/**
- * The maximum size of the cache, in bytes.
- */
-@property (assign, nonatomic) unsigned long long maxCacheSize;
+{
+    NSCache *memCache;
+    NSString *diskCachePath;
+    NSOperationQueue *cacheInQueue, *cacheOutQueue;
+}
 
 /**
  * Returns global shared cache instance
  *
- * @return SDImageCache global instance
+ * @return MCMSDImageCache global instance
  */
 + (MCMSDImageCache *)sharedImageCache;
 
 /**
- * Init a new cache store with a specific namespace
+ * Sets the global maximum cache age
  *
- * @param ns The namespace to use for this cache store
+ * @param maxCacheAge The maximum length of time to keep an image in the cache, in seconds
  */
-- (id)initWithNamespace:(NSString *)ns;
-
-/**
- * Add a read-only cache path to search for images pre-cached by SDImageCache
- * Useful if you want to bundle pre-loaded images with your app
- *
- * @param path The path to use for this read-only cache path
- */
-- (void)addReadOnlyCachePath:(NSString *)path;
++ (void) setMaxCacheAge:(NSInteger) maxCacheAge;
 
 /**
  * Store an image into memory and disk cache at the given key.
@@ -94,35 +64,45 @@ typedef enum MCMSDImageCacheType MCMSDImageCacheType;
 - (void)storeImage:(UIImage *)image imageData:(NSData *)data forKey:(NSString *)key toDisk:(BOOL)toDisk;
 
 /**
- * Query the disk cache asynchronously.
+ * Query the memory cache for an image at a given key and fallback to disk cache
+ * synchronousely if not found in memory.
+ *
+ * @warning This method may perform some synchronous IO operations
  *
  * @param key The unique key used to store the wanted image
  */
-- (NSOperation *)queryDiskCacheForKey:(NSString *)key done:(void (^)(UIImage *image, MCMSDImageCacheType cacheType))doneBlock;
+- (UIImage *)imageFromKey:(NSString *)key;
 
 /**
- * Query the memory cache synchronously.
+ * Query the memory cache for an image at a given key and optionnaly fallback to disk cache
+ * synchronousely if not found in memory.
+ *
+ * @warning This method may perform some synchronous IO operations if fromDisk is YES
  *
  * @param key The unique key used to store the wanted image
+ * @param fromDisk Try to retrive the image from disk if not found in memory if YES
  */
-- (UIImage *)imageFromMemoryCacheForKey:(NSString *)key;
+- (UIImage *)imageFromKey:(NSString *)key fromDisk:(BOOL)fromDisk;
+
 
 /**
- * Query the disk cache synchronously after checking the memory cache.
+ * Query the disk cache asynchronousely.
  *
  * @param key The unique key used to store the wanted image
+ * @param delegate The delegate object to send response to
+ * @param info An NSDictionary with some user info sent back to the delegate
  */
-- (UIImage *)imageFromDiskCacheForKey:(NSString *)key;
+- (void)queryDiskCacheForKey:(NSString *)key delegate:(id <MCMSDImageCacheDelegate>)delegate userInfo:(NSDictionary *)info;
 
 /**
- * Remove the image from memory and disk cache synchronously
+ * Remove the image from memory and disk cache synchronousely
  *
  * @param key The unique image cache key
  */
 - (void)removeImageForKey:(NSString *)key;
 
 /**
- * Remove the image from memory and optionaly disk cache synchronously
+ * Remove the image from memory and optionaly disk cache synchronousely
  *
  * @param key The unique image cache key
  * @param fromDisk Also remove cache entry from disk if YES
@@ -147,16 +127,11 @@ typedef enum MCMSDImageCacheType MCMSDImageCacheType;
 /**
  * Get the size used by the disk cache
  */
-- (unsigned long long)getSize;
+- (int)getSize;
 
 /**
  * Get the number of images in the disk cache
  */
 - (int)getDiskCount;
-
-/**
- * Asynchronously calculate the disk cache's size.
- */
-- (void)calculateSizeWithCompletionBlock:(void (^)(NSUInteger fileCount, unsigned long long totalSize))completionBlock;
 
 @end
