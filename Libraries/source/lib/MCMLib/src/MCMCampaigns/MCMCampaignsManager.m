@@ -263,7 +263,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
             }
             
             //Create the banner
-            self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView andCampaign:campaign];
+            self.currentBanner = [[MCMCampaignBannerViewController alloc] initInView:_campaignContainerView withPlaceholder:nil  andCampaign:campaign];
             
             //Configure banner
             [self.currentBanner setDelegate:self];
