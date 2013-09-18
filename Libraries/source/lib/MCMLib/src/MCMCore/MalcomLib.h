@@ -138,7 +138,7 @@
  End stats and send beacons to Malcom
  @since 2.0.0
  */
-+ (void)endBeacon __attribute__((deprecated);
++ (void)endBeacon __attribute__((deprecated));
 
 /**
  Start stats for a viewController or action
