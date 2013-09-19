@@ -74,6 +74,8 @@
  */
 + (NSString *)getUDID;
 
++ (NSString *)getMalcomID;
+
 //  CONFIGURATION
 
 /**
