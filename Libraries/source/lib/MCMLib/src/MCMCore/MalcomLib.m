@@ -576,7 +576,7 @@
 }
 
 + (void)addCampaignRateMyAppWithDelegate:(id<MCMCampaignsManagerDelegate>)delegate andAppstoreContainerView:(UIView *)appStoreContainerView {
-    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_RATE_MY_APP inView:nil withAppstoreView:appStoreContainerView];
+    [[MCMCampaignsManager sharedInstance] addBannerType:IN_APP_RATE_MY_APP inView:nil withAppstoreView:appStoreContainerView andPlaceHolder:nil];
     
     if(delegate != nil){
         [[MCMCampaignsManager sharedInstance] setDelegate:delegate];

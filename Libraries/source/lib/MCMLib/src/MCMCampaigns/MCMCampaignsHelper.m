@@ -245,22 +245,18 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
 #pragma mark - UIAlertViewDelegate methods
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    NSLog(@"Dismissing With Button %d",buttonIndex);
     switch (buttonIndex) {
         case 0:{
             //Disable button Pressed
-            NSLog(@"Button index 0");
             self.completionBlock(NO,YES);
             break;
         }
         case 1:{
             //Rate button pressed
-            NSLog(@"Button index 1");
             self.completionBlock(YES,NO);
             break;
         }
         case 2:{
-            NSLog(@"Button index 2");
             //RemindMeLater button pressed
             self.completionBlock(NO,NO);
             break;

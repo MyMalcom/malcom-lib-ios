@@ -229,7 +229,7 @@
  */
 - (void)openURLAppstore{
     
-    [MCMCampaignsHelper openAppStoreWithAppId:@"16" withDelegate:self  andAppStoreContainerView:self.appstoreContainerView];
+    [MCMCampaignsHelper openAppStoreWithAppId:self.currentCampaignDTO.promotionIdentifier withDelegate:self andAppStoreContainerView:self.appstoreContainerView];
     
     if ([self.currentCampaignDTO showOnWindow]) {
         [self close];
