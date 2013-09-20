@@ -1213,7 +1213,6 @@
 		C108573A1770A5F500845353 = {
 			isa = PBXGroup;
 			children = (
-				D5AC895D17DF661F00F875EA /* ImageIO.framework */,
 				C108574C1770A5F500845353 /* MalcomLibProject */,
 				C10857651770A5F500845353 /* MalcomLibProjectTests */,
 				C10857C71770A9F300845353 /* MalcomLib-iphoneos */,
@@ -1241,6 +1240,7 @@
 		C10857451770A5F500845353 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D5AC895D17DF661F00F875EA /* ImageIO.framework */,
 				C10857461770A5F500845353 /* Foundation.framework */,
 				C10857481770A5F500845353 /* CoreGraphics.framework */,
 				C108574A1770A5F500845353 /* UIKit.framework */,
