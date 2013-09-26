@@ -68,7 +68,7 @@
     
 	//Promotion feature
     if ([data objectForKey:@"promotionFeature"])
-		[self hydratePromotionFeature:[data objectForKey:@"promotionType"]];
+		[self hydratePromotionFeature:[data objectForKey:@"promotionFeature"]];
 
     //Client limit feature
     if ([data objectForKey:@"clientLimitFeatures"]){
