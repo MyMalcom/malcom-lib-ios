@@ -72,7 +72,7 @@
  return get malcom udid from device
  @since 2.0.0
  */
-+ (NSString *)getUDID;
++ (NSString *)getUDID __attribute__((deprecated("use getMalcomID")));
 
 //  CONFIGURATION
 
