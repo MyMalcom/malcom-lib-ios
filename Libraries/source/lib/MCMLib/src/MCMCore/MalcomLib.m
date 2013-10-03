@@ -91,7 +91,19 @@
 
 + (NSString *)getUDID {
     
-    return [MCMCoreUtils uniqueIdentifier];
+    return [MalcomLib getMalcomID];
+    
+}
+
++ (NSString *)getMalcomID {
+    
+    NSString *identifier = [MCMCoreUtils uniqueIdentifier];
+    
+    IF_IOS6_OR_GREATER(
+                       identifier = [MCMCoreUtils deviceIdentifier];
+    )
+    
+    return identifier;
     
 }
 
