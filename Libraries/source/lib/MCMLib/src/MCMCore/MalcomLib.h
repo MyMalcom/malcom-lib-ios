@@ -147,7 +147,7 @@
  @param action's name
  @since 2.0.0
  */
-+ (void)startBeaconWithName:(NSString *)name __attribute__((deprecated("use startEventWithName instead"));
++ (void)startBeaconWithName:(NSString *)name __attribute__((deprecated("use startEventWithName instead")));
 
 /**
  End stats for a viewController or action adding params
@@ -156,14 +156,14 @@
  @param timeSession if the user wants to track the time that subbeacon takes
  @since 2.0.2
  */
-+ (void)startBeaconWithName:(NSString *)name andParams:(NSDictionary *)params andTimeSession: (BOOL)timeSession  __attribute__((deprecated("use startEventWithName instead"));
++ (void)startBeaconWithName:(NSString *)name andParams:(NSDictionary *)params andTimeSession: (BOOL)timeSession  __attribute__((deprecated("use startEventWithName instead")));
 
 /**
  End stats for a viewController or action
  @param action's name
  @since 2.0.0
  */
-+ (void)endBeaconWithName:(NSString *)name __attribute__((deprecated("use endEventWithName instead"));
++ (void)endBeaconWithName:(NSString *)name __attribute__((deprecated("use endEventWithName instead")));
 
 /**
  End stats for a viewController or action adding params
@@ -171,7 +171,7 @@
  @param params attributes
  @since 2.0.2
  */
-+ (void)endBeaconWithName:(NSString *)name andParams:(NSDictionary *)params __attribute__((deprecated("use endEventWithName instead"));
++ (void)endBeaconWithName:(NSString *)name andParams:(NSDictionary *)params __attribute__((deprecated("use endEventWithName instead")));
 
 /**
  Start event

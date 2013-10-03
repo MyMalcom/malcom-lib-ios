@@ -107,12 +107,6 @@
     
 }
 
-+ (NSString *)getMalcomID {
-    
-    return [MCMCoreUtils deviceIdentifier];
-    
-}
-
 #pragma mark - Configuration methods
 
 + (void)loadConfiguration:(UIViewController *)viewController withDelegate:(id)delegate withLabel:(BOOL) isLabel {
@@ -484,7 +478,7 @@
     
 }
 
-+ (void) setAppInactive{
++ (void)setAppInactive{
 
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"mcm_appActive"];
     [[NSUserDefaults standardUserDefaults] synchronize];
