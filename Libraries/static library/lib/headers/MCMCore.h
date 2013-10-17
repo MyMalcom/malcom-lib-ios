@@ -17,7 +17,7 @@
 #define MCMFailReceiveAd @"mcmFailReceiveAd"
 #define MCMNotificationAdsAreOff @"mcmNotificationAdsAreOff"
 
-#define MCMVersionSDK @"2.0.4"
+#define MCMVersionSDK @"2.0.5"
 
 
 //General imports
