@@ -185,9 +185,7 @@
      This notification is most likely triggered inside an animation block,
      therefore no animation is needed to perform this nice transition.
      */
-    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){
-        //        [self rotateAccordingToStatusBarOrientationAndSupportedOrientations]; //use this method if you want to rotate everything
-        
+    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){        
         [self close];
     }
     
