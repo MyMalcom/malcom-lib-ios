@@ -74,7 +74,7 @@
         }
         
         //Try to read the settings from userDefaults
-        settings_ = [[NSUserDefaults standardUserDefaults] objectForKey:kMCMCoreInfoPlistName];
+        settings_ = [[[NSUserDefaults standardUserDefaults] objectForKey:kMCMCoreInfoPlistName] retain];
         
         if (settings_ == nil) {
             
