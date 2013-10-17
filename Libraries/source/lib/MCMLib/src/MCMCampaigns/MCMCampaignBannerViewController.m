@@ -9,7 +9,6 @@
 #import "MCMCampaignBannerViewController.h"
 #import "MCMCore.h"
 #import "MCMCampaignsHelper.h"
-#import "UIImageView+MCMWebCache.h"
 
 #define bannerHeight 55.0
 #define offset 20.0
@@ -27,6 +26,8 @@
 @property (nonatomic, retain) UIView *backgroundFadedView;      //faded view for middle banners
 @property (nonatomic, retain) UIButton *closeButton;            //button to close the campaign
 @property (nonatomic, retain) UIButton *bannerButton;           //button with campaign
+@property (nonatomic, retain) NSMutableData *dataMedia;
+@property (nonatomic, retain) NSURLConnection *connection;
 @property (nonatomic, retain) UIImage *placeHolderImage;        //Image to show while the banner is loading
 
 - (void)close;
@@ -60,6 +61,8 @@
 @synthesize backgroundFadedView;
 @synthesize closeButton;
 @synthesize bannerButton;
+@synthesize dataMedia;
+@synthesize connection;
 @synthesize placeHolderImage;
 
 - (id)initInView:(UIView *)view withPlaceholder:(UIImage *)placeHolder andCampaign:(MCMCampaignDTO*)campaign
@@ -92,7 +95,7 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(statusBarFrameOrOrientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,7 +113,7 @@
     return UIInterfaceOrientationMaskAll;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
     
     [self configureView];
 }
@@ -182,12 +185,10 @@
      This notification is most likely triggered inside an animation block,
      therefore no animation is needed to perform this nice transition.
      */
-    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){
-//        [self rotateAccordingToStatusBarOrientationAndSupportedOrientations]; //use this method if you want to rotate everything
-        
+    if((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE)||(self.currentCampaignDTO.position == MIDDLE_PORTRAIT)){        
         [self close];
     }
-
+    
 }
 
 
@@ -241,36 +242,18 @@
  @since 2.0.0
  */
 - (void)configureView{
-
+    
     //hides the view while is getting the media image
     [self.view setHidden:YES];
     
-    //Show the banner with the placeholder
-    [self showBannerWithPlaceholder:self.placeHolderImage];
-    
     NSURL *url = [NSURL URLWithString:self.currentCampaignDTO.media];
     
-    UIImageView *imageBannerView = [[UIImageView alloc] init];
-    [imageBannerView setImageWithURL:url placeholderImage:nil success:^(UIImage *image, BOOL cached) {
-        //When complete set the loaded image on the button
-        [self.bannerButton setImage:image forState:UIControlStateNormal];//shows the image
-        
-        //calls the delegate to advise that the image is loaded.
-        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
-            [self.delegate mediaFinishLoading:self.currentCampaignDTO];
-        }
-        
-        //Notify the impression to Malcom server
-        [MCMCampaignsHelper notifyServer:@"IMPRESSION" andCampaign:self.currentCampaignDTO];
-    } failure:^(NSError *error) {
-        //There was an error
-        MCMLog(@"Failed campaign loagin... %@",[error description]);
-        
-        //calls the delegate telling that the loading failed
-        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
-            [self.delegate mediaFailedLoading:self.currentCampaignDTO];
-        }
-    }];
+    //launches the new connection asynchronously
+    NSURLRequest* request = [NSURLRequest requestWithURL:url
+                                             cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                         timeoutInterval:20.0];
+    
+    self.connection = [[NSURLConnection alloc] initWithRequest:request delegate:[self retain]];
 }
 
 /**
@@ -312,10 +295,10 @@
     
     //in case it is a "middle" it needs to be centered and add a background view with alpha 0.7
     if ((self.currentCampaignDTO.position == MIDDLE_LANDSCAPE) || (self.currentCampaignDTO.position == MIDDLE_PORTRAIT)) {
-       
+        
         int width = 0;
         int height = 0;
-
+        
         if(self.currentCampaignDTO.position == MIDDLE_LANDSCAPE){
             width = middleLandscapeWidth;
             height = middleLandscapeHeight;
@@ -328,7 +311,7 @@
         [self.bannerButton setFrame:CGRectMake(0, 0, width, height)];
         self.bannerButton.center = center;
         
-        //sets it a border 
+        //sets it a border
         [self.bannerButton.layer setShadowColor:[UIColor blackColor].CGColor];
         [self.bannerButton.layer setShadowOpacity:0.8];
         [self.bannerButton.layer setShadowRadius:3.0];
@@ -340,18 +323,19 @@
         [auxView setAlpha:1];
         [auxView setUserInteractionEnabled:NO];
         [self.bannerButton addSubview:auxView];
-        [self.bannerButton sendSubviewToBack:auxView];        
+        [self.bannerButton sendSubviewToBack:auxView];
         [auxView.layer setBorderColor:[UIColor whiteColor].CGColor];
         [auxView.layer setBorderWidth:3.0f];
-
+        
     }
     
     //sets the image with the data media retrieved
-    [self.bannerButton setImage:placeholder forState:UIControlStateNormal];
+    UIImage *image = [UIImage imageWithData:self.dataMedia];
+    [self.bannerButton setImage:image forState:UIControlStateNormal];
     [self.bannerButton addTarget:self action:@selector(bannerPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.bannerButton.imageView setContentMode:UIViewContentModeScaleAspectFill];
     [self.bannerButton setBackgroundColor:[UIColor clearColor]];
-
+    
     [self.view addSubview:self.bannerButton];
     
     //unhides the view
@@ -393,12 +377,12 @@
             
             self.closeButton.frame = auxFrame;
         }
-    
+        
     }
     
     //Be sure that it still on top when finish animation and during all the web life
     [self.view.superview performSelector:@selector(bringSubviewToFront:) withObject:self.view];
-
+    
 }
 
 #pragma mark - SKStoreProductViewControllerDelegate methods
@@ -407,7 +391,47 @@
 - (void)productViewControllerDidFinish:(SKStoreProductViewController *)viewController {
     
     [viewController dismissViewControllerAnimated:YES completion:nil];
+    
+}
 
+#pragma mark - Connections delegate methods
+
+-(void)connection:(NSURLConnection *)theConnection didReceiveData:(NSData *)incrementalData {
+    
+    if (self.dataMedia==nil) {
+        self.dataMedia = [[NSMutableData alloc] initWithCapacity:2048];
+    }
+    [self.dataMedia appendData:incrementalData];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection*)theConnection {
+    
+    //when connection is finished and self.dataMedia is not nill
+    if(self.dataMedia != nil){
+        [self showBannerWithPlaceholder:placeHolderImage];         //shows the image
+        
+        //calls the delegate to advise that the image is loaded.
+        if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFinishLoading:)]){
+            [self.delegate mediaFinishLoading:self.currentCampaignDTO];
+        }
+        
+        //Notify the impression to Malcom server
+        [MCMCampaignsHelper notifyServer:kCampaignImpressionHit andCampaign:self.currentCampaignDTO];
+    }
+    
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    
+    MCMLog(@"Failed campaign loagin... %@",[error description]);
+    
+    self.dataMedia = nil;
+    
+    //calls the delegate telling that the loading failed
+    if (self.delegate!=nil && [self.delegate respondsToSelector:@selector(mediaFailedLoading:)]) {
+        [self.delegate mediaFailedLoading:self.currentCampaignDTO];
+    }
+    
 }
 
 
