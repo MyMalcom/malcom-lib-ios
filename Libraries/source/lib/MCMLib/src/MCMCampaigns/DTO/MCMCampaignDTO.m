@@ -11,6 +11,7 @@
 #define kTypeIN_APP_PROMOTION @"IN_APP_PROMOTION"
 #define kTypeIN_APP_RATE_MY_APP @"IN_APP_RATE_MY_APP"
 #define kTypeIN_APP_CROSS_SELLING @"IN_APP_CROSS_SELLING"
+#define kTypeIN_APP_EXTERNAL_URL @"IN_APP_EXTERNAL_URL"
 
 #define kPositionTOP @"TOP"
 #define kPositionBOTTOM @"BOTTOM"
@@ -59,6 +60,8 @@
             self.type = IN_APP_RATE_MY_APP;
         } else if ([dataType isEqualToString:kTypeIN_APP_CROSS_SELLING]) {
             self.type = IN_APP_CROSS_SELLING;
+        } else if ([dataType isEqualToString:kTypeIN_APP_EXTERNAL_URL]) {
+            self.type = IN_APP_EXTERNAL_URL;
         }
     }
     

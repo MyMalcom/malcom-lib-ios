@@ -11,7 +11,8 @@
 typedef enum _CampaignType {
 	IN_APP_PROMOTION = 0,
 	IN_APP_RATE_MY_APP = 1,
-	IN_APP_CROSS_SELLING = 2
+	IN_APP_CROSS_SELLING = 2,
+	IN_APP_EXTERNAL_URL = 3
 } CampaignType;
 
 typedef enum _CampaignPosition {
