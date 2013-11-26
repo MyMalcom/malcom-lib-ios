@@ -51,6 +51,12 @@
  */
 - (void)showBannerWithPlaceholder:(UIImage *)placeholder;
 
+/**
+ Method that opens the external url. As well, sends the campaignHit click event.
+ @since 2.0.6
+ */
+- (void)openExternalURL;
+
 @end
 
 @implementation MCMCampaignBannerViewController
@@ -211,12 +217,20 @@
     }
     
     if (self.currentCampaignDTO.type == IN_APP_CROSS_SELLING) {
-        MCMLog(@"IN_APP_CROSS_SELLING banner pressed");
+        
+		MCMLog(@"IN_APP_CROSS_SELLING banner pressed");
         
         [self openURLAppstore];
         
     } else if (self.currentCampaignDTO.type == IN_APP_PROMOTION) {
+		
         MCMLog(@"IN_APP_PROMOTION banner pressed");
+		
+    } else if (self.currentCampaignDTO.type == IN_APP_EXTERNAL_URL) {
+		
+        MCMLog(@"IN_APP_EXTERNAL_URL banner pressed");
+        
+        [self openExternalURL];
     }
     
     [MCMCampaignsHelper notifyServer:kCampaignClickHit andCampaign:self.currentCampaignDTO];
@@ -383,6 +397,20 @@
     //Be sure that it still on top when finish animation and during all the web life
     [self.view.superview performSelector:@selector(bringSubviewToFront:) withObject:self.view];
     
+}
+
+/**
+ Method that opens the external url. As well, sends the campaignHit click event.
+ @since 2.0.6
+ */
+- (void)openExternalURL {
+	
+	[MCMCampaignsHelper openExternalCampaign:self.currentCampaignDTO];
+	
+	if ([self.currentCampaignDTO showOnWindow]) {
+        [self close];
+    }
+	
 }
 
 #pragma mark - SKStoreProductViewControllerDelegate methods

@@ -69,9 +69,13 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
 + (MCMCampaignDTO *)selectCampaign:(NSArray *)campaigns forType:(CampaignType)type{
     //Get the sources for the current CampaignType
     MCMCampaignDTO *selectedCampaign = nil;
-    if (type == IN_APP_CROSS_SELLING || type == IN_APP_PROMOTION || type == IN_APP_RATE_MY_APP) {
+    if (type == IN_APP_EXTERNAL_URL || type == IN_APP_CROSS_SELLING || type == IN_APP_PROMOTION || type == IN_APP_RATE_MY_APP) {
         //Gets the one that fits better depending on the weight of the campaign
         NSArray *filteredCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:type];
+		if (type == IN_APP_CROSS_SELLING) {
+			NSArray *externalURLCampaigns = [MCMCampaignsHelper getCampaignsArray:campaigns forType:IN_APP_EXTERNAL_URL];
+			filteredCampaigns = [filteredCampaigns arrayByAddingObjectsFromArray:externalURLCampaigns];
+		}
         //Should have at least one campaign
         if ([filteredCampaigns count] > 0) {
             selectedCampaign = [MCMCampaignsHelper getCampaignPerWeight:filteredCampaigns];
@@ -195,6 +199,13 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
         
         [delegate productViewControllerDidFinish:nil];
     }
+}
+
++ (void)openExternalCampaign:(MCMCampaignDTO *)campaign {
+	
+	if (campaign.type == IN_APP_EXTERNAL_URL && campaign.externalPromotionURL) {
+		[[UIApplication sharedApplication] openURL:campaign.externalPromotionURL];
+	}
 }
 
 #pragma mark - Private methods

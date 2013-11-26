@@ -72,11 +72,17 @@
 	//Promotion feature
     if ([data objectForKey:@"promotionFeature"])
 		[self hydratePromotionFeature:[data objectForKey:@"promotionFeature"]];
+	
+	//External promotion feature
+	if ([data objectForKey:@"externalPromotionFeature"]) {
+		[self hydrateExternalPromotionFeature:[data objectForKey:@"externalPromotionFeature"]];
+	}
 
     //Client limit feature
     if ([data objectForKey:@"clientLimitFeatures"]){
         [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeatures"]];
     }
+	
     //Custom params
     if ([data objectForKey:@"customParamsFeature"] && [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"]){
         self.customParams = [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"];
@@ -84,6 +90,7 @@
         //If there is no properties the field doesn't exists
         self.customParams = [[NSDictionary alloc] init];
     }
+	
     if ([data objectForKey:@"serverOrderFeature"]){
         if ([[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"]) {
             self.weight = [[[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"] intValue];
@@ -146,6 +153,15 @@
     if ([data objectForKey:@"promotionIdentifier"])
 		self.promotionIdentifier = [data objectForKey:@"promotionIdentifier"];
     
+}
+
+- (void)hydrateExternalPromotionFeature:(NSDictionary *)data{
+	
+    if ([data objectForKey:@"externalUrl"]) {
+		NSString *urlString = [data objectForKey:@"externalUrl"];
+		NSURL *url = [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		self.externalPromotionURL = url;
+	}
 }
 
 - (void)hydrateClientLimitFeature:(NSArray *)data{

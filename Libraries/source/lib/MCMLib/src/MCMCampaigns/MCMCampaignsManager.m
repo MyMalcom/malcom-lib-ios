@@ -255,7 +255,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     if (campaign) {
         
-        if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION) {
+        if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION || self.type == IN_APP_EXTERNAL_URL) {
             
             //if previously there is some banner it will be removed in order to be replaced.
             if(self.currentBanner){
@@ -519,7 +519,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 
 - (void)mediaFinishLoading:(MCMCampaignDTO *)campaign{
     
-    if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_PROMOTION) {
+    if (self.type == IN_APP_CROSS_SELLING || self.type == IN_APP_EXTERNAL_URL || self.type == IN_APP_PROMOTION) {
         
         [self showBanner:self.currentBanner];
         
