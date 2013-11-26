@@ -12,7 +12,6 @@
 #import "MCMConfigManager.h"
 #import "MCMSplashViewController.h"
 #import "MCMStatsManager.h"
-//#import "MCMAdManager.h"
 #import "MCMNotificationManager.h"
 #import "MCMCampaignsManager.h"
 #import "MCMStatsDefines.h"
@@ -46,7 +45,6 @@
 + (void)initWithUUID:(NSString *)uuid andSecretKey:(NSString *)secretKey withAdId:(NSString *)adId urlApi:(NSString *)urlApi andLogActivated:(BOOL)logActivated {
     
     //  Activamos/Desactivamos el log
-    
     [MCMLog log:[NSString stringWithFormat:@"Malcom - SDK Version: %@", MCMVersionSDK] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
     [self showLog:logActivated];
@@ -542,6 +540,11 @@
 
 + (void)addCampaignPromotions:(UIView*)view{
     [self addCampaignPromotions:view withDelegate:nil];
+}
+
++ (void)addCampaignPromotions:(UIView *)view withDelegate:(id<MCMCampaignsManagerDelegate>)delegate {
+	
+	[self addCampaignPromotions:view withDelegate:delegate andPlaceHolder:nil];
 }
 
 + (void)addCampaignPromotions:(UIView*)view withDelegate:(id)delegate andPlaceHolder:(UIImage *)placeHolder{
