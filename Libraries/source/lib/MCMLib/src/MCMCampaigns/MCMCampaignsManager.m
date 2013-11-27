@@ -487,7 +487,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         
         
         //Notifies delegate fail
-        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest)]){
+        if(self.delegate && [self.delegate respondsToSelector:@selector(campaignViewDidFailRequest:)]){
             [self.delegate campaignViewDidFailRequest:errorMessage];
         }
         
