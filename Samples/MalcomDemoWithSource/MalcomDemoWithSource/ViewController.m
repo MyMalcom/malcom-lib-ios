@@ -28,6 +28,13 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	
+	[super viewWillAppear:animated];
+	
+	[MalcomLib addCampaignCrossSelling:self.view];
+}
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];

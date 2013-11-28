@@ -11,6 +11,7 @@
 #define kTypeIN_APP_PROMOTION @"IN_APP_PROMOTION"
 #define kTypeIN_APP_RATE_MY_APP @"IN_APP_RATE_MY_APP"
 #define kTypeIN_APP_CROSS_SELLING @"IN_APP_CROSS_SELLING"
+#define kTypeIN_APP_EXTERNAL_URL @"IN_APP_EXTERNAL_URL"
 
 #define kPositionTOP @"TOP"
 #define kPositionBOTTOM @"BOTTOM"
@@ -59,6 +60,8 @@
             self.type = IN_APP_RATE_MY_APP;
         } else if ([dataType isEqualToString:kTypeIN_APP_CROSS_SELLING]) {
             self.type = IN_APP_CROSS_SELLING;
+        } else if ([dataType isEqualToString:kTypeIN_APP_EXTERNAL_URL]) {
+            self.type = IN_APP_EXTERNAL_URL;
         }
     }
     
@@ -69,11 +72,17 @@
 	//Promotion feature
     if ([data objectForKey:@"promotionFeature"])
 		[self hydratePromotionFeature:[data objectForKey:@"promotionFeature"]];
+	
+	//External promotion feature
+	if ([data objectForKey:@"externalPromotionFeature"]) {
+		[self hydrateExternalPromotionFeature:[data objectForKey:@"externalPromotionFeature"]];
+	}
 
     //Client limit feature
     if ([data objectForKey:@"clientLimitFeatures"]){
         [self hydrateClientLimitFeature:[data objectForKey:@"clientLimitFeatures"]];
     }
+	
     //Custom params
     if ([data objectForKey:@"customParamsFeature"] && [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"]){
         self.customParams = [[data objectForKey:@"customParamsFeature"] objectForKey:@"properties"];
@@ -81,6 +90,7 @@
         //If there is no properties the field doesn't exists
         self.customParams = [[NSDictionary alloc] init];
     }
+	
     if ([data objectForKey:@"serverOrderFeature"]){
         if ([[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"]) {
             self.weight = [[[data objectForKey:@"serverOrderFeature"] objectForKey:@"weight"] intValue];
@@ -143,6 +153,15 @@
     if ([data objectForKey:@"promotionIdentifier"])
 		self.promotionIdentifier = [data objectForKey:@"promotionIdentifier"];
     
+}
+
+- (void)hydrateExternalPromotionFeature:(NSDictionary *)data{
+	
+    if ([data objectForKey:@"externalUrl"]) {
+		NSString *urlString = [data objectForKey:@"externalUrl"];
+		NSURL *url = [NSURL URLWithString:[urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		self.externalPromotionURL = url;
+	}
 }
 
 - (void)hydrateClientLimitFeature:(NSArray *)data{
