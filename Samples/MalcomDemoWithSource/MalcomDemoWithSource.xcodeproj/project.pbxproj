@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		142FF0C518436EE000D789DE /* MCMCampaignDTO.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0BA18436EE000D789DE /* MCMCampaignDTO.m */; };
+		142FF0C618436EE000D789DE /* MCMCampaignBannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0BC18436EE000D789DE /* MCMCampaignBannerViewController.m */; };
+		142FF0C718436EE000D789DE /* MCMCampaignsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0BF18436EE000D789DE /* MCMCampaignsHelper.m */; };
+		142FF0C818436EE000D789DE /* MCMCampaignsLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0C118436EE000D789DE /* MCMCampaignsLogic.m */; };
+		142FF0C918436EE000D789DE /* MCMCampaignsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0C318436EE000D789DE /* MCMCampaignsManager.m */; };
+		142FF0D71843C21400D789DE /* MCMKeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 142FF0D61843C21400D789DE /* MCMKeychainItemWrapper.m */; };
+		142FF0D91843C27000D789DE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 142FF0D81843C27000D789DE /* StoreKit.framework */; };
+		142FF0DB1843C2A200D789DE /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 142FF0DA1843C2A200D789DE /* Security.framework */; };
+		142FF0DD1843C2DF00D789DE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 142FF0DC1843C2DF00D789DE /* AdSupport.framework */; };
+		142FF0DE1843C39400D789DE /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33762158A06F600DAA0FC /* CoreTelephony.framework */; };
 		F399C2871588B46D00D74A4A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F399C2861588B46D00D74A4A /* UIKit.framework */; };
 		F399C2891588B46D00D74A4A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F399C2881588B46D00D74A4A /* Foundation.framework */; };
 		F399C28B1588B46D00D74A4A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F399C28A1588B46D00D74A4A /* CoreGraphics.framework */; };
@@ -133,7 +143,6 @@
 		F3A3376B158A06F700DAA0FC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A3375F158A06F600DAA0FC /* AVFoundation.framework */; };
 		F3A3376C158A06F700DAA0FC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33760158A06F600DAA0FC /* CFNetwork.framework */; };
 		F3A3376D158A06F700DAA0FC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33761158A06F600DAA0FC /* CoreLocation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		F3A3376E158A06F700DAA0FC /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33762158A06F600DAA0FC /* CoreTelephony.framework */; };
 		F3A3376F158A06F700DAA0FC /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33763158A06F600DAA0FC /* iAd.framework */; };
 		F3A33770158A06F700DAA0FC /* libz.1.2.5.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33764158A06F600DAA0FC /* libz.1.2.5.dylib */; };
 		F3A33771158A06F700DAA0FC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A33765158A06F600DAA0FC /* MediaPlayer.framework */; };
@@ -144,6 +153,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		142FF0B918436EE000D789DE /* MCMCampaignDTO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignDTO.h; sourceTree = "<group>"; };
+		142FF0BA18436EE000D789DE /* MCMCampaignDTO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignDTO.m; sourceTree = "<group>"; };
+		142FF0BB18436EE000D789DE /* MCMCampaignBannerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignBannerViewController.h; sourceTree = "<group>"; };
+		142FF0BC18436EE000D789DE /* MCMCampaignBannerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignBannerViewController.m; sourceTree = "<group>"; };
+		142FF0BD18436EE000D789DE /* MCMCampaignsDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsDefines.h; sourceTree = "<group>"; };
+		142FF0BE18436EE000D789DE /* MCMCampaignsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsHelper.h; sourceTree = "<group>"; };
+		142FF0BF18436EE000D789DE /* MCMCampaignsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignsHelper.m; sourceTree = "<group>"; };
+		142FF0C018436EE000D789DE /* MCMCampaignsLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsLogic.h; sourceTree = "<group>"; };
+		142FF0C118436EE000D789DE /* MCMCampaignsLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignsLogic.m; sourceTree = "<group>"; };
+		142FF0C218436EE000D789DE /* MCMCampaignsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsManager.h; sourceTree = "<group>"; };
+		142FF0C318436EE000D789DE /* MCMCampaignsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignsManager.m; sourceTree = "<group>"; };
+		142FF0C418436EE000D789DE /* MCMCampaignsManagerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsManagerDelegate.h; sourceTree = "<group>"; };
+		142FF0D51843C21400D789DE /* MCMKeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMKeychainItemWrapper.h; sourceTree = "<group>"; };
+		142FF0D61843C21400D789DE /* MCMKeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMKeychainItemWrapper.m; sourceTree = "<group>"; };
+		142FF0D81843C27000D789DE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		142FF0DA1843C2A200D789DE /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		142FF0DC1843C2DF00D789DE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		F399C2821588B46C00D74A4A /* MalcomDemoWithSource.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MalcomDemoWithSource.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F399C2861588B46D00D74A4A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		F399C2881588B46D00D74A4A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -413,11 +439,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				142FF0DE1843C39400D789DE /* CoreTelephony.framework in Frameworks */,
+				142FF0DD1843C2DF00D789DE /* AdSupport.framework in Frameworks */,
+				142FF0DB1843C2A200D789DE /* Security.framework in Frameworks */,
+				142FF0D91843C27000D789DE /* StoreKit.framework in Frameworks */,
 				F3A3376A158A06F700DAA0FC /* AudioToolbox.framework in Frameworks */,
 				F3A3376B158A06F700DAA0FC /* AVFoundation.framework in Frameworks */,
 				F3A3376C158A06F700DAA0FC /* CFNetwork.framework in Frameworks */,
 				F3A3376D158A06F700DAA0FC /* CoreLocation.framework in Frameworks */,
-				F3A3376E158A06F700DAA0FC /* CoreTelephony.framework in Frameworks */,
 				F3A3376F158A06F700DAA0FC /* iAd.framework in Frameworks */,
 				F3A33770158A06F700DAA0FC /* libz.1.2.5.dylib in Frameworks */,
 				F3A33771158A06F700DAA0FC /* MediaPlayer.framework in Frameworks */,
@@ -434,6 +463,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		142FF0B718436EE000D789DE /* MCMCampaigns */ = {
+			isa = PBXGroup;
+			children = (
+				142FF0B818436EE000D789DE /* DTO */,
+				142FF0BB18436EE000D789DE /* MCMCampaignBannerViewController.h */,
+				142FF0BC18436EE000D789DE /* MCMCampaignBannerViewController.m */,
+				142FF0BD18436EE000D789DE /* MCMCampaignsDefines.h */,
+				142FF0BE18436EE000D789DE /* MCMCampaignsHelper.h */,
+				142FF0BF18436EE000D789DE /* MCMCampaignsHelper.m */,
+				142FF0C018436EE000D789DE /* MCMCampaignsLogic.h */,
+				142FF0C118436EE000D789DE /* MCMCampaignsLogic.m */,
+				142FF0C218436EE000D789DE /* MCMCampaignsManager.h */,
+				142FF0C318436EE000D789DE /* MCMCampaignsManager.m */,
+				142FF0C418436EE000D789DE /* MCMCampaignsManagerDelegate.h */,
+			);
+			path = MCMCampaigns;
+			sourceTree = "<group>";
+		};
+		142FF0B818436EE000D789DE /* DTO */ = {
+			isa = PBXGroup;
+			children = (
+				142FF0B918436EE000D789DE /* MCMCampaignDTO.h */,
+				142FF0BA18436EE000D789DE /* MCMCampaignDTO.m */,
+			);
+			path = DTO;
+			sourceTree = "<group>";
+		};
 		F399C2771588B46C00D74A4A = {
 			isa = PBXGroup;
 			children = (
@@ -454,6 +510,9 @@
 		F399C2851588B46D00D74A4A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				142FF0DC1843C2DF00D789DE /* AdSupport.framework */,
+				142FF0DA1843C2A200D789DE /* Security.framework */,
+				142FF0D81843C27000D789DE /* StoreKit.framework */,
 				F3A3375E158A06F600DAA0FC /* AudioToolbox.framework */,
 				F3A3375F158A06F600DAA0FC /* AVFoundation.framework */,
 				F3A33760158A06F600DAA0FC /* CFNetwork.framework */,
@@ -827,6 +886,7 @@
 		F3A33640158A066B00DAA0FC /* src */ = {
 			isa = PBXGroup;
 			children = (
+				142FF0B718436EE000D789DE /* MCMCampaigns */,
 				F3A33641158A066B00DAA0FC /* MCMAd */,
 				F3A3369A158A066B00DAA0FC /* MCMConfig */,
 				F3A336AE158A066B00DAA0FC /* MCMCore */,
@@ -1029,6 +1089,8 @@
 		F3A336B7158A066B00DAA0FC /* private */ = {
 			isa = PBXGroup;
 			children = (
+				142FF0D51843C21400D789DE /* MCMKeychainItemWrapper.h */,
+				142FF0D61843C21400D789DE /* MCMKeychainItemWrapper.m */,
 				F3A336B8158A066B00DAA0FC /* MCMCoreAPIRequest.h */,
 				F3A336B9158A066B00DAA0FC /* MCMCoreAPIRequest.m */,
 				F3A336BA158A066B00DAA0FC /* MCMCoreDefines.h */,
@@ -1198,6 +1260,8 @@
 				F3A336E2158A066B00DAA0FC /* MVYFeedManager.m in Sources */,
 				F3A336E4158A066B00DAA0FC /* MVYFeedParser.m in Sources */,
 				F3A336E5158A066B00DAA0FC /* MVYFeedParserDelegateAtom.m in Sources */,
+				142FF0C818436EE000D789DE /* MCMCampaignsLogic.m in Sources */,
+				142FF0C618436EE000D789DE /* MCMCampaignBannerViewController.m in Sources */,
 				F3A336E6158A066B00DAA0FC /* MVYFeedParserDelegateDC.m in Sources */,
 				F3A336E7158A066B00DAA0FC /* MVYFeedParserDelegateRSS.m in Sources */,
 				F3A336E8158A066B00DAA0FC /* MVYFeedParserDelegateYahooMedia.m in Sources */,
@@ -1225,6 +1289,7 @@
 				F3A33707158A066B00DAA0FC /* MCMhmac.c in Sources */,
 				F3A33708158A066B00DAA0FC /* MCMsha1.c in Sources */,
 				F3A33709158A066B00DAA0FC /* MCMNSObject+SBJSON.m in Sources */,
+				142FF0C518436EE000D789DE /* MCMCampaignDTO.m in Sources */,
 				F3A3370A158A066B00DAA0FC /* MCMNSString+SBJSON.m in Sources */,
 				F3A3370B158A066B00DAA0FC /* MCMSBJSON.m in Sources */,
 				F3A3370C158A066B00DAA0FC /* MCMSBJsonBase.m in Sources */,
@@ -1243,9 +1308,11 @@
 				F3A33719158A066B00DAA0FC /* MCMNSScanner_Extensions.m in Sources */,
 				F3A3371A158A066B00DAA0FC /* MCJSONSerializer.m in Sources */,
 				F3A3371B158A066B00DAA0FC /* MCMCJSONDataSerializer.m in Sources */,
+				142FF0C718436EE000D789DE /* MCMCampaignsHelper.m in Sources */,
 				F3A3371C158A066B00DAA0FC /* MCMCJSONDeserializer.m in Sources */,
 				F3A3371D158A066B00DAA0FC /* MCMCJSONScanner.m in Sources */,
 				F3A3371E158A066B00DAA0FC /* MCMCSerializedJSONData.m in Sources */,
+				142FF0D71843C21400D789DE /* MCMKeychainItemWrapper.m in Sources */,
 				F3A3371F158A066B00DAA0FC /* MCMCDataScanner.m in Sources */,
 				F3A33724158A066B00DAA0FC /* AdWhirlAdapterIAd.m in Sources */,
 				F3A3372E158A066C00DAA0FC /* AdWhirlAdapterCustom.m in Sources */,
@@ -1261,6 +1328,7 @@
 				F3A33738158A066C00DAA0FC /* AdWhirlCustomAdView.m in Sources */,
 				F3A33739158A066C00DAA0FC /* AdWhirlError.m in Sources */,
 				F3A3373A158A066C00DAA0FC /* AdWhirlLog.m in Sources */,
+				142FF0C918436EE000D789DE /* MCMCampaignsManager.m in Sources */,
 				F3A3373B158A066C00DAA0FC /* AdWhirlView.m in Sources */,
 				F3A3373D158A066C00DAA0FC /* AdWhirlWebBrowserController.m in Sources */,
 				F3A3373E158A066C00DAA0FC /* ARRollerView.m in Sources */,
@@ -1375,7 +1443,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DDISTRIBUTION=0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -1388,7 +1456,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomDemoWithSource/MalcomDemoWithSource-Prefix.pch";
 				INFOPLIST_FILE = "MalcomDemoWithSource/MalcomDemoWithSource-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = (
 					"-DNS_BLOCK_ASSERTIONS=1",
 					"-DDISTRIBUTION=0",

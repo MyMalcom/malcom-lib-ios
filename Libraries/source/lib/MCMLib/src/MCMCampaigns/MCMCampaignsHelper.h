@@ -36,4 +36,6 @@
 
 + (void)openAppStoreWithAppId:(NSString *)appId withDelegate:(id<SKStoreProductViewControllerDelegate>)delegate andAppStoreContainerView:(UIView *)appStoreContainerView;
 
++ (void)openExternalCampaign:(MCMCampaignDTO *)campaign;
+
 @end
