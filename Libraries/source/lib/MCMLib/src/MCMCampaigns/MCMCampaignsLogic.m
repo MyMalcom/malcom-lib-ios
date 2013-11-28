@@ -123,7 +123,7 @@
     
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:[defaults objectForKey:kRateMyAppParameters]];
     
-    return parameters;
+    return [parameters autorelease];
 }
 
 + (void)setRateMyAppParameters:(NSDictionary *)parameters {

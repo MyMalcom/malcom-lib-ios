@@ -82,7 +82,7 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
         }
     }
     
-    return [selectedCampaign autorelease];
+    return selectedCampaign;
 }
 
 + (NSArray *)createBannersForCampaigns:(NSArray *)campaigns inView:(UIView *)containerView withPlaceHolder:(UIImage *)placeHolderImage{
@@ -97,6 +97,7 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
         [bannerViewController.view setTag:i];
         
         [bannersArray addObject:bannerViewController];
+		[bannerViewController release];
     }
     
     return [NSArray arrayWithArray:bannersArray];

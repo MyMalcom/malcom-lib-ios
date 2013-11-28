@@ -198,6 +198,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
 	
 		MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
         [campaignsArray addObject:campaignModel];
+		[campaignModel release];
         
     }
     

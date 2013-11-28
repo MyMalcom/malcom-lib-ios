@@ -252,7 +252,7 @@
 }
 
 + (void)identifyUserWithName: (NSString *)name mail: (NSString *)mail {
-    [self identifyUserWithName:name mail:mail andParams:[[NSMutableDictionary alloc] initWithCapacity:1]];
+    [self identifyUserWithName:name mail:mail andParams:[[[NSMutableDictionary alloc] initWithCapacity:1] autorelease]];
 }
 
 + (void)identifyUserWithName: (NSString *)name mail: (NSString *)mail andParams: (NSDictionary *)params {
@@ -263,6 +263,8 @@
     [userDictionary addEntriesFromDictionary:params];
     
     [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"app_user" forType:TYPE_SPECIAL andParams:userDictionary timeSession:NO];
+	[userDictionary release];
+	
 }
 
 + (void)registerRevenueWithName: (NSString *)name SKU: (NSString *)SKU price: (float)price currencyCode: (NSString *)currency andAmount: (int)amount{
@@ -275,6 +277,8 @@
     [revenueDictionary setObject:[NSString stringWithFormat:@"%d", amount] forKey:@"amount"];
     
     [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"revenue" forType:TYPE_SPECIAL andParams:revenueDictionary timeSession:NO];
+	[revenueDictionary release];
+	
 }
 
 +(void)trackView:(NSString *)name{
@@ -283,6 +287,8 @@
     [screenViewDictionary setObject:name forKey:@"name"];
 
     [[MCMStatsManager sharedInstance] startSubBeaconWithName:@"screenview" forType:TYPE_SPECIAL andParams:screenViewDictionary timeSession:NO];
+	[screenViewDictionary release];
+	
 }
 
 + (void)setTags:(NSArray *)tags {
