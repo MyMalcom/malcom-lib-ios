@@ -20,7 +20,7 @@
 	if (self != nil)
 	{
 		self.name = beaconName;
-        self.params = [[NSMutableDictionary alloc] initWithCapacity:1];
+        params_ = [[NSMutableDictionary alloc] initWithCapacity:1];
         self.type= TYPE_CUSTOM;
 	}
 	return self;
@@ -34,9 +34,9 @@
 		self.name = beaconName;
         self.type = type;
         if (paramsDictionary) {
-            self.params = [[NSMutableDictionary alloc] initWithDictionary: paramsDictionary];
+            params_ = [[NSMutableDictionary alloc] initWithDictionary: paramsDictionary];
         }else{
-            self.params = [[NSMutableDictionary alloc] initWithCapacity:1];
+            params_ = [[NSMutableDictionary alloc] initWithCapacity:1];
         }
         
 	}
@@ -52,6 +52,13 @@
 			[NSNumber numberWithDouble:[startedOn_ timeIntervalSince1970]], @"started_on",
 			[NSNumber numberWithDouble:[stoppedOn_ timeIntervalSince1970]], @"stopped_on",
 			nil];
+}
+
+- (void)dealloc
+{
+    [params_ release];
+	
+	[super dealloc];
 }
 
 @end

@@ -92,7 +92,8 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
     for (int i=0;i<[campaigns count];i++) {
         //creates a banner with the specifications
         MCMCampaignBannerViewController *bannerViewController = [[MCMCampaignBannerViewController alloc] initInView:containerView
-                                                                                                    withPlaceholder:placeHolderImage andCampaign:[campaigns objectAtIndex:i]];
+                                                                                                    withPlaceholder:placeHolderImage
+																										andCampaign:[campaigns objectAtIndex:i]];
         [bannerViewController.view setTag:i];
         
         [bannersArray addObject:bannerViewController];
@@ -106,15 +107,14 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
     NSMutableArray *resultArray = [[NSMutableArray alloc] init];
     
     //generates the array with only the promotion campaigns
-    for(int i=0; i<[campaigns count]; i++){
-        
-        MCMCampaignDTO *campaignModel = [campaigns objectAtIndex:i];
-        
-        if (campaignModel.type == type) {
+	
+	for (MCMCampaignDTO *campaignModel in campaigns) {
+		
+		if (campaignModel.type == type) {
             [resultArray addObject:campaignModel];
         }
-        
-    }
+
+	}
     
     return [resultArray autorelease];
     

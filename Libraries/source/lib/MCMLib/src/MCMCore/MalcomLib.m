@@ -75,6 +75,8 @@
         [settings writeToFile:bundlePath atomically:YES];
     }
     
+	[settings release];
+	
     // Automatic initialization
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(resumeMalcom)
                                                  name:UIApplicationDidBecomeActiveNotification object:nil];

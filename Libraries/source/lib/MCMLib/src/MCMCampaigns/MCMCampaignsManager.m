@@ -193,12 +193,10 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     NSMutableArray *campaignsArray = [[NSMutableArray alloc] initWithCapacity:1];
     
     //parses all the campaigns
-    for(int i=0; i<[items count];i++){
-        
-        //gets the first element of the dictionary
-        NSDictionary *dict = [items objectAtIndex:i];
-        
-        MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
+	
+	for (NSDictionary *dict in items) {
+	
+		MCMCampaignDTO *campaignModel = [[MCMCampaignDTO alloc] initWithDictionary:dict];
         [campaignsArray addObject:campaignModel];
         
     }
@@ -245,6 +243,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
         }
     }
     
+	[campaignsArray release]; 
 }
 
 /**
@@ -505,7 +504,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     NSString *errorMessage = [NSString stringWithFormat:@"Error receiving campaing file: %@", [err description]];
     MCMLog(errorMessage);
-    
+	
     //Calls the error block
     if (self.errorBlock != nil) {
         self.errorBlock(errorMessage);
