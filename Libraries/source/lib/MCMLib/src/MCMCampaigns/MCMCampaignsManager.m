@@ -422,15 +422,13 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     UIView *containerView;
     
     //depending on the situation it will show it in window or in the container view.
-    if([self.currentBanner.currentCampaignDTO showOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+    if( _campaignContainerView == nil ){ //adds it to the window
         
         UIWindow* window = [UIApplication sharedApplication].keyWindow;
         if (!window)
             window = [[UIApplication sharedApplication].windows objectAtIndex:0];
         
         containerView = [[window subviews] objectAtIndex:0];
-        
-        containerView = [[[UIApplication sharedApplication] delegate] window];
         
     }else{ //adds to the specified view
         containerView = _campaignContainerView;
