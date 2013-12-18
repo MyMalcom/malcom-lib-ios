@@ -20,6 +20,18 @@
 #define middlePortraitWidth 240.0f
 #define middlePortraitHeight 350.0f
 
+#define middleLandscapeIPadWidth 750.0f
+#define middleLandscapeIPadHeight 560.0f
+#define middlePortraitIPadWidth 560.0f
+#define middlePortraitIPadHeight 750.0f
+
+#ifdef UI_USER_INTERFACE_IDIOM()
+    #define IS_IPAD() (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#else
+    #define IS_IPAD() (false)
+#endif
+
+
 @interface MCMCampaignBannerViewController ()
 
 @property (nonatomic, retain) UIView *containerView;
@@ -313,12 +325,19 @@
         int width = 0;
         int height = 0;
         
-        if(self.currentCampaignDTO.position == MIDDLE_LANDSCAPE){
+        if(self.currentCampaignDTO.position == MIDDLE_LANDSCAPE && !IS_IPAD()){
             width = middleLandscapeWidth;
             height = middleLandscapeHeight;
-        }else if(self.currentCampaignDTO.position == MIDDLE_PORTRAIT){
+        }else if(self.currentCampaignDTO.position == MIDDLE_PORTRAIT && !IS_IPAD()){
             width = middlePortraitWidth;
             height = middlePortraitHeight;
+        }
+        else if(self.currentCampaignDTO.position == MIDDLE_LANDSCAPE && IS_IPAD()){
+            width = middleLandscapeIPadWidth;
+            height = middleLandscapeIPadHeight;
+        }else if(self.currentCampaignDTO.position == MIDDLE_PORTRAIT && IS_IPAD()){
+            width = middlePortraitIPadWidth;
+            height = middlePortraitIPadHeight;
         }
         
         //centers the bannerButton

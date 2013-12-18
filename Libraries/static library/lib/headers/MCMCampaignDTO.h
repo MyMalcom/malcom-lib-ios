@@ -11,7 +11,8 @@
 typedef enum _CampaignType {
 	IN_APP_PROMOTION = 0,
 	IN_APP_RATE_MY_APP = 1,
-	IN_APP_CROSS_SELLING = 2
+	IN_APP_CROSS_SELLING = 2,
+	IN_APP_EXTERNAL_URL = 3
 } CampaignType;
 
 typedef enum _CampaignPosition {
@@ -35,9 +36,10 @@ typedef enum _CampaignPosition {
 @property (nonatomic,assign) CampaignPosition position;     //position in screen
 @property (nonatomic,retain) NSString *promotionType;       //the type of the object promotion
 @property (nonatomic,retain) NSString *promotionIdentifier; //app store identifier
+@property (nonatomic,retain) NSURL *externalPromotionURL;	//external promotion url
 @property (nonatomic,retain) NSDictionary *clientLimitFeature;//the client limit parameters
-@property (nonatomic,copy) NSDictionary *customParams;    //Custom parameters defined in malcom
-@property (nonatomic,assign) int weight;                  //this value is used to random weighted selection once the total weight is known
+@property (nonatomic,copy) NSDictionary *customParams;		//Custom parameters defined in malcom
+@property (nonatomic,assign) int weight;					//this value is used to random weighted selection once the total weight is known
 
 - (id)initWithDictionary:(NSDictionary *)dict;
 - (void)hydrate:(NSDictionary *)data;
