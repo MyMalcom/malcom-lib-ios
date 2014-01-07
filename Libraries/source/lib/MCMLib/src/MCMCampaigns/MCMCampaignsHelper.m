@@ -110,8 +110,9 @@ typedef void(^CompletionBlock)(bool userRate, bool userDisableRate);
     //generates the array with only the promotion campaigns
 	
 	for (MCMCampaignDTO *campaignModel in campaigns) {
-		
-		if (campaignModel.type == type) {
+        
+		if (campaignModel.type == type ||
+            ((type == IN_APP_CROSS_SELLING && campaignModel.type == IN_APP_EXTERNAL_URL))) {
             [resultArray addObject:campaignModel];
         }
 
