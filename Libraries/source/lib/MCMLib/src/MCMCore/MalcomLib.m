@@ -91,13 +91,19 @@
 
 + (NSString *)getUDID {
     
-    return [MCMCoreUtils uniqueIdentifier];
+    return [MalcomLib getMalcomID];
     
 }
 
 + (NSString *)getMalcomID {
     
-    return [MCMCoreUtils deviceIdentifier];
+    NSString *identifier = [MCMCoreUtils uniqueIdentifier];
+    
+    IF_IOS6_OR_GREATER(
+                       identifier = [MCMCoreUtils deviceIdentifier];
+    )
+    
+    return identifier;
     
 }
 
@@ -220,7 +226,7 @@
 }
 
 + (void)endBeacon {
-    NSLog(@"[MalcomLib endBeacon] - This method is no more needed");
+    NSLog(@"[MalcomLib endBeacon] - This method is no longer needed");
 }
 
 + (void)privateEndBeacon {
@@ -246,6 +252,30 @@
 }
 
 + (void)endBeaconWithName:(NSString *)name andParams: (NSDictionary *) params{
+    
+    [[MCMStatsManager sharedInstance] endSubBeaconWithName:name andParams:params];
+    
+}
+
++ (void)startEventWithName:(NSString *)name{
+    
+    [self startEventWithName:name andParams:nil andTimeSession:YES];
+    
+}
+
++ (void)startEventWithName:(NSString *)name andParams:(NSDictionary *)params andTimeSession:(BOOL)timeSession{
+
+    [[MCMStatsManager sharedInstance] startSubBeaconWithName:name forType:TYPE_CUSTOM andParams:params timeSession:timeSession];
+    
+}
+
++ (void)endEventWithName:(NSString *)name{
+    
+    [self endEventWithName:name andParams:nil];
+    
+}
+
++ (void)endEventWithName:(NSString *)name andParams:(NSDictionary *)params{
     
     [[MCMStatsManager sharedInstance] endSubBeaconWithName:name andParams:params];
     
@@ -454,7 +484,7 @@
     
 }
 
-+ (void) setAppInactive{
++ (void)setAppInactive{
 
     [[NSUserDefaults standardUserDefaults] setBool:FALSE forKey:@"mcm_appActive"];
     [[NSUserDefaults standardUserDefaults] synchronize];

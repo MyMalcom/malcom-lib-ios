@@ -72,7 +72,7 @@
  return get malcom udid from device
  @since 2.0.0
  */
-+ (NSString *)getUDID;
++ (NSString *)getUDID __attribute__((deprecated("use getMalcomID")));
 
 + (NSString *)getMalcomID;
 
@@ -140,14 +140,14 @@
  End stats and send beacons to Malcom
  @since 2.0.0
  */
-+ (void)endBeacon;
++ (void)endBeacon __attribute__((deprecated));
 
 /**
  Start stats for a viewController or action
  @param action's name
  @since 2.0.0
  */
-+ (void)startBeaconWithName:(NSString *)name;
++ (void)startBeaconWithName:(NSString *)name __attribute__((deprecated("use startEventWithName instead")));
 
 /**
  End stats for a viewController or action adding params
@@ -156,14 +156,14 @@
  @param timeSession if the user wants to track the time that subbeacon takes
  @since 2.0.2
  */
-+ (void)startBeaconWithName:(NSString *)name andParams: (NSDictionary *) params andTimeSession: (BOOL)timeSession;
++ (void)startBeaconWithName:(NSString *)name andParams:(NSDictionary *)params andTimeSession: (BOOL)timeSession  __attribute__((deprecated("use startEventWithName instead")));
 
 /**
  End stats for a viewController or action
  @param action's name
  @since 2.0.0
  */
-+ (void)endBeaconWithName:(NSString *)name;
++ (void)endBeaconWithName:(NSString *)name __attribute__((deprecated("use endEventWithName instead")));
 
 /**
  End stats for a viewController or action adding params
@@ -171,7 +171,38 @@
  @param params attributes
  @since 2.0.2
  */
-+ (void)endBeaconWithName:(NSString *)name andParams: (NSDictionary *) params;
++ (void)endBeaconWithName:(NSString *)name andParams:(NSDictionary *)params __attribute__((deprecated("use endEventWithName instead")));
+
+/**
+ Start event
+ @param event's name
+ @since 2.1
+ */
++ (void)startEventWithName:(NSString *)name;
+
+/**
+ Start event adding params
+ @param event's name
+ @param params attributes
+ @param timeSession if the user wants to track the time that event takes
+ @since 2.1
+ */
++ (void)startEventWithName:(NSString *)name andParams:(NSDictionary *)params andTimeSession: (BOOL)timeSession;
+
+/**
+ End event
+ @param event's name
+ @since 2.1
+ */
++ (void)endEventWithName:(NSString *)name;
+
+/**
+ End event adding params
+ @param event's name
+ @param params attributes
+ @since 2.1
+ */
++ (void)endEventWithName:(NSString *)name andParams:(NSDictionary *)params;
 
 /**
  Method that configures an user as identifier of the application
