@@ -716,6 +716,13 @@
 		D5AC896317DF6D5500F875EA /* MCMCampaignsLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AC896017DF6D5400F875EA /* MCMCampaignsLogic.m */; };
 		D5AC896417DF6D5500F875EA /* MCMCampaignsLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AC896017DF6D5400F875EA /* MCMCampaignsLogic.m */; };
 		D5AC896517DF6D5500F875EA /* MCMCampaignsLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = D5AC896017DF6D5400F875EA /* MCMCampaignsLogic.m */; };
+		D5BAFCB41892BF540049343F /* MCMWindowView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5BAFCB31892BF540049343F /* MCMWindowView.m */; };
+		D5BAFCB51892BF6C0049343F /* MCMWindowView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5BAFCB31892BF540049343F /* MCMWindowView.m */; };
+		D5BAFCB61892BF6D0049343F /* MCMWindowView.m in Sources */ = {isa = PBXBuildFile; fileRef = D5BAFCB31892BF540049343F /* MCMWindowView.m */; };
+		D5BAFCB71892BF980049343F /* MCMWindowViewDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = D5BAFCB11892BF200049343F /* MCMWindowViewDefines.h */; };
+		D5BAFCB81892BF990049343F /* MCMWindowViewDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = D5BAFCB11892BF200049343F /* MCMWindowViewDefines.h */; };
+		D5BAFCB91892BF9D0049343F /* MCMWindowView.h in Headers */ = {isa = PBXBuildFile; fileRef = D5BAFCB21892BF540049343F /* MCMWindowView.h */; };
+		D5BAFCBA1892BF9D0049343F /* MCMWindowView.h in Headers */ = {isa = PBXBuildFile; fileRef = D5BAFCB21892BF540049343F /* MCMWindowView.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1075,6 +1082,9 @@
 		D5AC895D17DF661F00F875EA /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D5AC895F17DF6D5300F875EA /* MCMCampaignsLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsLogic.h; sourceTree = "<group>"; };
 		D5AC896017DF6D5400F875EA /* MCMCampaignsLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignsLogic.m; sourceTree = "<group>"; };
+		D5BAFCB11892BF200049343F /* MCMWindowViewDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCMWindowViewDefines.h; sourceTree = "<group>"; };
+		D5BAFCB21892BF540049343F /* MCMWindowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMWindowView.h; sourceTree = "<group>"; };
+		D5BAFCB31892BF540049343F /* MCMWindowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMWindowView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1776,6 +1786,9 @@
 				C1A1AECE1781EA6C00D5C121 /* MCMKeychainItemWrapper.m */,
 				C1A1AECF1781EA6C00D5C121 /* MCMLog.h */,
 				C1A1AED01781EA6C00D5C121 /* MCMLog.m */,
+				D5BAFCB11892BF200049343F /* MCMWindowViewDefines.h */,
+				D5BAFCB21892BF540049343F /* MCMWindowView.h */,
+				D5BAFCB31892BF540049343F /* MCMWindowView.m */,
 			);
 			path = private;
 			sourceTree = "<group>";
@@ -2079,6 +2092,8 @@
 				C1A1B13E1781EA6C00D5C121 /* MCMApplicationDelegate.h in Headers */,
 				C1A1B1431781EA6C00D5C121 /* MCMViewController.h in Headers */,
 				C1A1B1481781EA6C00D5C121 /* MCMLib.h in Headers */,
+				D5BAFCB81892BF990049343F /* MCMWindowViewDefines.h in Headers */,
+				D5BAFCBA1892BF9D0049343F /* MCMWindowView.h in Headers */,
 				C1A1B14A1781EA6C00D5C121 /* MCMNotificationManager.h in Headers */,
 				C1A1B14F1781EA6C00D5C121 /* MCMNotifications.h in Headers */,
 				C1A1B1511781EA6C00D5C121 /* MCMNotificationsAdapter.h in Headers */,
@@ -2187,6 +2202,8 @@
 				C1A1B1201781EA6C00D5C121 /* MCMCoreAPIRequest.h in Headers */,
 				C1A1B1251781EA6C00D5C121 /* MCMCoreDefines.h in Headers */,
 				C1A1B1271781EA6C00D5C121 /* MCMCoreSingleton.h in Headers */,
+				D5BAFCB71892BF980049343F /* MCMWindowViewDefines.h in Headers */,
+				D5BAFCB91892BF9D0049343F /* MCMWindowView.h in Headers */,
 				C1A1B12E1781EA6C00D5C121 /* MCMCoreWebAlertView.h in Headers */,
 				C1A1B1331781EA6C00D5C121 /* MCMKeychainItemWrapper.h in Headers */,
 				C1A1B1491781EA6C00D5C121 /* MCMNotificationManager.h in Headers */,
@@ -2649,6 +2666,7 @@
 				C1A1AF591781EA6C00D5C121 /* MCMASIAuthenticationDialog.m in Sources */,
 				C1A1AF601781EA6C00D5C121 /* MCMASIDataCompressor.m in Sources */,
 				C1A1AF651781EA6C00D5C121 /* MCMASIDataDecompressor.m in Sources */,
+				D5BAFCB41892BF540049343F /* MCMWindowView.m in Sources */,
 				C1A1AF6A1781EA6C00D5C121 /* MCMASIDownloadCache.m in Sources */,
 				C1A1AF6F1781EA6C00D5C121 /* MCMASIFormDataRequest.m in Sources */,
 				C1A1AF741781EA6C00D5C121 /* MCMASIHTTPRequest.m in Sources */,
@@ -2823,6 +2841,7 @@
 				C1A1B14D1781EA6C00D5C121 /* MCMNotificationManager.m in Sources */,
 				C1A1B1541781EA6C00D5C121 /* MCMNotificationsAdapter.m in Sources */,
 				C1A1B15D1781EA6C00D5C121 /* MCMNotificationUtils.m in Sources */,
+				D5BAFCB61892BF6D0049343F /* MCMWindowView.m in Sources */,
 				C1A1B1641781EA6C00D5C121 /* MCMStatsAdapter.m in Sources */,
 				C1A1B1691781EA6C00D5C121 /* MCMStatsManager.m in Sources */,
 				C1A1B1701781EA6C00D5C121 /* MCMStatsLocatorService.m in Sources */,
@@ -2913,6 +2932,7 @@
 				C1A1B14C1781EA6C00D5C121 /* MCMNotificationManager.m in Sources */,
 				C1A1B1531781EA6C00D5C121 /* MCMNotificationsAdapter.m in Sources */,
 				C1A1B15C1781EA6C00D5C121 /* MCMNotificationUtils.m in Sources */,
+				D5BAFCB51892BF6C0049343F /* MCMWindowView.m in Sources */,
 				C1A1B1631781EA6C00D5C121 /* MCMStatsAdapter.m in Sources */,
 				C1A1B1681781EA6C00D5C121 /* MCMStatsManager.m in Sources */,
 				C1A1B16F1781EA6C00D5C121 /* MCMStatsLocatorService.m in Sources */,
@@ -3181,7 +3201,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
-				CURRENT_PROJECT_VERSION = 2.0.9;
+				CURRENT_PROJECT_VERSION = 2.0.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -3191,7 +3211,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
-				CURRENT_PROJECT_VERSION = 2.0.9;
+				CURRENT_PROJECT_VERSION = 2.0.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
