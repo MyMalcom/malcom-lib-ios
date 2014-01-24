@@ -23,6 +23,7 @@
 #import "MCMCampaignsHelper.h"
 #import "MCMCampaignsDefines.h"
 #import "MCMCampaignsLogic.h"
+#import "MCMWindowView.h"
 
 typedef void(^CompletionBlock)(NSArray* campaignBannersVC);
 typedef void(^ErrorBlock)(NSString* errorMessage);
@@ -422,17 +423,10 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     UIView *containerView;
     
     //depending on the situation it will show it in window or in the container view.
-    if( _campaignContainerView == nil ){ //adds it to the window
-        
-        UIWindow* window = [UIApplication sharedApplication].keyWindow;
-        if (!window)
-            window = [[UIApplication sharedApplication].windows objectAtIndex:0];
-        
-        containerView = [[window subviews] objectAtIndex:0];
-        
+    if( [self.currentBanner.currentCampaignDTO showOnWindow] || _campaignContainerView == nil ){ //adds it to the window
+        containerView = [[MCMWindowView alloc] initAndAddToKeyWindow];
     }else{ //adds to the specified view
         containerView = _campaignContainerView;
-        
     }
     
     return containerView;
