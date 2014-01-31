@@ -379,6 +379,9 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     
     if(self.currentBanner.view.superview){
         [self.currentBanner.view removeFromSuperview];
+        if (_campaignContainerView != nil && [_campaignContainerView isKindOfClass:[MCMWindowView class]]) {
+            [(MCMWindowView*)_campaignContainerView slideDownSubviewsAndRemoveFromSuperview:nil];
+        }
     }
 
     self.currentBanner = nil;
@@ -425,6 +428,7 @@ typedef void(^ErrorBlock)(NSString* errorMessage);
     //depending on the situation it will show it in window or in the container view.
     if( [self.currentBanner.currentCampaignDTO showOnWindow] || _campaignContainerView == nil ){ //adds it to the window
         containerView = [[MCMWindowView alloc] initAndAddToKeyWindow];
+        _campaignContainerView = containerView;
     }else{ //adds to the specified view
         containerView = _campaignContainerView;
     }
