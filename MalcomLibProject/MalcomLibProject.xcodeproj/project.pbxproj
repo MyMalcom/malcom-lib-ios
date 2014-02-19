@@ -710,6 +710,11 @@
 		C1A1B28D1781EA8300D5C121 /* MCMAdViewControllerDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1CC1781EA8300D5C121 /* MCMAdViewControllerDelegate.h */; };
 		C1A1B28E1781EA8300D5C121 /* MCMAdDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1CE1781EA8300D5C121 /* MCMAdDefines.h */; };
 		C1A1B28F1781EA8300D5C121 /* MCMAdDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = C1A1B1CE1781EA8300D5C121 /* MCMAdDefines.h */; };
+		D532520718A2973700172A26 /* MCMNotificationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D532520618A2973700172A26 /* MCMNotificationToken.m */; };
+		D532520818A2975100172A26 /* MCMNotificationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = D532520518A2973700172A26 /* MCMNotificationToken.h */; };
+		D532520918A2975200172A26 /* MCMNotificationToken.h in Headers */ = {isa = PBXBuildFile; fileRef = D532520518A2973700172A26 /* MCMNotificationToken.h */; };
+		D532520A18A2975900172A26 /* MCMNotificationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D532520618A2973700172A26 /* MCMNotificationToken.m */; };
+		D532520B18A2975900172A26 /* MCMNotificationToken.m in Sources */ = {isa = PBXBuildFile; fileRef = D532520618A2973700172A26 /* MCMNotificationToken.m */; };
 		D5AC895E17DF662000F875EA /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5AC895D17DF661F00F875EA /* ImageIO.framework */; };
 		D5AC896117DF6D5500F875EA /* MCMCampaignsLogic.h in Headers */ = {isa = PBXBuildFile; fileRef = D5AC895F17DF6D5300F875EA /* MCMCampaignsLogic.h */; };
 		D5AC896217DF6D5500F875EA /* MCMCampaignsLogic.h in Headers */ = {isa = PBXBuildFile; fileRef = D5AC895F17DF6D5300F875EA /* MCMCampaignsLogic.h */; };
@@ -1079,6 +1084,8 @@
 		C1A1B1CB1781EA8300D5C121 /* MCMAdManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMAdManager.m; sourceTree = "<group>"; };
 		C1A1B1CC1781EA8300D5C121 /* MCMAdViewControllerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdViewControllerDelegate.h; sourceTree = "<group>"; };
 		C1A1B1CE1781EA8300D5C121 /* MCMAdDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMAdDefines.h; sourceTree = "<group>"; };
+		D532520518A2973700172A26 /* MCMNotificationToken.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMNotificationToken.h; sourceTree = "<group>"; };
+		D532520618A2973700172A26 /* MCMNotificationToken.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMNotificationToken.m; sourceTree = "<group>"; };
 		D5AC895D17DF661F00F875EA /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		D5AC895F17DF6D5300F875EA /* MCMCampaignsLogic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MCMCampaignsLogic.h; sourceTree = "<group>"; };
 		D5AC896017DF6D5400F875EA /* MCMCampaignsLogic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MCMCampaignsLogic.m; sourceTree = "<group>"; };
@@ -1824,6 +1831,8 @@
 				C1A1AEDF1781EA6C00D5C121 /* MCMNotificationsDefines.h */,
 				C1A1AEE01781EA6C00D5C121 /* MCMNotificationUtils.h */,
 				C1A1AEE11781EA6C00D5C121 /* MCMNotificationUtils.m */,
+				D532520518A2973700172A26 /* MCMNotificationToken.h */,
+				D532520618A2973700172A26 /* MCMNotificationToken.m */,
 			);
 			path = private;
 			sourceTree = "<group>";
@@ -2005,6 +2014,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A1AEEF1781EA6C00D5C121 /* MVYFeed.h in Headers */,
+				D532520918A2975200172A26 /* MCMNotificationToken.h in Headers */,
 				C1A1AEF41781EA6C00D5C121 /* MVYFeedItem.h in Headers */,
 				C1A1AEF91781EA6C00D5C121 /* MVYFeedManager.h in Headers */,
 				C1A1AEFF1781EA6C00D5C121 /* MVYFeedParser.h in Headers */,
@@ -2115,6 +2125,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1A1B0D61781EA6C00D5C121 /* MCMCampaignBannerViewController.h in Headers */,
+				D532520818A2975100172A26 /* MCMNotificationToken.h in Headers */,
 				C1A1B0E71781EA6C00D5C121 /* MCMCampaignsManagerDelegate.h in Headers */,
 				C1A1B0D11781EA6C00D5C121 /* MCMCampaignDTO.h in Headers */,
 				C1A1B1291781EA6C00D5C121 /* MCMCoreUtils.h in Headers */,
@@ -2738,6 +2749,7 @@
 				C1A1B2481781EA8300D5C121 /* AdWhirlConfigStore.m in Sources */,
 				C1A1B24D1781EA8300D5C121 /* AdWhirlCustomAdView.m in Sources */,
 				C1A1B2521781EA8300D5C121 /* AdWhirlError.m in Sources */,
+				D532520718A2973700172A26 /* MCMNotificationToken.m in Sources */,
 				C1A1B2571781EA8300D5C121 /* AdWhirlLog.m in Sources */,
 				C1A1B25C1781EA8300D5C121 /* AdWhirlView.m in Sources */,
 				C1A1B2631781EA8300D5C121 /* AdWhirlWebBrowserController.m in Sources */,
@@ -2787,6 +2799,7 @@
 				C1A1AF621781EA6C00D5C121 /* MCMASIDataCompressor.m in Sources */,
 				C1A1AF671781EA6C00D5C121 /* MCMASIDataDecompressor.m in Sources */,
 				C1A1AF6C1781EA6C00D5C121 /* MCMASIDownloadCache.m in Sources */,
+				D532520B18A2975900172A26 /* MCMNotificationToken.m in Sources */,
 				C1A1AF711781EA6C00D5C121 /* MCMASIFormDataRequest.m in Sources */,
 				C1A1AF761781EA6C00D5C121 /* MCMASIHTTPRequest.m in Sources */,
 				C1A1AF7F1781EA6C00D5C121 /* MCMASIInputStream.m in Sources */,
@@ -2878,6 +2891,7 @@
 				C1A1AF611781EA6C00D5C121 /* MCMASIDataCompressor.m in Sources */,
 				C1A1AF661781EA6C00D5C121 /* MCMASIDataDecompressor.m in Sources */,
 				C1A1AF6B1781EA6C00D5C121 /* MCMASIDownloadCache.m in Sources */,
+				D532520A18A2975900172A26 /* MCMNotificationToken.m in Sources */,
 				C1A1AF701781EA6C00D5C121 /* MCMASIFormDataRequest.m in Sources */,
 				C1A1AF751781EA6C00D5C121 /* MCMASIHTTPRequest.m in Sources */,
 				C1A1AF7E1781EA6C00D5C121 /* MCMASIInputStream.m in Sources */,

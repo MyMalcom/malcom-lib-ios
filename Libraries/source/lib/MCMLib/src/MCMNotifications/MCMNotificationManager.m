@@ -2,11 +2,14 @@
 #import "MCMNotificationManager.h"
 #import "MCMNotificationsDefines.h"
 #import "MCMNotifications.h"
+#import "MCMNotificationToken.h"
 
 #import "MCMCore.h"
 #import "MCMCoreDefines.h"
 
-@implementation MCMNotificationManager
+#define kNotificationTokenMalcom @"kNotificationTokenMalcom"
+
+@implementation MCMNotificationManager SYNTHESIZE_SINGLETON_FOR_CLASS(MCMNotificationManager)
 
 static NSData *sDevToken=nil;
 
@@ -56,28 +59,33 @@ static NSData *sDevToken=nil;
     
 
     // Device token
-	const unsigned *tokenBytes = [devToken bytes];
-	NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
-						  ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-						  ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-						  ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-	
-    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: deviceToken: %@", hexToken] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+    NSString *hexToken = [MCMNotificationManager getHexToken:devToken];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSData* tokenSavedAsData = [defaults objectForKey:kNotificationTokenMalcom];
+    MCMNotificationToken* notificationToken = (MCMNotificationToken*)[NSKeyedUnarchiver unarchiveObjectWithData:tokenSavedAsData];
     
-    NSString *json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], @"IOS"];
+    if (notificationToken == nil ||
+        abs([notificationToken.dateSaved timeIntervalSinceNow]) > 3600 ||
+        ![notificationToken.token isEqualToString:hexToken])
+    {
+        [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: deviceToken: %@", hexToken] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
-    IF_IOS6_OR_GREATER(
+        NSString *json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], @"IOS"];
+    
+        IF_IOS6_OR_GREATER(
                        json = [NSString stringWithFormat:@"{\"NotificationRegistration\":{\"applicationCode\":\"%@\",\"environment\":\"%@\",\"token\":\"%@\",\"udid\":\"%@\",\"identifier\":\"%@\",\"devicePlatform\":\"%@\"}}",[[MCMCoreManager sharedInstance] malcomAppId], environment, hexToken, [MCMCoreUtils uniqueIdentifier], [MCMCoreUtils deviceIdentifier], @"IOS"];
                        )
     
-    [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
+        [MCMLog log:[NSString stringWithFormat:@"Malcom MCMNotifications - MCMNotificationManager APNS Library: request: %@", json] inLine:__LINE__ fromMethod:[NSString stringWithCString:__PRETTY_FUNCTION__ encoding:NSUTF8StringEncoding]];
     
-    // Malcom's PNS device registration request        
-    MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:[NSURL URLWithString:url]];
-    [request appendPostData:[json dataUsingEncoding:NSUTF8StringEncoding]];
-    [request addRequestHeader:@"Content-Type" value:@"application/json"];
-    [request setDelegate:self];
-    [request startAsynchronous];
+        // Malcom's PNS device registration request
+        MCMCoreAPIRequest *request = [[MCMCoreAPIRequest alloc] initWithURL:[NSURL URLWithString:url]];
+        [request appendPostData:[json dataUsingEncoding:NSUTF8StringEncoding]];
+        [request addRequestHeader:@"Content-Type" value:@"application/json"];
+        [request setDelegate:[MCMNotificationManager sharedInstance]];
+        [request startAsynchronous];
+    }
     
 	
 }
@@ -196,8 +204,17 @@ static NSData *sDevToken=nil;
 }
 
 - (void)requestFinished:(MCMASIHTTPRequest *)request {
-
     NSLog(@"requestFinished");
+    NSString* postBody = [NSString stringWithUTF8String:[request.postBody bytes]];
+    if ( [postBody rangeOfString:@"NotificationRegistration"].location != NSNotFound ) {
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        MCMNotificationToken* notificationToken = [[MCMNotificationToken alloc] init];
+        notificationToken.token = [MCMNotificationManager getHexToken:sDevToken];
+        notificationToken.dateSaved = [[NSDate alloc] init];
+        NSData* notificationTokenCoded = [NSKeyedArchiver archivedDataWithRootObject:notificationToken];
+        [defaults setObject:notificationTokenCoded forKey:kNotificationTokenMalcom];
+        [defaults synchronize];
+    }
 
 }
 
@@ -206,6 +223,15 @@ static NSData *sDevToken=nil;
 
     NSLog(@"requestFailed");
 
+}
+
++ (NSString*) getHexToken:(NSData*)data {
+	const unsigned *tokenBytes = [data bytes];
+	NSString *hexToken = [NSString stringWithFormat:@"%08x%08x%08x%08x%08x%08x%08x%08x",
+						  ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+						  ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+						  ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    return hexToken;
 }
 
 @end
