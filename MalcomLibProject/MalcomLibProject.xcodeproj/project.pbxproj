@@ -3215,7 +3215,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
-				CURRENT_PROJECT_VERSION = 2.0.11;
+				CURRENT_PROJECT_VERSION = 2.0.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
@@ -3225,7 +3225,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MalcomDemo.app/MalcomDemo";
-				CURRENT_PROJECT_VERSION = 2.0.11;
+				CURRENT_PROJECT_VERSION = 2.0.12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
