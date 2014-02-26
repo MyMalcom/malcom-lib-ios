@@ -1,21 +1,21 @@
 /*
-SHA-1 in C
-By Steve Reid <steve@edmweb.com>
-100% Public Domain
-
-Test Vectors (from FIPS PUB 180-1)
-"abc"
-  A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D
-"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
-  84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1
-A million repetitions of "a"
-  34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F
-*/
+ SHA-1 in C
+ By Steve Reid <steve@edmweb.com>
+ 100% Public Domain
+ 
+ Test Vectors (from FIPS PUB 180-1)
+ "abc"
+ A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D
+ "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"
+ 84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1
+ A million repetitions of "a"
+ 34AA973C D4C4DAA4 F61EEB2B DBAD2731 6534016F
+ */
 
 /* #define LITTLE_ENDIAN * This should be #define'd if true. */
 #if __LITTLE_ENDIAN__
 #define LITTLE_ENDIAN
-#endif 
+#endif
 /* #define SHA1HANDSOFF * Copies data before messing with it. */
 
 #include <stdio.h>
@@ -23,7 +23,7 @@ A million repetitions of "a"
 
 #include "MCMsha1.h"
 
-void MCMSHA1Transform(unsigned long state[5], unsigned char buffer[64]);
+void MCMSHA1Transform(u_int32_t state[5], u_int8_t buffer[64]);
 
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
@@ -31,12 +31,12 @@ void MCMSHA1Transform(unsigned long state[5], unsigned char buffer[64]);
 /* I got the idea of expanding during the round function from SSLeay */
 #ifdef LITTLE_ENDIAN
 #define blk0(i) (block->l[i] = (rol(block->l[i],24)&0xFF00FF00) \
-    |(rol(block->l[i],8)&0x00FF00FF))
+|(rol(block->l[i],8)&0x00FF00FF))
 #else
 #define blk0(i) block->l[i]
 #endif
 #define blk(i) (block->l[i&15] = rol(block->l[(i+13)&15]^block->l[(i+8)&15] \
-    ^block->l[(i+2)&15]^block->l[i&15],1))
+^block->l[(i+2)&15]^block->l[i&15],1))
 
 /* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
 #define R0(v,w,x,y,z,i) z+=((w&(x^y))^y)+blk0(i)+0x5A827999+rol(v,5);w=rol(w,30);
@@ -48,16 +48,16 @@ void MCMSHA1Transform(unsigned long state[5], unsigned char buffer[64]);
 
 /* Hash a single 512-bit block. This is the core of the algorithm. */
 
-void MCMSHA1Transform(unsigned long state[5], unsigned char buffer[64])
+void MCMSHA1Transform(u_int32_t state[5], u_int8_t buffer[64])
 {
-unsigned long a, b, c, d, e;
-typedef union {
-    unsigned char c[64];
-    unsigned long l[16];
-} CHAR64LONG16;
-CHAR64LONG16* block;
+    u_int32_t a, b, c, d, e;
+    typedef union {
+        u_int8_t c[64];
+        u_int32_t l[16];
+    } CHAR64LONG16;
+    CHAR64LONG16* block;
 #ifdef SHA1HANDSOFF
-static unsigned char workspace[64];
+    static u_int8_t workspace[64];
     block = (CHAR64LONG16*)workspace;
     memcpy(block, buffer, 64);
 #else
@@ -97,7 +97,7 @@ static unsigned char workspace[64];
     state[3] += d;
     state[4] += e;
     /* Wipe variables */
-    //a = b = c = d = e = 0;
+    a = b = c = d = e = 0;
 }
 
 
@@ -117,10 +117,10 @@ void MCMSHA1Init(SHA1_CTX* context)
 
 /* Run your data through this. */
 
-void MCMSHA1Update(SHA1_CTX* context, unsigned char* data, unsigned int len)
+void MCMSHA1Update(SHA1_CTX* context, u_int8_t* data, unsigned int len)
 {
-unsigned int i, j;
-
+    unsigned int i, j;
+    
     j = (context->count[0] >> 3) & 63;
     if ((context->count[0] += len << 3) < (len << 3)) context->count[1]++;
     context->count[1] += (len >> 29);
@@ -139,31 +139,31 @@ unsigned int i, j;
 
 /* Add padding and return the message digest. */
 
-void MCMSHA1Final(unsigned char digest[20], SHA1_CTX* context)
+void MCMSHA1Final(u_int8_t digest[20], SHA1_CTX* context)
 {
-unsigned long i;
-unsigned char finalcount[8];
-
+    u_int32_t i, j;
+    u_int8_t finalcount[8];
+    
     for (i = 0; i < 8; i++) {
-        finalcount[i] = (unsigned char)((context->count[(i >= 4 ? 0 : 1)]
-         >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
+        finalcount[i] = (u_int8_t)((context->count[(i >= 4 ? 0 : 1)]
+                                    >> ((3-(i & 3)) * 8) ) & 255);  /* Endian independent */
     }
-    MCMSHA1Update(context, (unsigned char *)"\200", 1);
+    MCMSHA1Update(context, (u_int8_t *)"\200", 1);
     while ((context->count[0] & 504) != 448) {
-        MCMSHA1Update(context, (unsigned char *)"\0", 1);
+        MCMSHA1Update(context, (u_int8_t *)"\0", 1);
     }
     MCMSHA1Update(context, finalcount, 8);  /* Should cause a SHA1Transform() */
     for (i = 0; i < 20; i++) {
-        digest[i] = (unsigned char)
-         ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
+        digest[i] = (u_int8_t)
+        ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
     }
     /* Wipe variables */
-    //i = j = 0;
+    i = j = 0;
     memset(context->buffer, 0, 64);
     memset(context->state, 0, 20);
     memset(context->count, 0, 8);
     memset(&finalcount, 0, 8);
 #ifdef SHA1HANDSOFF  /* make SHA1Transform overwrite it's own static vars */
-    SHA1Transform(context->state, context->buffer);
+    MCMSHA1Transform(context->state, context->buffer);
 #endif
 }
