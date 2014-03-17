@@ -2444,7 +2444,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = MCM;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Malcom;
 				TargetAttributes = {
 					C108575D1770A5F500845353 = {
@@ -3097,6 +3097,7 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -3129,6 +3130,7 @@
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
@@ -3234,7 +3236,6 @@
 		C158F7571771C1C7009EA8A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomLib_iphonesimulator.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3251,7 +3252,6 @@
 		C158F7581771C1C7009EA8A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomLib_iphonesimulator.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3268,15 +3268,11 @@
 		C158F7671771C1E7009EA8A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					armv7s,
-					armv6,
-				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomLib_iphoneos.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomLib-iphoneos/MalcomLib-iphoneos-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
@@ -3289,15 +3285,11 @@
 		C158F7681771C1E7009EA8A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv7,
-					armv7s,
-					armv6,
-				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomLib_iphoneos.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomLib-iphoneos/MalcomLib-iphoneos-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
@@ -3310,7 +3302,6 @@
 		C158F7781771C243009EA8A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomAdsLib_iphonesimulator.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3327,7 +3318,6 @@
 		C158F7791771C243009EA8A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = i386;
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomAdsLib_iphonesimulator.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3344,15 +3334,11 @@
 		C158F7881771C258009EA8A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-					armv7s,
-				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomAdsLib_iphoneos.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomAdsLib-iphoneos/MalcomAdsLib-iphoneos-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
@@ -3365,15 +3351,11 @@
 		C158F7891771C258009EA8A0 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					armv6,
-					armv7,
-					armv7s,
-				);
 				CLANG_ENABLE_OBJC_ARC = NO;
 				DSTROOT = /tmp/MalcomAdsLib_iphoneos.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MalcomAdsLib-iphoneos/MalcomAdsLib-iphoneos-Prefix.pch";
+				GCC_THUMB_SUPPORT = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				ONLY_ACTIVE_ARCH = NO;
