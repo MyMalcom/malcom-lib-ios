@@ -229,9 +229,7 @@
         if (icon){
             [[vc tabBarItem] setImage:[UIImage imageWithContentsOfFile:icon]];
         }
-        if ([vc respondsToSelector:@selector(setUrls:)]){
-            [vc performSelector:@selector(setUrls:) withObject:urls];
-        } else if ([vc respondsToSelector:@selector(setUrl:)]){
+        if ([vc respondsToSelector:@selector(setUrl:)]){
             [vc performSelector:@selector(setUrl:) withObject:[urls lastObject]];
         }    
     }
